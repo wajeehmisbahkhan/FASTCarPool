@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyDq57-u4HO7kuKhPBPgLtXlEd8k1ErVUwo",
+    authDomain: "fast-carpool.firebaseapp.com",
+    databaseURL: "https://fast-carpool.firebaseio.com",
+    projectId: "fast-carpool",
+    storageBucket: "fast-carpool.appspot.com",
+    messagingSenderId: "919520858431"
+  }
 };
 
 /*
