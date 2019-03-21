@@ -1,12 +1,39 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Register</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input type="text" formControlName="name"></ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'name', this.error)" [innerHTML]="error.name"></div>
+    <!--Ionic 4 bug: Custom validators must be styled like this-->
+    <ion-item [class.ion-invalid]="email.hasError('emailAvailable')">
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" formControlName="email">
+        <!--Show spinner when checking mail-->
+        <ion-spinner *ngIf="email.status==='PENDING'" color="primary"></ion-spinner>
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'email', this.error)" [innerHTML]="error.email"></div>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'password', this.error)" [innerHTML]="error.password"></div>
+    <ion-button margin-top type="submit" [disabled]="!registerForm.valid" expand="block">
+      Register
+    <ion-spinner *ngIf="registering" color="white"></ion-spinner>
+    </ion-button>
+    <ion-item>
+      <p>Already registered? <a routerLink="../login/" routerDirection="backward">Login!</a></p>
+    </ion-item>
+  </form>
 </ion-content>

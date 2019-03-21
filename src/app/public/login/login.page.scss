@@ -1,8 +1,15 @@
-// div.error-message {
-//     padding: 1em;
-//     color: red;
-// }
-// div.error-message a {
-//     color: green;
-//     text-decoration-style: none;
-// }
+div.error-message {
+    padding-top: 0.5em;
+    color: red;
+    a {
+        color: var(--ion-color-primary);
+        text-decoration-style: none;
+    }
+}
+ion-input, ion-button {
+    position: relative;
+    ion-spinner {
+        position: absolute;
+        right: 1em;
+    }
+}
