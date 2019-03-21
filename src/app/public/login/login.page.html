@@ -3,25 +3,29 @@
     <ion-title>FAST CarPool</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content padding>
   <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <ion-item>
+    <!--Ionic 4 bug: Custom validators must be styled like this-->
+    <ion-item [class.ion-invalid]="email.hasError('emailExists')">
       <ion-label position="floating">Email</ion-label>
-      <ion-input (focusout)="mailPassed()" type="text" formControlName="email"></ion-input>
-    </ion-item>
-    <div [innerHTML]="error.email" class="error-message" *ngIf="!mailPassed()"></div>
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="text" formControlName="password">
-        <ion-spinner style="float:right" color="primary"></ion-spinner>
+      <ion-input type="email" formControlName="email">
+        <!--Show spinner when checking mail-->
+        <ion-spinner *ngIf="email.status==='PENDING'" color="primary"></ion-spinner>
       </ion-input>
     </ion-item>
-    <div [innerHTML]="error.password" class="error-message" *ngIf="!passPassed()"></div>
-    <ion-button type="submit" [disabled]="!loginForm.valid" expand="block">Login</ion-button>
+    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'email', this.error)" [innerHTML]="error.email"></div>
     <ion-item>
-      <p>Not registered? Create an account!</p>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'password', this.error) || loginFailed" [innerHTML]="error.password"></div>
+    <ion-button margin-top type="submit" [disabled]="!loginForm.valid" expand="block">
+      Login
+      <ion-spinner *ngIf="logging" color="white"></ion-spinner>
+    </ion-button>
+    <ion-item>
+      <!-- TODO: Not working after coming back -->
+      <p>Not registered? <a routerLink="../register/" routerDirection="forward">Create an account!</a></p>
     </ion-item>
   </form>
-  <!-- <ion-button (click)="register()" expand="block" color="secondary" href="/register" routerDirection="forward">Register</ion-button> -->
 </ion-content>

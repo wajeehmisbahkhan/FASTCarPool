@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Storage } from '@ionic/storage'
 import { Platform } from '@ionic/angular';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 
-import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFireAuth } from '@angular/fire/auth';
 
 const TOKEN_KEY: any = null;
 
@@ -13,14 +13,16 @@ const TOKEN_KEY: any = null;
 })
 export class AuthenticationService {
 
-  private user:any = null;
+  private _user = null;
   private validation_messages = {
     'name': [
       { type: 'required', message: 'Name is required.' }
     ],
     'email': [
       { type: 'required', message: 'Email is required.' },
-      { type: 'email', message: 'Enter a valid email.' }
+      { type: 'email', message: 'Enter a valid email.' },
+      { type: 'emailExists', message: 'No such email exists. <a routerLink="../register/ routerDirection="forward">Sign Up!</a>' },
+      { type: 'emailAvailable', message: 'Email already exists. <a>Forgot Password?</a>' }
     ],
     'password': [
       { type: 'required', message: 'Password is required.' },
@@ -35,15 +37,15 @@ export class AuthenticationService {
     private plt: Platform,
     private afAuth: AngularFireAuth
     ) {
-    //Check on app load
+    // Check on app load
     this.plt.ready().then(() => {
       this.checkToken();
     });
-    //Subscribe to authentication state
+    // Subscribe to authentication state
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        this.user = user;
-        //Store token in local storage
+        this._user = user;
+        // Store token in local storage
         user.getIdToken().then(idToken => {
           this.storage.set(TOKEN_KEY, idToken);
         });
@@ -55,45 +57,105 @@ export class AuthenticationService {
 
   validate(form: FormGroup, field: string, error: Object): boolean {
     for (let i = 0; i < this.validation_messages[field].length; i++) {
-      let validation = this.validation_messages[field][i];
+      const validation = this.validation_messages[field][i];
       if (form.get(field).hasError(validation.type) && (form.get(field).dirty || form.get(field).touched)) {
-        //Set error message
+        // Set error message
         error[field] = validation.message;
         return false;
       }
     }
-    //Clear error message
+    // Clear error message
     error[field] = '';
     return true;
   }
 
-  async authenticateMail(email: string) {
-    await this.afAuth.auth.fetchSignInMethodsForEmail(email).then(signInMethods => {
+   emailExists(control: AbstractControl) {
+    return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
       if (signInMethods.length === 0) {
-        throw {
-          code: 'auth/user-not-found',
-          message: 'No such email exists. <a href="#">Sign up!</a>'
-        }
+        return {
+          emailExists: {
+            passedInEmail: control.value
+          }
+        };
       }
+      return null;
     });
-    return true;
+  }
+
+  emailAvailable(control: AbstractControl) {
+    return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
+      if (signInMethods.length === 0) {
+        return null;
+      }
+      return {
+        emailAvailable: {
+          passedInEmail: control.value
+        }
+      };
+    });
   }
 
   async login(email: string, password: string) {
-    //Password is too small, invalid by default
-    if (password.length <= 6)
+    // Password is too small, invalid by default
+    if (password.length < 6)
       throw {
         code: 'auth/wrong-password',
         message: 'Invalid password. <a href="#">Forgot Password?</a>'
-      }
-    //Sign in - any error will be thrown back
+      };
+    // Sign in - any error will be thrown back
     await this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    //Authenticated to move forward
+    // Authenticated to move forward
+    this.authenticationState.next(true);
+  }
+
+  async register(name: string, email: string, password: string) {
+    await this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(function (auth) {
+      this._user = auth.user;
+      // Update name
+      auth.user.updateProfile({
+        displayName: name
+      }).catch(function(error) {
+        // TODO: Handle Errors here.
+      });
+      // DATABASE
+      // Make place in firestore
+      // db.collection('users').doc(email).set({
+      //     chats: [],
+      //     user: 'Rider',
+      //     status: 'Hey there! I am using FASTUber.',
+      //     home: {
+      //         lat: 24.8607,
+      //         lng: 67.0011
+      //     },
+      //     location: { //Last seen
+      //         lat: 24.8607,
+      //         lng: 67.0011
+      //     },
+      //     schedule: {
+      //         //8 slots every day
+      //         monday: [null, null, null, null, null, null, null, null],
+      //         tuesday: [null, null, null, null, null, null, null, null],
+      //         wednesday: [null, null, null, null, null, null, null, null],
+      //         thursday: [null, null, null, null, null, null, null, null],
+      //         friday: [null, null, null, null, null, null, null, null]
+      //     },
+      //     car: {
+      //         capacity: 0,
+      //         riders: 0,
+      //         description: ''
+      //     },
+      //     price: {
+      //         oneway: 50,
+      //         daily: 100,
+      //         weekly: 500,
+      //         semester: 8000
+      //     }
+      });
     this.authenticationState.next(true);
   }
 
   async logout() {
-    //Sign in - any error will be thrown back
+    // Sign in - any error will be thrown back
     await this.afAuth.auth.signOut();
     
     await this.storage.remove(TOKEN_KEY);
@@ -106,10 +168,15 @@ export class AuthenticationService {
 
   checkToken() {
     return this.storage.get(TOKEN_KEY).then(res => {
-      //TODO: If TOKEN_KEY is valid/!= null or not undefined/removed
+      // TODO: If TOKEN_KEY is valid/!= null or not undefined/removed
       if (res) {
         this.authenticationState.next(true);
       }
-    })
+    });
+  }
+
+  // Getters
+  get user(): Object {
+    return this._user;
   }
 }

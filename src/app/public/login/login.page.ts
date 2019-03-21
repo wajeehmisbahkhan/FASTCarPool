@@ -1,6 +1,6 @@
 import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -9,68 +9,48 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class LoginPage implements OnInit {
 
-  private loginForm: FormGroup;
-  private error = {
+  public loginForm: FormGroup;
+  // For ease in reference
+  public error = {
     email: '',
     password: ''
   };
-  private loginFailed = false;
-  private emailTimer: any = null;
+  public logging = false;
+  public loginFailed = false;
   constructor(
     private authService: AuthenticationService,
     private formBuilder: FormBuilder
     ) {
       this.loginForm = this.formBuilder.group({
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required]] // TODO: Check for minimum length manually
-      });
+        email: ['', [Validators.required, Validators.email], authService.emailExists.bind(this.authService)],
+        password: ['', [Validators.required]]
+      }, {updateOn: 'blur'});
     }
 
   ngOnInit() { }
 
-  async mailPassed() {
-    // Fails at basic checks
-    if (!this.authService.validate(this.loginForm, 'email', this.error))
-      return false;
-    // Check from firebase if email exists
-    // With some time gap to avoid load on server
-    if (this.emailTimer) {
-      clearInterval(this.emailTimer);
-    }
-    this.emailTimer = setInterval(() => {
-      this.emailTimer = null;
-      this.authService.authenticateMail(this.loginForm.get('email').value);
-    }, 1500);
-    // if (!this.authService.authenticateMail(this.loginForm.get('email').value)) {
-    //   return false;
-    // }
-
-    return true;
-  }
-
-  passPassed(): boolean {
-    // If login failed
-    if (this.loginFailed)
-      return false;
-    // Fails at basic checks
-    if (!this.authService.validate(this.loginForm, 'password', this.error))
-      return false;
-    return true;
-  }
-
-  async login() {
+  login() {
     // If user gets past the initial checks
-    if (!this.loginForm.valid)
-      return;
-    this.authService.login(this.loginForm.get('email').value, this.loginForm.get('password').value).then(() => {
+    if (!this.loginForm.valid) return;
+    this.logging = true;
+    this.authService.login(this.loginForm.get('email').value, this.loginForm.get('password').value)
+    .then(() => {
+      this.loginFailed = false;
+      this.logging = false;
       this.loginForm.reset();
     }).catch(err => {
       // Password failed
-      this.loginForm.get('password').setValue('');
       this.loginFailed = true;
+      this.logging = false;
       this.error.password = err.message;
     });
-    
   }
 
+  //Getters
+  get email():AbstractControl {
+    return this.loginForm.get('email');
+  }
+  get password():AbstractControl {
+    return this.loginForm.get('password');
+  }
 }
