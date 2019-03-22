@@ -5,12 +5,15 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyDq57-u4HO7kuKhPBPgLtXlEd8k1ErVUwo",
-    authDomain: "fast-carpool.firebaseapp.com",
-    databaseURL: "https://fast-carpool.firebaseio.com",
-    projectId: "fast-carpool",
-    storageBucket: "fast-carpool.appspot.com",
-    messagingSenderId: "919520858431"
+    apiKey: 'AIzaSyDq57-u4HO7kuKhPBPgLtXlEd8k1ErVUwo',
+    authDomain: 'fast-carpool.firebaseapp.com',
+    databaseURL: 'https://fast-carpool.firebaseio.com',
+    projectId: 'fast-carpool',
+    storageBucket: 'fast-carpool.appspot.com',
+    messagingSenderId: '919520858431'
+  },
+  googleMaps: {
+    apiKey: 'AIzaSyA0QWLSU0f8IpeNngrVvut1i7jj6wsQwjA'
   }
 };
 

@@ -28,6 +28,7 @@
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
     <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'password', this.error)" [innerHTML]="error.password"></div>
+    <!-- TODO: Handle already saved browser credentials -->
     <ion-button margin-top type="submit" [disabled]="!registerForm.valid" expand="block">
       Register
     <ion-spinner *ngIf="registering" color="white"></ion-spinner>
