@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { DashboardPage } from './dashboard.page';
+import { GoogleMapComponent } from '../../services/google-map/google-map.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    GoogleMapComponent,
     RouterModule.forChild(routes)
   ],
   declarations: [DashboardPage]
