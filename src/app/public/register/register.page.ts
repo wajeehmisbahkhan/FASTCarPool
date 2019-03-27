@@ -1,6 +1,7 @@
 import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,8 @@ export class RegisterPage implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private db: DatabaseService
     ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -34,15 +36,15 @@ export class RegisterPage implements OnInit {
   }
 
   register() {
+    const email = this.registerForm.get('email').value;
     // If user gets past the initial checks
     if (!this.registerForm.valid) return;
-    this.authService.register
-    (this.registerForm.get('name').value,
-     this.registerForm.get('email').value,
-     this.registerForm.get('password').value)
+    this.authService.register(this.registerForm.get('name').value, email, this.registerForm.get('password').value)
     .then(() => {
       this.registering = false;
       this.registerForm.reset();
+      // Make place in database
+      this.db.createNewUser(email);
     }).catch(err => {
       // TODO: Make Error Feedback
       this.registering = false;

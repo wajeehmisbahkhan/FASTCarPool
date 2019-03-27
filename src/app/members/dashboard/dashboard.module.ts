@@ -6,7 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { DashboardPage } from './dashboard.page';
-import { GoogleMapComponent } from '../../services/google-map/google-map.component';
+import { AgmCoreModule } from '@agm/core';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   {
@@ -20,8 +21,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    GoogleMapComponent,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    AgmCoreModule.forRoot({
+      apiKey: environment.googleMaps.apiKey
+    })
   ],
   declarations: [DashboardPage]
 })
