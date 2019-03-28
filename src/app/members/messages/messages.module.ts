@@ -5,15 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DashboardPage } from './dashboard.page';
-
-import { AgmCoreModule } from '@agm/core';
-import { environment } from 'src/environments/environment';
+import { MessagesPage } from './messages.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardPage
+    component: MessagesPage
   }
 ];
 
@@ -22,11 +19,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMaps.apiKey
-    })
+    RouterModule.forChild(routes)
   ],
-  declarations: [DashboardPage]
+  declarations: [MessagesPage]
 })
-export class DashboardPageModule {}
+export class MessagesPageModule {}

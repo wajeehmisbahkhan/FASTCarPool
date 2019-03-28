@@ -19,13 +19,13 @@ export class DashboardPage implements OnInit {
     },
     {
       title: 'Messages',
-      url: '/messages',
+      url: '../messages',
       icon: 'mail'
     }
   ];
 
-  lat: number = 0;
-  lng: number = 0;
+  lat = 0;
+  lng = 0;
 
   constructor(
     private authService: AuthenticationService,
