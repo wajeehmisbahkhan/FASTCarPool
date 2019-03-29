@@ -2,6 +2,7 @@ import { AuthenticationService } from './../../services/authentication.service'
 import { Component, OnInit } from '@angular/core';
 import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +20,7 @@ export class DashboardPage implements OnInit {
     },
     {
       title: 'Messages',
-      url: '../messages',
+      url: '/messages',
       icon: 'mail'
     }
   ];
@@ -30,7 +31,8 @@ export class DashboardPage implements OnInit {
   constructor(
     private authService: AuthenticationService,
     private map: MapsService,
-    private db: DatabaseService
+    private db: DatabaseService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -44,6 +46,10 @@ export class DashboardPage implements OnInit {
     //   this.lat = resp.coords.latitude;
     //   this.lng = resp.coords.longitude;
     // }).catch(console.error);
+  }
+
+  gotoPage(path: string) {
+    this.router.navigateByUrl('members' + path);
   }
 
   logout () {
