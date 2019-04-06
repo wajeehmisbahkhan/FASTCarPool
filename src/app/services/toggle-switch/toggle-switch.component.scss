@@ -19,12 +19,12 @@
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "Driver";
+    content: attr(data-on);
     padding-left: 10px;
     background-color: #34A7C1; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-    content: "Rider";
+    content: attr(data-off);
     padding-right: 10px;
     background-color: #EEEEEE; color: #999999;
     text-align: right;
