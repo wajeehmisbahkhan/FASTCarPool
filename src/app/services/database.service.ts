@@ -46,9 +46,12 @@ export class DatabaseService {
     });
   }
 
-  get(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.QuerySnapshot> {
+  getCollection(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.QuerySnapshot> {
     return this.db.collection(path).get(options);
   }
 
+  getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
+    return this.db.doc(path).get(options);
+  }
 
 }

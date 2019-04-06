@@ -21,6 +21,17 @@ export class AppComponent {
     this.initializeApp();
   }
 
+  ionViewDidEnter () {
+    this.platform.backButton.subscribe(this.navigateBack);
+  }
+
+  navigateBack (e) {
+    // const url = this.router.url;
+    // if (url === '/login') {
+      navigator['app'].exitApp();
+    // }
+  }
+
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
