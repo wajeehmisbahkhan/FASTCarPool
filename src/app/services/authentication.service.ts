@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Storage } from '@ionic/storage'
+import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
+import { AlertService } from './alert.service';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -22,7 +23,7 @@ export class AuthenticationService {
       { type: 'required', message: 'Email is required.' },
       { type: 'email', message: 'Enter a valid email.' },
       { type: 'emailExists', message: 'No such email exists. <a routerLink="../register/ routerDirection="forward">Sign Up!</a>' },
-      { type: 'emailAvailable', message: 'Email already exists. <a>Forgot Password?</a>' }
+      { type: 'emailAvailable', message: 'Email already exists. <a (click)="resetPassword()">Forgot Password?</a>' }
     ],
     'password': [
       { type: 'required', message: 'Password is required.' },
@@ -35,7 +36,8 @@ export class AuthenticationService {
   constructor(
     private storage: Storage,
     private plt: Platform,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    private alertService: AlertService
     ) {
     // Check on app load
     this.plt.ready().then(() => {
@@ -79,7 +81,7 @@ export class AuthenticationService {
         };
       }
       return null;
-    });
+    }).catch(this.alertService.error);
   }
 
   emailAvailable(control: AbstractControl) {
@@ -103,9 +105,16 @@ export class AuthenticationService {
         message: 'Invalid password. <a href="#">Forgot Password?</a>'
       };
     // Sign in - any error will be thrown back
-    await this.afAuth.auth.signInWithEmailAndPassword(email, password);
+    let errors = false;
+    await this.afAuth.auth.signInWithEmailAndPassword(email, password).catch(err => {
+      // Wrong password from firebase
+      if (err.code !== 'auth/wrong-password')
+        this.alertService.error(err);
+      errors = true;
+    });
     // Authenticated to move forward
-    this.authenticationState.next(true);
+    if (!errors)
+      this.authenticationState.next(true);
   }
 
   async register(name: string, email: string, password: string) {
@@ -116,16 +125,13 @@ export class AuthenticationService {
       auth.user.updateProfile({
         displayName: name
       });
-    }).catch(err => {
-      console.log(err);
-    });
+    }).catch(this.alertService.error);
     this.authenticationState.next(true);
   }
 
   async logout() {
     // Sign in - any error will be thrown back
-    await this.afAuth.auth.signOut();
-    
+    await this.afAuth.auth.signOut().catch(this.alertService.error);
     await this.storage.remove(TOKEN_KEY);
     this.authenticationState.next(false);
   }
@@ -140,6 +146,14 @@ export class AuthenticationService {
       if (res) {
         this.authenticationState.next(true);
       }
+    });
+  }
+
+  resetPassword() {
+    this.alertService.confirmation('Are you sure you want to reset your password?', () => { // On Confirmation
+      this.afAuth.auth.sendPasswordResetEmail(this.user.email).then(() => {
+        this.alertService.notice('Email Confirmation Sent.');
+      }).catch(this.alertService.error);
     });
   }
 

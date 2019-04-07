@@ -1,12 +1,27 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>My Profile</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-label>Status: </ion-label>
-  <ion-toggle></ion-toggle>
-  <!--TODO: Change app theme when option updates-->
-  <toggle-switch ></toggle-switch>
+  <form [formGroup]="profileForm" (submit)="updateProfile()">
+    <ion-item>
+      <ion-label position="fixed">You are a:</ion-label>
+      <!--TODO: Change app theme when option updates-->
+      <toggle-switch name="type" formControlName="type" [onText]="'Rider'" [offText]="'Driver'"></toggle-switch>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Status</ion-label>
+      <ion-input name="status" formControlName="status"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Pickup Point</ion-label>
+      <agm-map></agm-map>
+    </ion-item>
+    <ion-button expand="block" type="submit" [disabled]="valueChanged() || profileForm.invalid">Update</ion-button>
+  </form>
 </ion-content>

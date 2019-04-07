@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,8 @@ export class DatabaseService {
     // Add to users folder - reference by email users/email.get(property)
     this.db.collection('users').doc(email).set({
         chats: [],
-        user: 'Rider',
-        status: 'Hey there! I am using FASTUber.',
+        type: 'Rider',
+        status: 'Hey there! I\'m using FAST CarPool.',
         home: {
             lat: 24.8607,
             lng: 67.0011
@@ -52,6 +53,21 @@ export class DatabaseService {
 
   getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
     return this.db.doc(path).get(options);
+  }
+
+  setDoc(path: string, data: Object, options?: firebase.firestore.SetOptions) {
+    this.db.doc(path).set(data, options);
+  }
+
+  updateDoc(path: string, data: Object) {
+    this.db.doc(path).update(data);
+  }
+
+  // TODO: Test
+  unionArray(path: string, field: string, element: any) {
+    const updated = {};
+    updated[field] = firebase.firestore.FieldValue.arrayUnion(element);
+    this.db.doc(path).update(updated);
   }
 
 }
