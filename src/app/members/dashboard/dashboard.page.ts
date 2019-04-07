@@ -1,4 +1,4 @@
-import { AuthenticationService } from './../../services/authentication.service'
+import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
