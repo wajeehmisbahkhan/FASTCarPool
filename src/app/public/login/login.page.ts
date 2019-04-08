@@ -52,5 +52,6 @@ export class LoginPage implements OnInit {
   }
   get password():AbstractControl {
     return this.loginForm.get('password');
+    // ** CHANGE **
   }
 }
