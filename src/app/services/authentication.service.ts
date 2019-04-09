@@ -22,7 +22,7 @@ export class AuthenticationService {
     'email': [
       { type: 'required', message: 'Email is required.' },
       { type: 'email', message: 'Enter a valid email.' },
-      { type: 'emailExists', message: 'No such email exists. <a routerLink="../register/ routerDirection="forward">Sign Up!</a>' },
+      { type: 'emailExists', message: 'No such email exists. <a routerLink="../register/" routerDirection="forward">Sign Up!</a>' },
       { type: 'emailAvailable', message: 'Email already exists. <a (click)="resetPassword()">Forgot Password?</a>' }
     ],
     'password': [

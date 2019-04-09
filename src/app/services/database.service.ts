@@ -15,7 +15,7 @@ export class DatabaseService {
     // Add to users folder - reference by email users/email.get(property)
     this.db.collection('users').doc(email).set({
         chats: [],
-        type: 'Rider',
+        driver: false,
         status: 'Hey there! I\'m using FAST CarPool.',
         home: {
             lat: 24.8607,
