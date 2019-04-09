@@ -17,7 +17,12 @@ export class ProfilePage implements OnInit {
 
   user: firebase.User;
   userData = {
-    status: null
+    driver: false,
+    status: null,
+    home: {
+      lat: 0,
+      lng: 0
+    }
   };
 
   constructor(
@@ -28,7 +33,7 @@ export class ProfilePage implements OnInit {
     private alertService: AlertService
   ) {
     this.profileForm = this.formBuilder.group({
-      type: [''],
+      driver: [''],
       status: ['', [Validators.required, Validators.maxLength(100)]] // TODO: Indicate error
     });
     const loading = this.lc.create({
@@ -39,6 +44,11 @@ export class ProfilePage implements OnInit {
     });
     this.user = this.auth.user;
     this.db.getDoc('users/' + this.user.email).subscribe(doc => {
+      // Driver
+      this.userData['driver'] = doc.data().driver;
+      this.profileForm.controls['driver'].setValue(this.userData['driver']);
+
+      // Status
       this.userData['status'] = doc.data().status;
       this.profileForm.controls['status'].setValue(this.userData['status']);
       this.lc.dismiss();
@@ -50,7 +60,8 @@ export class ProfilePage implements OnInit {
 
   valueChanged(): boolean {
     if (this.userData['status'])
-      return this.userData['status'].trim() === this.profileForm.controls['status'].value.trim();
+      return this.userData['status'].trim() === this.profileForm.controls['status'].value.trim()
+      &&     this.userData['driver'] === this.profileForm.controls['driver'].value;
     return false;
   }
 
@@ -59,6 +70,11 @@ export class ProfilePage implements OnInit {
     if (this.userData['status'] !== this.profileForm.controls['status'].value) {
       this.userData['status'] = this.profileForm.controls['status'].value;
       this.db.updateDoc(`users/${this.user.email}`, {status: this.userData['status']});
+    }
+
+    if (this.userData['driver'] !== this.profileForm.controls['driver'].value) {
+      this.userData['driver'] = this.profileForm.controls['driver'].value;
+      this.db.updateDoc(`users/${this.user.email}`, {driver: this.userData['driver']});
     }
 
     this.alertService.notice('Profile updated successfully');

@@ -10,17 +10,19 @@
 <ion-content padding>
   <form [formGroup]="profileForm" (submit)="updateProfile()">
     <ion-item>
-      <ion-label position="fixed">You are a:</ion-label>
+      <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
       <!--TODO: Change app theme when option updates-->
-      <toggle-switch name="type" formControlName="type" [onText]="'Rider'" [offText]="'Driver'"></toggle-switch>
+      <toggle-switch name="driver" formControlName="driver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Status</ion-label>
       <ion-input name="status" formControlName="status"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Pickup Point</ion-label>
-      <agm-map></agm-map>
+      <ion-label position="floating">Pickup Point</ion-label>
+      <agm-map [zoomControl]="false" [streetViewControl]="false" [zoom]="12">
+        <agm-marker></agm-marker>
+      </agm-map>
     </ion-item>
     <ion-button expand="block" type="submit" [disabled]="valueChanged() || profileForm.invalid">Update</ion-button>
   </form>

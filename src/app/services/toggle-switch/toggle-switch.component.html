@@ -1,5 +1,5 @@
 <div class="onoffswitch">
-  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+  <input [disabled]="disabled" [checked]="value" (click)="onChange($event.target.checked)" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
   <label class="onoffswitch-label" for="myonoffswitch">
       <span data-on="On" class="onoffswitch-inner"></span>
       <span data-off="Off" class="onoffswitch-switch"></span>
