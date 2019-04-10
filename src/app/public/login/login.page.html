@@ -3,7 +3,7 @@
     <ion-title>FAST CarPool</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content padding>
+<ion-content >
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <!--Ionic 4 bug: Custom validators must be styled like this-->
     <ion-item [class.ion-invalid]="email.hasError('emailExists')">
