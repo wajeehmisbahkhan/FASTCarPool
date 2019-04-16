@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import * as firebase from 'firebase';
+import { map } from 'rxjs/operators';
+import { firestore } from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +52,21 @@ export class DatabaseService {
     return this.db.collection(path).get(options);
   }
 
+  createDoc(data: Object) {
+    return this.db.collection('chats').add(data);
+  }
+
   getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
     return this.db.doc(path).get(options);
+  }
+
+  getLiveDoc(path: string) {
+    return this.db.doc(path).snapshotChanges().pipe(map(doc => {
+      return {
+        id: doc.payload.id,
+        ...doc.payload.data()
+      };
+    }));
   }
 
   setDoc(path: string, data: Object, options?: firebase.firestore.SetOptions) {
@@ -66,7 +80,7 @@ export class DatabaseService {
   // TODO: Test
   unionArray(path: string, field: string, element: any) {
     const updated = {};
-    updated[field] = firebase.firestore.FieldValue.arrayUnion(element);
+    updated[field] = firestore.FieldValue.arrayUnion(element);
     this.db.doc(path).update(updated);
   }
 

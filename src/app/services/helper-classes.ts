@@ -23,10 +23,12 @@ export class Participant {
 export class Chat {
     public messages: Array <Message>;
     public participants: Array <Participant>;
+    public title: string;
 
-    constructor (messages: Array <Message> , participants: Array <Participant>) {
+    constructor (messages?: Array <Message>, participants?: Array <Participant>, title?: string) {
         this.messages = messages;
         this.participants = participants;
+        this.title = title;
     }
 
 }
