@@ -32,3 +32,13 @@ export class Chat {
     }
 
 }
+
+export class Coordinate {
+    public lng: number;
+    public lat: number;
+
+    constructor(lat: number, lng: number) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+}
