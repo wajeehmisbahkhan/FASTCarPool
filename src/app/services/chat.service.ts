@@ -12,16 +12,18 @@ import { switchMap } from 'rxjs/operators';
 export class ChatService {
 
   user: string;
+  chats: Array<Chat> = [];
 
   constructor(
     private db: DatabaseService,
     private auth: AuthenticationService
   ) {
     this.user = this.auth.user.email;
+    
   }
 
   async create() {
-    const docRef = await this.db.createDoc(new Chat());
+    // const docRef = await this.db.createDoc(new Chat());
 
     // TODO: Save doc reference
   }

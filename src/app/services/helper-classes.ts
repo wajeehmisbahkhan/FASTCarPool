@@ -21,11 +21,14 @@ export class Participant {
 }
 
 export class Chat {
+    public id: string; // For document id
+
     public messages: Array <Message>;
     public participants: Array <Participant>;
     public title: string;
 
-    constructor (messages?: Array <Message>, participants?: Array <Participant>, title?: string) {
+    constructor (id: string, messages?: Array <Message>, participants?: Array <Participant>, title?: string) {
+        this.id = id;
         this.messages = messages;
         this.participants = participants;
         this.title = title;

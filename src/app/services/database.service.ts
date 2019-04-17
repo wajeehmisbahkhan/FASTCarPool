@@ -61,12 +61,7 @@ export class DatabaseService {
   }
 
   getLiveDoc(path: string) {
-    return this.db.doc(path).snapshotChanges().pipe(map(doc => {
-      return {
-        id: doc.payload.id,
-        ...doc.payload.data()
-      };
-    }));
+    return this.db.doc(path).snapshotChanges();
   }
 
   setDoc(path: string, data: Object, options?: firebase.firestore.SetOptions) {
