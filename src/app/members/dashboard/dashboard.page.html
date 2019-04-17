@@ -39,6 +39,7 @@
   <ion-router-outlet main>
     <agm-map [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="12">
       <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      <agm-marker *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'"></agm-marker>
     </agm-map>
   </ion-router-outlet>
 </ion-content>
