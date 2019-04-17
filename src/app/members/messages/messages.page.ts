@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 export class MessagesPage implements OnInit {
 
   user: firebase.User;
-  chats: Array<string>;
-  chat: Chat;
+  chatList: Array<string>;
+  chats: Array<Chat> = [];
   inbox: Array<Message> = [];
   foreverAlone = false;
 
@@ -25,77 +25,89 @@ export class MessagesPage implements OnInit {
     private auth: AuthenticationService,
     private router: Router
     ) {
-      const loading = this.lc.create({
-        message: 'Loading Messages...'
-      });
-      loading.then(loader => {
-        loader.present();
-      });
-      this.user = this.auth.user;
-      // TODO: Internet issue
-      this.db.getDoc('users/' + this.user.email).subscribe(doc => {
-        this.chats = doc.data().chats;
-        this.chat = new Chat(null, null, null);
-        this.displayInbox();
-      });
-    }
+    const loading = this.lc.create({
+      message: 'Loading Messages...'
+    });
+    loading.then(loader => {
+      loader.present();
+    });
+    this.user = this.auth.user;
+    // TODO: Internet issue
+    this.db.getLiveDoc('users/' + this.user.email).subscribe(doc => {
+      console.log('New Chat');
+      this.chatList = doc.payload.data()['chats'];
+      this.displayInbox();
+    });
+  }
 
   ngOnInit() { }
 
   displayInbox () {
-    if (this.chats.length === 0) {
+    if (this.chatList.length === 0) {
       // Display Forever Alone
       this.foreverAlone = true;
       this.lc.dismiss();
       return;
     }
 
-    this.chats.forEach(chatId => {
+    this.chatList.forEach(chatId => {
+      // Create an empty chat
+      const chat = new Chat(chatId);
+      // Attach id to the parent item to pass in argument later
+
       // Get entire chat from chats folder in db
-      this.db.getDoc(`chats/${chatId}`).subscribe(doc => {
+      this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
+        console.log('New Chat');
         // Display Message Starts in inbox
-        const messages: Array<Message> = doc.data().messages,
-            participants: Array<Participant> = doc.data().participants;
+        const messages: Array<Message> = doc.payload.data()['messages'],
+            participants: Array<Participant> = doc.payload.data()['participants'];
 
-        this.createMessageSample(messages[messages.length - 1], participants);
+        // Create Message Sample and return Title
+        chat.title = this.createMessageSample(messages[messages.length - 1], participants);
 
-        this.chat.messages = messages;
-        this.chat.participants = participants;
+        chat.messages = messages;
+        chat.participants = participants;
+
+        // Push to chats
+        this.chats.push(chat);
 
         // Loading ended
+        // TODO: If last chat being loaded
         this.lc.dismiss();
       });
     });
   }
 
-  createMessageSample(message: Message, participants: Participant[]) {
+  createMessageSample(message: Message, participants: Participant[]): string {
     let sender = message.sender;
     const content = message.content;
 
     // If sender is user
     const user = this.user.email;
-    if (sender === user) {
+    if (sender === user)
       sender = 'You';
-    } else {
-      // Convert email into name
+    else
+      // Convert email into name - loop through all participants for match
       participants.forEach(participant => {
         if (sender === participant.email) {
           sender = participant.name;
-          if (participants.length === 2) {
-            this.chat.title = sender;
-          } else {
-            this.chat.title = 'Group';
-          }
         }
       });
-    }
 
-    // Push in the chats array
+    // Push to the inbox array
     this.inbox.push(new Message(sender, content));
+
+    // Return title of chat
+    if (participants.length === 2) {
+      return participants[0].email !== this.user.email ? participants[0].name : participants[1].name;
+    } else { // TODO: Name group
+      return 'Group';
+    }
   }
 
-  goToChat() {
-    this.router.navigate(['members', 'messages', 'chat']);
+  goToChat(e) {
+    const index = e.currentTarget.attributes['data-index'].value;
+    this.router.navigate(['members', 'messages', 'chat', this.chats[index].id]);
   }
 
 }
