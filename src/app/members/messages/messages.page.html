@@ -11,9 +11,9 @@
     <ion-img [src]="'../../../assets/img/forever_alone.png'"></ion-img>
   </ion-item>
   <ion-list>
-    <ion-item *ngFor="let chat of chats; index as i" (click)="goToChat($event)" [attr.data-index]="i">
-      <h3>{{ chat.title }}</h3><br>
-      <p><em>{{ inbox[i].sender }}</em>: {{ inbox[i].content }}</p>
+    <ion-item *ngFor="let message of inbox; index as i" (click)="goToChat($event)" [attr.data-index]="i">
+      <h3>{{ cs.chats[i].title }}</h3><br>
+      <p><em>{{ message.lastSender }}</em>: {{ message.content }}</p>
     </ion-item>
   </ion-list>
 </ion-content>

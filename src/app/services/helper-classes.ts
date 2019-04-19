@@ -1,12 +1,23 @@
 export class Message {
     public content: string;
-    public sender: string;
+    // TODO: Make sender a user
+    public sender: number; // -1 for sample messages
     public status: string;
+    // TODO: Sent time
 
-    constructor (sender: string, content: string) {
+    constructor (sender: number, content: string) {
         this.content = content;
         this.sender = sender;
         this.status = 'SENDING';
+    }
+}
+
+export class SampleMessage extends Message {
+
+    public lastSender: string;
+    constructor(lastSender: string, content: string) {
+        super(-1, content);
+        this.lastSender = lastSender;
     }
 }
 
