@@ -56,3 +56,11 @@ export class Coordinate {
         this.lng = lng;
     }
 }
+
+export class Location extends Coordinate {
+    public name: string;
+    constructor(lat: number, lng: number, name = 'Unnamed') {
+        super(lat, lng);
+        this.name = name;
+    }
+}
