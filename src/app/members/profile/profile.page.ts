@@ -4,7 +4,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LoadingController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
-import { MapsService } from '../../services/maps.service';
+import { User } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-profile',
@@ -14,16 +14,10 @@ import { MapsService } from '../../services/maps.service';
 export class ProfilePage implements OnInit {
 
   profileForm: FormGroup;
-
   user: firebase.User;
-  userData = {
-    driver: false,
-    status: null,
-    home: { // Karachi for now
-      lat: 24.8607,
-      lng: 67.0011
-    }
-  };
+  userData = new User;
+  // Will be used to detect changes in input
+  localCopy = new User;
 
   constructor(
     private lc: LoadingController,
@@ -33,8 +27,14 @@ export class ProfilePage implements OnInit {
     private alertService: AlertService
   ) {
     this.profileForm = this.formBuilder.group({
-      driver: [''],
-      status: ['', [Validators.required, Validators.maxLength(100)]] // TODO: Indicate error
+      isDriver: [''],
+      status: ['', [Validators.required, Validators.maxLength(100)]], // TODO: Indicate error
+      arrival: ['', [Validators.required, Validators.maxLength(5)]],
+      departure: ['', [Validators.required, Validators.maxLength(5)]],
+      capacity: [''],
+      filled: [''],
+      description: [''],
+      price: ['']
     });
     const loading = this.lc.create({
       message: 'Loading Profile...'
@@ -45,12 +45,17 @@ export class ProfilePage implements OnInit {
     this.user = this.auth.user;
     this.db.getDoc('users/' + this.user.email).subscribe(doc => {
       // Driver
-      this.userData['driver'] = doc.data().driver;
-      this.profileForm.controls['driver'].setValue(this.userData['driver']);
+      this.userData.isDriver = doc.data().isDriver;
+      // Update manually TODO: Set up NgModel with driver
+      this.profileForm.controls['isDriver'].setValue(this.userData.isDriver);
 
       // Status
-      this.userData['status'] = doc.data().status;
-      this.profileForm.controls['status'].setValue(this.userData['status']);
+      this.userData.status = doc.data().status;
+      // Schedule
+      this.userData.schedule = doc.data().schedule;
+
+
+      this.localCopy = this.userData;
       this.lc.dismiss();
     });
   }
@@ -60,24 +65,28 @@ export class ProfilePage implements OnInit {
 
   valueChanged(): boolean {
     if (this.userData['status'])
-      return this.userData['status'].trim() === this.profileForm.controls['status'].value.trim()
-      &&     this.userData['driver'] === this.profileForm.controls['driver'].value;
+      return this.localCopy.status.trim() === this.profileForm.controls['status'].value.trim();
     return false;
   }
 
   updateProfile() {
-    // TODO: Optimize u lazy boi
-    if (this.userData['status'] !== this.profileForm.controls['status'].value) {
-      this.userData['status'] = this.profileForm.controls['status'].value;
-      this.db.updateDoc(`users/${this.user.email}`, {status: this.userData['status']});
+    this.db.updateDoc(`users/${this.user.email}`, Object.assign({}, this.userData));
+    // If driver changed
+    if (this.userData.isDriver !== this.localCopy.isDriver) {
+      if (this.userData.isDriver) {
+        // Add to drivers
+        this.db.unionArray('app/drivers', 'ids', this.user.email);
+      } else {
+        // Remove from drivers
+        this.db.getDoc(`app/drivers`).subscribe(doc => {
+          let ids: Array<string> = doc.data().ids;
+          ids = ids.filter(id => id !== this.user.email);
+          this.db.updateDoc('app/drivers', Object.assign({}, ids));
+        });
+      }
     }
-
-    if (this.userData['driver'] !== this.profileForm.controls['driver'].value) {
-      this.userData['driver'] = this.profileForm.controls['driver'].value;
-      this.db.updateDoc(`users/${this.user.email}`, {driver: this.userData['driver']});
-    }
-
-    this.alertService.notice('Profile updated successfully');
+    this.localCopy = this.userData;
+    this.alertService.notice('Profile updated successfully!');
   }
 
 }

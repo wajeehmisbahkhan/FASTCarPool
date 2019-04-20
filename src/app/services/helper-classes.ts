@@ -1,3 +1,62 @@
+// DASHBOARD
+export class Coordinate {
+    public lng: number;
+    public lat: number;
+
+    constructor(lat: number, lng: number) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+}
+
+export class Location extends Coordinate {
+    public name: string;
+    constructor(lat: number, lng: number, name = 'Unnamed') {
+        super(lat, lng);
+        this.name = name;
+    }
+}
+
+
+// PROFILE
+export class Day {
+    public name: string;
+    // TODO: Completely rewrite later to make this a time picker - do when we have our own time scheduler
+    // ALSO keep in mind the returning User object
+    public arrival: string;
+    public departure: string;
+    constructor(name: string, arrival: string, departure: string) {
+        this.name = name;
+        this.arrival = arrival;
+        this.departure = departure;
+    }
+}
+export class Car {
+    // TODO?: Number Plate & Color
+    capacity: number;
+    filled: number;
+    description: string;
+    constructor() {
+        this.capacity = 0;
+        this.filled = 0;
+        this.description = '';
+    }
+}
+export class Rate {
+    oneway: number;
+    daily: number;
+    weekly: number;
+    semester: number;
+
+    constructor() {
+        this.oneway = 100;
+        this.daily = this.oneway * 2;
+        this.weekly = this.daily * 5;
+        this.semester = this.weekly * 16;
+    }
+}
+
+// CHAT
 export class Message {
     public content: string;
     // TODO: Make sender a user
@@ -47,20 +106,54 @@ export class Chat {
 
 }
 
-export class Coordinate {
-    public lng: number;
-    public lat: number;
-
-    constructor(lat: number, lng: number) {
-        this.lat = lat;
-        this.lng = lng;
+// REGISTRATION
+export class User {
+    chats: Array<String>;
+    isDriver: boolean;
+    status: string;
+    schedule: Array<Day>;
+    // Driver specific
+    car: Car;
+    rate: Rate;
+    constructor() {
+        this.chats = [];
+        this.isDriver = false;
+        this.status = 'Hey there! I\'m using FAST CarPool.';
+        // Making default schedule
+        const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        this.schedule = [];
+        dayNames.forEach(day => {
+            this.schedule.push(new Day(day, '08:00', '16:00'));
+        });
+        this.car = new Car;
+        this.rate = new Rate;
     }
-}
 
-export class Location extends Coordinate {
-    public name: string;
-    constructor(lat: number, lng: number, name = 'Unnamed') {
-        super(lat, lng);
-        this.name = name;
+    toObject(): Object {
+        // Convert Schedule
+        const schedule = [];
+        for (let i = 0; i < 5; i++) {
+            const day = this.schedule[i];
+            schedule[i] = {
+                name: day.name,
+                arrival: day.arrival,
+                departure: day.departure
+            };
+        }
+        // Convert Car
+        const car = {
+            capacity: this.car.capacity,
+            filled: this.car.filled,
+            description: this.car.description
+        };
+        // Convert User
+        return {
+            chats: this.chats,
+            isDriver: this.isDriver,
+            status: this.status,
+            schedule: schedule,
+            car: car,
+            price: this.rate.oneway
+        };
     }
 }

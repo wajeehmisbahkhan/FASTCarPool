@@ -12,17 +12,36 @@
     <ion-item>
       <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
       <!--TODO: Change app theme when option updates-->
-      <toggle-switch name="driver" formControlName="driver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
+      <toggle-switch name="isDriver" formControlName="isDriver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Status</ion-label>
-      <ion-input name="status" formControlName="status"></ion-input>
+      <ion-input name="status" formControlName="status" [placeholder]="'Cool Status'" [(ngModel)]="userData.status"></ion-input>
+    </ion-item>
+    <div class="ion-text-center">
+      <p>Your Schedule (First Class Start & Last Class End)</p>
+    </div>
+    <ion-item *ngFor="let day of userData.schedule; index as i">
+      <ion-label>{{ day.name }}</ion-label>
+      <ion-input name="arrival-{{i}}" formControlName="arrival" [placeholder]="'Arrival'" [(ngModel)]="userData.schedule[i].arrival"></ion-input>
+      <ion-input name="departure-{{i}}" formControlName="departure" [placeholder]="'Departure'" [(ngModel)]="userData.schedule[i].departure"></ion-input>
+    </ion-item>
+    <div class="ion-text-center">
+      <p>Your Car Details</p>
+    </div>
+    <ion-item>
+      <ion-label position="floating">Capacity</ion-label>
+      <ion-input name="capacity" formControlName="capacity" [placeholder]="'Max Capacity'" [(ngModel)]="userData.car.capacity"></ion-input>
+      <ion-label position="floating">Filled</ion-label>
+      <ion-input name="filled" formControlName="filled" [placeholder]="'Number of Current Riders'" [(ngModel)]="userData.car.filled"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="floating">Pickup Point</ion-label>
-      <agm-map [zoomControl]="false" [streetViewControl]="false" [zoom]="8">
-        
-      </agm-map>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input name="description" formControlName="description" [placeholder]="'Eg: Black Toyota Corolla 2009 GLI'" [(ngModel)]="userData.car.description"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Price</ion-label>
+      <ion-input name="price" formControlName="price" [placeholder]="'Charges for a one way trip'" [(ngModel)]="userData.rate.oneway"></ion-input>
     </ion-item>
     <ion-button expand="block" type="submit" [disabled]="valueChanged() || profileForm.invalid">Update</ion-button>
   </form>
