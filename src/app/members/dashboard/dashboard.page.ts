@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { Coordinate } from 'src/app/services/helper-classes';
+import { Coordinate, Location } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,7 +38,7 @@ export class DashboardPage implements OnInit {
     private db: DatabaseService,
     private router: Router
   ) {
-    this.makePickup();
+    this.makePickup(24.914032, 67.127501, 'Darul Sehat');
   }
 
   ngOnInit() {
@@ -64,11 +64,8 @@ export class DashboardPage implements OnInit {
     this.authService.logout();
   }
 
-  makePickup() {
-    this.db.unionArray('app/pickups', 'locations', {
-      lat: 24.74,
-      lng: 67.25
-    });
+  makePickup(lat: number, lng: number, name = 'Unnamed Place') {
+    this.db.unionArray('app/pickups', 'locations', Object.assign({}, new Location(lat, lng, name)));
   }
 
   showPickups() {
