@@ -38,7 +38,7 @@ export class DashboardPage implements OnInit {
     private db: DatabaseService,
     private router: Router
   ) {
-    this.makePickup(24.914032, 67.127501, 'Darul Sehat');
+    // this.makePickup(24.900868, 67.11631, 'Askari 4');
   }
 
   ngOnInit() {
