@@ -19,9 +19,9 @@ export class ProfilePage implements OnInit {
   userData = {
     driver: false,
     status: null,
-    home: {
-      lat: 0,
-      lng: 0
+    home: { // Karachi for now
+      lat: 24.8607,
+      lng: 67.0011
     }
   };
 
