@@ -39,7 +39,17 @@
   <ion-router-outlet main>
     <agm-map [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="12">
       <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-      <agm-marker *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'"></agm-marker>
+      <agm-marker *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'">
+        <agm-info-window>
+          <h3>{{ pickup.name }}</h3>
+          <!-- TODO: Show if user is rider -->
+          <p *ngIf="pickup.drivers.length === 0; else driversAvailable">There are currently no drivers who pass by this point.</p>
+          <ng-template #driversAvailable><b>Drivers: </b></ng-template>
+          <!-- TODO: Show if user is driver -->
+          <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no drivers who pass by this point.</p>
+          <ng-template #ridersAvailable><b>Drivers: </b></ng-template>
+        </agm-info-window>
+      </agm-marker>
     </agm-map>
   </ion-router-outlet>
 </ion-content>

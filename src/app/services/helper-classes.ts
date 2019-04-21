@@ -1,4 +1,13 @@
 // DASHBOARD
+export class UserLink {
+    public name: string;
+    public email: string;
+
+    constructor(name: string, email: string) {
+        this.name = name;
+        this.email = email;
+    }
+}
 export class Coordinate {
     public lng: number;
     public lat: number;
@@ -11,9 +20,41 @@ export class Coordinate {
 
 export class Location extends Coordinate {
     public name: string;
+    public drivers: Array<UserLink>;
+    public riders: Array<UserLink>;
     constructor(lat: number, lng: number, name = 'Unnamed') {
         super(lat, lng);
         this.name = name;
+        this.drivers = [];
+        this.riders = [];
+    }
+
+    addDriver(driver: UserLink) {
+        this.drivers.push(driver);
+    }
+
+    addRider(rider: UserLink) {
+        this.riders.push(rider);
+    }
+
+    toObject(): Object {
+        // Drivers
+        const drivers = [];
+        this.drivers.forEach(driver => {
+            drivers.push(driver);
+        });
+        // Riders
+        const riders = [];
+        this.riders.forEach(driver => {
+            riders.push(driver);
+        });
+        return {
+            name: this.name,
+            lat: this.lat,
+            lng: this.lng,
+            drivers: drivers,
+            riders: riders
+        };
     }
 }
 
@@ -37,22 +78,22 @@ export class Car {
     filled: number;
     description: string;
     constructor() {
-        this.capacity = 0;
-        this.filled = 0;
+        this.capacity = null;
+        this.filled = null;
         this.description = '';
     }
 }
 export class Rate {
     oneway: number;
-    daily: number;
-    weekly: number;
-    semester: number;
+    // daily: number;
+    // weekly: number;
+    // semester: number;
 
     constructor() {
-        this.oneway = 100;
-        this.daily = this.oneway * 2;
-        this.weekly = this.daily * 5;
-        this.semester = this.weekly * 16;
+        this.oneway = null;
+        // this.daily = this.oneway * 2;
+        // this.weekly = this.daily * 5;
+        // this.semester = this.weekly * 16;
     }
 }
 

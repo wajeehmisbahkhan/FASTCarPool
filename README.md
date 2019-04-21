@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+It is recommended that you first install an IDE. Visual Studio Code is recommended.
 
 ```
 Give examples

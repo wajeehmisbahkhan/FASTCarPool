@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -13,67 +13,46 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 
-export class ToggleSwitchComponent implements ControlValueAccessor, OnInit {
+export class ToggleSwitchComponent implements ControlValueAccessor {
 
   @Input() onText: string;
   @Input() offText: string;
 
-  value: boolean;
+  private _value = false;
 
-  constructor() { }
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
-  onChange = (checked: boolean) => {
-    this.value = checked;
-  }
-  onTouched: () => void;
-  disabled: boolean;
 
-  ngOnInit() {
-    document.querySelector('.onoffswitch-inner').setAttribute('data-on', this.onText);
-    document.querySelector('.onoffswitch-inner').setAttribute('data-off', this.offText);
+  constructor() {}
+
+  get value(): boolean {
+    return this._value;
   }
 
-  writeValue(value: any): void {
-    this.value = value ? value : false;
+  set value(value: boolean) {
+    this._value = value;
   }
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
+
+  registerOnChange(fn) {
+    this.onChange = (obj) => fn(obj);
   }
-  registerOnTouched(fn: any): void {
+
+  registerOnTouched(fn) {
     this.onTouched = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+
+  writeValue(value) {
+    if (value) {
+      this.value = value;
+    }
   }
 
-  // // TODO: Find purpose of these
-  // onChange: any = () => {
-  //   this.checked = !this.checked;
-  //   console.log(this.checked);
-  // }
-  // onTouch: any = (): boolean => {
-  //   this.checked = document.querySelector('#myonoffswitch').hasAttribute('checked');
-  //   return this.checked;
-  // }
-
-  // // this method sets the value programmatically
-  // writeValue(checked: boolean) {
-  //   this.checked = checked;
-  // }
-  // // upon UI element value changes, this method gets triggered
-  // registerOnChange(fn: any) {
-  //   console.log(fn);
-    
-  //   this.onChange = fn;
-  // }
-  // // upon touching the element, this method gets triggered
-  // registerOnTouched(fn: any) {
-  //   this.onTouch = fn;
-  // }
-
-  // switchToggle () {
-  //   this.checked = !this.checked;
-  // }
+  switch() {
+    this.value = !this.value;
+    this.onChange(this.value);
+    // console.log(this.value);
+  }
 
 
 }

@@ -48,4 +48,10 @@ export class DatabaseService {
     this.db.doc(path).update(updated);
   }
 
+  arrayRemove(path: string, field: string, element: any) {
+    const updated = {};
+    updated[field] = firestore.FieldValue.arrayRemove(element);
+    this.db.doc(path).update(updated);
+  }
+
 }
