@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { LoadingController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { User } from 'src/app/services/helper-classes';
 
@@ -17,24 +16,13 @@ export class ProfilePage implements OnInit {
   localCopy: User = new User;
 
   constructor(
-    private lc: LoadingController,
     private db: DatabaseService,
     private auth: AuthenticationService,
     private alertService: AlertService
   ) {
-    const loading = this.lc.create({
-      message: 'Loading Profile...'
-    });
-    loading.then(loader => {
-      loader.present();
-    });
     this.user = this.auth.user;
-    this.db.getUserData(this.user.email).then(userData => {
-      // Make a local deep copy - simple assignment will make a shallow copy
-      // TODO: No need for loading
-      this.localCopy = JSON.parse(JSON.stringify(userData));
-      this.lc.dismiss();
-    });
+    // Make a local deep copy - simple assignment will make a shallow copy
+    this.localCopy = JSON.parse(JSON.stringify(this.db.userData));
   }
 
   ngOnInit() {

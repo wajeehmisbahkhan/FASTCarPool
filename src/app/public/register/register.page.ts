@@ -2,6 +2,7 @@ import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,8 @@ export class RegisterPage implements OnInit {
   constructor(
     private authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private db: DatabaseService
+    private db: DatabaseService,
+    private alertService: AlertService
     ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -44,12 +46,8 @@ export class RegisterPage implements OnInit {
       this.registering = false;
       this.registerForm.reset();
       // Make place in database
-      this.db.createNewUser(email);
-    }).catch(err => {
-      // TODO: Make Error Feedback
-      this.registering = false;
-      console.log(err);
-    });
+      this.db.createNewUser(this.authService.user);
+    }).catch(this.alertService.error);
   }
 
   // Getters
