@@ -37,17 +37,29 @@
 </ion-menu>
 <ion-content fullscreen="true">
   <ion-router-outlet main>
-    <agm-map [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="12">
+    <agm-map (mapClick)="close_window($event)" [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="12">
       <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-      <agm-marker *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'">
-        <agm-info-window>
+      <agm-marker (markerClick)=select_marker(infoWindow) *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'">
+        <agm-info-window #infoWindow>
           <h3>{{ pickup.name }}</h3>
-          <!-- TODO: Show if user is rider -->
+          <!-- Show if user is rider -->
+          <div *ngIf="!userData.isDriver; else notRider">
           <p *ngIf="pickup.drivers.length === 0; else driversAvailable">There are currently no drivers who pass by this point.</p>
-          <ng-template #driversAvailable><b>Drivers: </b></ng-template>
-          <!-- TODO: Show if user is driver -->
-          <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no drivers who pass by this point.</p>
-          <ng-template #ridersAvailable><b>Drivers: </b></ng-template>
+          <ng-template #driversAvailable>
+            <b>Drivers: </b>
+            {{ pickup.drivers.join(', ') }}
+          </ng-template>
+          <button type="submit" (click)="addDriver(pickup)">I can be picked up from this location</button>
+          </div>
+          <!-- Show if user is driver -->
+          <ng-template #notRider>
+          <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no riders who can make it to this point.</p>
+          <ng-template #ridersAvailable>
+            <b>Riders: </b>
+            {{ pickup.riders.join(', ') }}
+          </ng-template>
+          <button>I can pickup riders from this location</button>
+          </ng-template>
         </agm-info-window>
       </agm-marker>
     </agm-map>

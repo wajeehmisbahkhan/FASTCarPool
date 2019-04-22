@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { Location } from 'src/app/services/helper-classes';
+import { Location, UserLink } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +26,7 @@ export class DashboardPage implements OnInit {
     }
   ];
 
-  // Pickups
+  // Default location
   lat = 0;
   lng = 0;
 
@@ -38,7 +38,13 @@ export class DashboardPage implements OnInit {
     private db: DatabaseService,
     private router: Router
   ) {
-    this.makePickup(24.920396, 67.134292, 'Munawar Chowrangi');
+    // Check when authenticated
+    this.authService.userState.subscribe(state => {
+      if (state === true) {
+        this.db.getUserData(this.authService.user.email);
+      }
+    });
+    // this.makePickup(24.920396, 67.134292, 'Munawar Chowrangi');
   }
 
   ngOnInit() {
@@ -47,7 +53,6 @@ export class DashboardPage implements OnInit {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
     });
-
     this.showPickups();
     // this.map.getCurrentLocation().then(resp => {
     //   // Coordinates
@@ -73,5 +78,34 @@ export class DashboardPage implements OnInit {
       this.pickups = pickups.data().locations;
     });
   }
+
+  addDriver(pickup: Location) {
+    pickup.addDriver(new UserLink(this.authService.user.displayName, this.authService.user.email));
+  }
+
+
+
+
+
+
+  // TODO: Close previous window
+  infoWindowOpened = null
+previous_info_window = null
+close_window(){
+if (this.previous_info_window != null ) {
+  this.previous_info_window.close()
+  }    
+}
+
+select_marker(data,infoWindow){
+ if (this.previous_info_window == null)
+  this.previous_info_window = infoWindow;
+ else{
+  this.infoWindowOpened = infoWindow
+  this.previous_info_window.close()
+ }
+ this.previous_info_window = infoWindow
+}
+
 
 }
