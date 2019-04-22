@@ -32,6 +32,7 @@ export class AuthenticationService {
   };
 
   authenticationState = new BehaviorSubject(false);
+  userState = new BehaviorSubject(false);
 
   constructor(
     private storage: Storage,
@@ -47,11 +48,13 @@ export class AuthenticationService {
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this._user = user;
+        this.userState.next(true);
         // Store token in local storage
         user.getIdToken().then(idToken => {
           this.storage.set(TOKEN_KEY, idToken);
         });
       } else {
+        this.userState.next(false);
         this.storage.set(TOKEN_KEY, null);
       }
     });
@@ -113,8 +116,10 @@ export class AuthenticationService {
       errors = true;
     });
     // Authenticated to move forward
-    if (!errors)
+    if (!errors) {
       this.authenticationState.next(true);
+      this.userState.next(true);
+    }
   }
 
   async register(name: string, email: string, password: string) {
@@ -127,6 +132,7 @@ export class AuthenticationService {
       });
     }).catch(this.alertService.error);
     this.authenticationState.next(true);
+    this.userState.next(true);
   }
 
   async logout() {
@@ -134,6 +140,7 @@ export class AuthenticationService {
     await this.afAuth.auth.signOut().catch(this.alertService.error);
     await this.storage.remove(TOKEN_KEY);
     this.authenticationState.next(false);
+    this.userState.next(false);
   }
 
   isAuthenticated() {

@@ -12,39 +12,39 @@
     <ion-item>
       <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
       <!--TODO: Change app theme when option updates-->
-      <toggle-switch name="isDriver" [(ngModel)]="userData.isDriver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
+      <toggle-switch name="isDriver" [(ngModel)]="localCopy.isDriver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Status</ion-label>
-      <ion-input name="status" [placeholder]="'Cool Status'" [(ngModel)]="userData.status" required></ion-input>
+      <ion-input name="status" [placeholder]="'Cool Status'" [(ngModel)]="localCopy.status" required></ion-input>
     </ion-item>
     <div class="ion-text-center">
       <p>Your Schedule (First Class Start & Last Class End)</p>
     </div>
-    <ion-item *ngFor="let day of userData.schedule; index as i">
+    <ion-item *ngFor="let day of localCopy.schedule; index as i">
       <ion-label>{{ day.name }}</ion-label>
-      <ion-input name="arrival-{{i}}" [placeholder]="'Arrival'" [(ngModel)]="userData.schedule[i].arrival" required max></ion-input>
-      <ion-input name="departure-{{i}}" [placeholder]="'Departure'" [(ngModel)]="userData.schedule[i].departure" required></ion-input>
+      <ion-input name="arrival-{{i}}" [placeholder]="'Arrival'" [(ngModel)]="localCopy.schedule[i].arrival" required max></ion-input>
+      <ion-input name="departure-{{i}}" [placeholder]="'Departure'" [(ngModel)]="localCopy.schedule[i].departure" required></ion-input>
     </ion-item>
-    <div *ngIf="userData.isDriver">
+    <div *ngIf="localCopy.isDriver">
     <div class="ion-text-center">
       <p>Your Car Details</p>
     </div>
     <ion-item>
       <ion-label position="floating">Capacity</ion-label>
-      <ion-input name="capacity" [placeholder]="'Max Capacity'" [(ngModel)]="userData.car.capacity" [required]="userData.isDriver"></ion-input>
+      <ion-input name="capacity" [placeholder]="'Max Capacity'" [(ngModel)]="localCopy.car.capacity" [required]="localCopy.isDriver"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Filled</ion-label>
-      <ion-input name="filled" [placeholder]="'Number of Current Riders'" [(ngModel)]="userData.car.filled" [required]="userData.isDriver"></ion-input>
+      <ion-input name="filled" [placeholder]="'Number of Current Riders'" [(ngModel)]="localCopy.car.filled" [required]="localCopy.isDriver"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Description</ion-label>
-      <ion-input name="description" [placeholder]="'Eg: Black Toyota Corolla 2009 GLI'" [(ngModel)]="userData.car.description" [required]="userData.isDriver"></ion-input>
+      <ion-input name="description" [placeholder]="'Eg: Black Toyota Corolla 2009 GLI'" [(ngModel)]="localCopy.car.description" [required]="localCopy.isDriver"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Price</ion-label>
-      <ion-input type="number" name="price" [placeholder]="'Charges for a one way trip'" [(ngModel)]="userData.rate.oneway" [required]="userData.isDriver"></ion-input>
+      <ion-input type="number" name="price" [placeholder]="'Charges for a one way trip'" [(ngModel)]="localCopy.rate.oneway" [required]="localCopy.isDriver"></ion-input>
     </ion-item>
     </div>
     <ion-button expand="block" type="submit" [disabled]="profileForm.invalid || !valueChanged()">Update</ion-button>
