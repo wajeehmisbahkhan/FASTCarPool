@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Storage } from '@ionic/storage';
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { AlertService } from './alert.service';
 
@@ -31,6 +31,8 @@ export class AuthenticationService {
     ]
   };
 
+  appLoadScreen: Promise<HTMLIonLoadingElement>;
+
   authenticationState = new BehaviorSubject(false);
   userState = new BehaviorSubject(false);
 
@@ -38,8 +40,16 @@ export class AuthenticationService {
     private storage: Storage,
     private plt: Platform,
     private afAuth: AngularFireAuth,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private lc: LoadingController
     ) {
+      // TODO: Optimize loading screens
+    this.appLoadScreen = this.lc.create({
+      message: 'Loading application'
+    });
+    this.appLoadScreen.then(loader => {
+      loader.present();
+    });
     // Check on app load
     this.plt.ready().then(() => {
       this.checkToken();
@@ -122,17 +132,22 @@ export class AuthenticationService {
     }
   }
 
-  async register(name: string, email: string, password: string) {
+  register(name: string, email: string, password: string) {
     const _this = this;
-    await this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(auth => {
+    return new Promise(resolve => {
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(auth => {
       _this._user = auth.user;
       // Update name
       auth.user.updateProfile({
         displayName: name
+      })
+      .then(() => {
+        _this.authenticationState.next(true);
+        _this.userState.next(true);
+        resolve();
       });
+    });
     }).catch(this.alertService.error);
-    this.authenticationState.next(true);
-    this.userState.next(true);
   }
 
   async logout() {
@@ -153,6 +168,7 @@ export class AuthenticationService {
       if (res) {
         this.authenticationState.next(true);
       }
+      this.lc.dismiss(this.appLoadScreen);
     });
   }
 
