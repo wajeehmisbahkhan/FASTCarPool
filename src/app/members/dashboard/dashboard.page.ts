@@ -5,6 +5,7 @@ import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { Location, UserLink } from 'src/app/services/helper-classes';
 import { AlertService } from 'src/app/services/alert.service';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,6 +41,7 @@ export class DashboardPage implements OnInit {
     private authService: AuthenticationService,
     private map: MapsService,
     public db: DatabaseService,
+    private cs: ChatService,
     private router: Router,
     private alertService: AlertService
   ) {

@@ -122,8 +122,8 @@ export class DatabaseService {
     return this.db.collection(path).get(options);
   }
 
-  createDoc(data: Object) {
-    return this.db.collection('chats').add(data);
+  createDoc(path: string, data: Object) {
+    return this.db.collection(path).add(data);
   }
 
   getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
@@ -145,7 +145,7 @@ export class DatabaseService {
   unionArray(path: string, field: string, element: any) {
     const updated = {};
     updated[field] = firestore.FieldValue.arrayUnion(element);
-    this.db.doc(path).update(updated);
+    return this.db.doc(path).update(updated);
   }
 
   arrayRemove(path: string, field: string, element: any) {

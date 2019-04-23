@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { AuthenticationService } from './authentication.service';
 import { Chat, Message, Participant } from './helper-classes';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +16,42 @@ export class ChatService {
 
   constructor(
     private db: DatabaseService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private alertService: AlertService
   ) {
     this.user = this.auth.user;
+    this.alertService.load('Loading Chats...',
+    new Promise(resolve => {
+      this.db.getLiveDoc('users/' + this.user.email).subscribe(doc => {
+        this.chatList = doc.payload.data()['chats'];
+      });
+    }));
   }
 
-  async createChat() {
-    // const docRef = await this.db.createDoc(new Chat());
-
-    // TODO: Save doc reference
+  async createChat(sender: Participant, receiver: Participant, message: string) {
+    // Default chat
+    const hi = new Message(0, message); // Sender is at index 0
+    const chat = new Chat(null, [hi], [sender, receiver], 'Chat');
+    // Create chat
+    await this.alertService.load('Creating Chat',
+    new Promise(resolve => {
+      this.db.createDoc('chats', JSON.parse(JSON.stringify(chat))).then(async doc => {
+        // Send document id to both users
+        chat.id = doc.id;
+        await this.db.unionArray(`users/${sender.email}`, 'chats', chat.id);
+        await this.db.unionArray(`users/${receiver.email}`, 'chats', chat.id);
+        // Set document id to the chat
+        await doc.update({
+          id: chat.id
+        });
+        resolve();
+      });
+    }));
+    // Push to local chat
+    this.chatList.push(chat.id);
+    this.chats.push(chat);
+    // Return document id
+    return new Promise<string>(resolve => resolve(chat.id));
   }
 
   getParticipant(sender: number, index: number) {
