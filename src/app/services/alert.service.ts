@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
 
-  constructor(private alertController: AlertController) { }
+  constructor(
+    private alertController: AlertController,
+    private lc: LoadingController
+  ) { }
 
   async error(error: firebase.FirebaseError) {
     const alert = await this.alertController.create({
@@ -53,4 +56,23 @@ export class AlertService {
 
     await alert.present();
   }
+
+  load(message: string, work: Promise<any>) {
+    return new Promise(resolve => {
+      const loading = this.lc.create({
+        message: message
+      });
+      loading.then(loader => {
+        loader.present()
+        .then(() => {
+          work
+          .then(() => {
+            this.lc.dismiss(loader);
+            resolve();
+          });
+        });
+      });
+    }).catch(this.error);
+  }
+
 }

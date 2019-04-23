@@ -29,14 +29,6 @@ export class Location extends Coordinate {
         this.riders = [];
     }
 
-    addDriver(driver: UserLink) {
-        this.drivers.push(driver);
-    }
-
-    addRider(rider: UserLink) {
-        this.riders.push(rider);
-    }
-
     toObject(): Object {
         // Drivers
         const drivers = [];
@@ -187,6 +179,10 @@ export class User {
             filled: this.car.filled,
             description: this.car.description
         };
+        // Convert rate
+        const rate = {
+            oneway: this.rate.oneway
+        };
         // Convert User
         return {
             chats: this.chats,
@@ -194,7 +190,17 @@ export class User {
             status: this.status,
             schedule: schedule,
             car: car,
-            price: this.rate.oneway
+            rate: rate
         };
+    }
+}
+
+export class Users {
+    drivers: Array<UserLink>;
+    riders: Array<UserLink>;
+
+    constructor() {
+        this.drivers = [];
+        this.riders = [];
     }
 }
