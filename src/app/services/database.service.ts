@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { firestore } from 'firebase/app';
-import { User, UserLink, Users, Location } from './helper-classes';
+import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
 import { AlertService } from './alert.service';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class DatabaseService {
 
   public users: Users = new Users;
   public userData = new User;
+  public viewUser = new ViewUser;
 
   constructor(
     private db: AngularFirestore,
@@ -39,7 +40,6 @@ export class DatabaseService {
         this.userData.status = doc.data().status;
         this.userData.schedule = doc.data().schedule;
         this.userData.car = doc.data().car;
-        // Rates are special case for now
         this.userData.rate.oneway = doc.data().rate.oneway;
         // Chats
         this.userData.chats = doc.data().chats;
@@ -96,6 +96,24 @@ export class DatabaseService {
       this.users.drivers = doc.payload.data()['drivers'];
       this.users.riders = doc.payload.data()['riders'];
     });
+  }
+
+  getUserView(user: UserLink) {
+    this.alertService.load(`Loading ${user.name}'s Profile`,
+    new Promise(resolve =>
+      this.getDoc(`users/${user.email}`).subscribe(doc => {
+        // Copy to view user
+        this.viewUser.name = user.name;
+        this.viewUser.email = user.email;
+        this.viewUser.isDriver = doc.data().isDriver;
+        this.viewUser.status = doc.data().status;
+        this.viewUser.schedule = doc.data().schedule;
+        this.viewUser.car = doc.data().car;
+        this.viewUser.rate.oneway = doc.data().rate.oneway;
+        resolve();
+      })
+    )
+    );
   }
 
 

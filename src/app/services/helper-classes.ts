@@ -204,3 +204,15 @@ export class Users {
         this.riders = [];
     }
 }
+
+
+// VIEW
+export class ViewUser extends User {
+    public name: string;
+    public email: string;
+    constructor() {
+        super();
+        this.name = 'Loading';
+        this.email = null;
+    }
+}
