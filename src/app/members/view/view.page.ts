@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DatabaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'view',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewPage implements OnInit {
 
-  constructor() { }
+  constructor(public db: DatabaseService) { }
 
   ngOnInit() {
   }

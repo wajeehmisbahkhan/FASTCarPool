@@ -39,7 +39,7 @@ export class DashboardPage implements OnInit {
   constructor(
     private authService: AuthenticationService,
     private map: MapsService,
-    private db: DatabaseService,
+    public db: DatabaseService,
     private router: Router,
     private alertService: AlertService
   ) {
