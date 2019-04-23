@@ -37,9 +37,9 @@
 </ion-menu>
 <ion-content fullscreen="true">
   <ion-router-outlet main>
-    <agm-map (mapClick)="close_window($event)" [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="12">
+    <agm-map (mapClick)="close_window($event)" [zoomControl]="false" [streetViewControl]="false" [latitude]="lat" [longitude]="lng" [zoom]="14">
       <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-      <agm-marker (markerClick)=select_marker(infoWindow) *ngFor="let pickup of pickups" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="'../../../assets/img/blue_location.png'">
+      <agm-marker (markerClick)=select_marker(infoWindow) *ngFor="let pickup of pickups; index as i" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="pickupUrl(pickup, i)">
         <agm-info-window #infoWindow>
           <h3>{{ pickup.name }}</h3>
           <!-- Show if user is rider -->
@@ -49,16 +49,20 @@
             <b>Drivers: </b>
             {{ pickup.drivers.join(', ') }}
           </ng-template>
-          <button type="submit" (click)="addDriver(pickup)">I can be picked up from this location</button>
+          <button expand="block" margin-top type="submit"
+          *ngIf="!addedToLocation('riders', pickup); else addedRider" (click)="addRider(pickup, i)">I can be picked up from this location</button>
+          <ng-template #addedRider><button (click)="removeRider(pickup, i)">Added Successfully As Rider</button></ng-template>
           </div>
           <!-- Show if user is driver -->
           <ng-template #notRider>
           <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no riders who can make it to this point.</p>
           <ng-template #ridersAvailable>
             <b>Riders: </b>
-            {{ pickup.riders.join(', ') }}
+            <!-- {{ pickup.riders.map(elem => return elem.name).join(', ') }} -->
           </ng-template>
-          <button>I can pickup riders from this location</button>
+          <button expand="block" margin-top type="submit"
+          *ngIf="!addedToLocation('drivers', pickup); else addedDriver" (click)="addDriver(pickup, i)">I can pickup riders from this location</button>
+          <ng-template #addedDriver><button (click)="removeDriver(pickup, i)">Added Successfully As Driver</button></ng-template>
           </ng-template>
         </agm-info-window>
       </agm-marker>

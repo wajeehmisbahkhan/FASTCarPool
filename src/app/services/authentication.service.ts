@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Storage } from '@ionic/storage';
-import { Platform, LoadingController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { AlertService } from './alert.service';
 
@@ -31,8 +31,6 @@ export class AuthenticationService {
     ]
   };
 
-  appLoadScreen: Promise<HTMLIonLoadingElement>;
-
   authenticationState = new BehaviorSubject(false);
   userState = new BehaviorSubject(false);
 
@@ -40,33 +38,34 @@ export class AuthenticationService {
     private storage: Storage,
     private plt: Platform,
     private afAuth: AngularFireAuth,
-    private alertService: AlertService,
-    private lc: LoadingController
+    private alertService: AlertService
     ) {
-      // TODO: Optimize loading screens
-    this.appLoadScreen = this.lc.create({
-      message: 'Loading application'
-    });
-    this.appLoadScreen.then(loader => {
-      loader.present();
-    });
     // Check on app load
     this.plt.ready().then(() => {
-      this.checkToken();
-    });
-    // Subscribe to authentication state
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this._user = user;
-        this.userState.next(true);
-        // Store token in local storage
-        user.getIdToken().then(idToken => {
-          this.storage.set(TOKEN_KEY, idToken);
+      // Loading screen
+      this.alertService.load('Loading...', new Promise((resolve, reject) => {
+        // Subscribe to authentication state
+        this.afAuth.authState.subscribe(user => {
+          if (user) {
+            this._user = user;
+            this.userState.next(true);
+            // Store token in local storage
+            user.getIdToken().then(idToken => {
+              this.storage.set(TOKEN_KEY, idToken);
+            });
+          } else {
+            this.userState.next(false);
+            this.storage.set(TOKEN_KEY, null);
+          }
+          resolve();
         });
-      } else {
-        this.userState.next(false);
-        this.storage.set(TOKEN_KEY, null);
-      }
+        // TODO: Timeout
+        setTimeout(() => resolve(), 1000);
+      })
+      );
+
+      // Token checker
+      this.checkToken();
     });
   }
 
@@ -168,7 +167,6 @@ export class AuthenticationService {
       if (res) {
         this.authenticationState.next(true);
       }
-      this.lc.dismiss(this.appLoadScreen);
     });
   }
 
