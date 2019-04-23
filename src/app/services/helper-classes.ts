@@ -113,6 +113,7 @@ export class SampleMessage extends Message {
     }
 }
 
+// TODO: Being repeated already UserLink
 export class Participant {
     public email: string;
     public name: string;
@@ -136,7 +137,6 @@ export class Chat {
         this.participants = participants;
         this.title = title;
     }
-
 }
 
 // REGISTRATION

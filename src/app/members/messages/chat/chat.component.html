@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Title</ion-title>
+    <!-- TODO: Chat name -->
+    <ion-title>Chat</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="'../'"></ion-back-button>
+      <ion-back-button [routerLink]="'../../'"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,7 +11,7 @@
   <div class="chat">
     <div class="chat-history">
       <ul>
-        <li class="clearfix" *ngFor="let message of this.chat.messages;">
+        <li class="clearfix" *ngFor="let message of this.chat.messages">
           <!--
             Align right class message-data on right
             Float right and other message class for message on right

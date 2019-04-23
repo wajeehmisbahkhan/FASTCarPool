@@ -32,12 +32,7 @@ export class MessagesPage implements OnInit {
       loader.present();
     });
     this.user = this.auth.user;
-    // TODO: Internet issue
-    // Live for new chats
-    this.db.getLiveDoc('users/' + this.user.email).subscribe(doc => {
-      this.cs.chatList = doc.payload.data()['chats'];
-      this.displayInbox();
-    });
+    this.displayInbox();
   }
 
   ngOnInit() { }
