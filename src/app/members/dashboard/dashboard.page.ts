@@ -59,10 +59,11 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.map.getLiveLocation().subscribe(resp => {
+    const watchId = this.map.getLiveLocation().subscribe(resp => {
       // Coordinates
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
+      watchId.unsubscribe();
     });
     this.showPickups();
   }

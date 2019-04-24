@@ -7,11 +7,6 @@
   </ion-toolbar>
 </ion-header>
 <ion-menu>
-  <!-- TODO: Profile info <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header> -->
   <ion-content>
     <ion-list>
       <!-- App Pages -->
@@ -46,9 +41,9 @@
           <div *ngIf="!db.userData.isDriver; else notRider">
           <p *ngIf="pickup.drivers.length === 0; else driversAvailable">There are currently no drivers who pass by this point.</p>
           <ng-template #driversAvailable>
-            <b>Drivers: </b>
+            <b>Tap to see driver's profile: </b>
             <span *ngFor="let driver of pickup.drivers">
-              <ion-chip (click)="db.getUserView(driver)" [routerLink]="'../view/'">{{ driver.name }}</ion-chip>
+              <ion-chip (click)="db.getUserView(driver)" [routerLink]="'../../view/'">{{ driver.name }}</ion-chip>
             </span>
           </ng-template>
           <ion-button  size="small"
@@ -59,7 +54,7 @@
           <ng-template #notRider>
           <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no riders who can make it to this point.</p>
           <ng-template #ridersAvailable>
-            <b>Riders: </b>
+            <b>Tap to see rider's profile: </b>
             <span *ngFor="let rider of pickup.riders">
               <ion-chip (click)="db.getUserView(rider)" [routerLink]="'../../view/'">{{ rider.name }}</ion-chip>
             </span>
