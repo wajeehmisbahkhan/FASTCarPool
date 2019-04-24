@@ -2,18 +2,22 @@
   <ion-toolbar>
     <ion-title>Inbox</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button [routerLink]="'../../dashboard'"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <ion-item *ngIf="foreverAlone">
+  <ion-item *ngIf="emptyInbox(); else inboxMessages">
     <ion-img [src]="'../../../assets/img/forever_alone.png'"></ion-img>
   </ion-item>
+  <ng-template #inboxMessages>
   <ion-list>
-    <ion-item *ngFor="let message of inbox; index as i" (click)="goToChat($event)" [attr.data-index]="i">
-      <h3>{{ cs.chats[i].title }}</h3><br>
-      <p><em>{{ message.lastSender }}</em>: {{ message.content }}</p>
+    <ion-item *ngFor="let chat of cs.chats" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">
+      <h3>{{ chat.title }}</h3><br>
+      <p>
+        <em>{{ getLastSender(chat.messages[chat.messages.length-1].sender, chat.participants) }}</em>: {{ chat.messages[chat.messages.length-1].content }}
+      </p>
     </ion-item>
   </ion-list>
+  </ng-template>
 </ion-content>

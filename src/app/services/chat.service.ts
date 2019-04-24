@@ -16,16 +16,56 @@ export class ChatService {
 
   constructor(
     private db: DatabaseService,
-    private auth: AuthenticationService,
+    private authService: AuthenticationService,
     private alertService: AlertService
   ) {
-    this.user = this.auth.user;
-    this.alertService.load('Loading Chats...',
-    new Promise(resolve => {
+// Start construction when user has loaded
+this.authService.userState.subscribe(state => {
+  if (state) {
+    this.user = this.authService.user;
+    // this.alertService.load('Loading Chats...',
+    const promise = new Promise(async resolve => {
+      // Loading user chat list
+      await new Promise(res =>
       this.db.getLiveDoc('users/' + this.user.email).subscribe(doc => {
         this.chatList = doc.payload.data()['chats'];
+        res();
+      }));
+      // Load each individual chat
+      this.chatList.forEach(async (chatId, index, array) => {
+        // Create an empty chat
+        const chat = new Chat(chatId);
+        // Get entire chat from chats folder in db
+        // Live for new messages
+        await new Promise(res =>
+        this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
+          // Chat details
+          const messages: Array<Message> = doc.payload.data()['messages'],
+                participants: Array<Participant> = doc.payload.data()['participants'];
+          // Create chat title accordingly
+          if (participants.length === 2)
+            chat.title = participants[0].email !== this.user.email ? participants[0].name : participants[1].name;
+          else // TODO: Name group
+            chat.title = 'Group';
+          // Other chat stuff
+          chat.messages = messages;
+          chat.participants = participants;
+
+          // Push to chats
+          // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
+          this.chats[index] = chat;
+
+          // If last chat being loaded
+          if (Object.is(array.length - 1, index))
+            res();
+        })
+        );
       });
-    }));
+      return resolve();
+    });
+    // );
+  }
+});
   }
 
   async createChat(sender: Participant, receiver: Participant, message: string) {
