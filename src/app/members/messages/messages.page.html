@@ -12,6 +12,7 @@
   </ion-item>
   <ng-template #inboxMessages>
   <ion-list>
+    <!-- TODO: Sort by latest message -->
     <ion-item *ngFor="let chat of cs.chats" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">
       <h3>{{ chat.title }}</h3><br>
       <p>
