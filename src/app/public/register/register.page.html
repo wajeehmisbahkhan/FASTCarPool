@@ -13,7 +13,11 @@
       <ion-label position="floating">Name</ion-label>
       <ion-input type="text" formControlName="name"></ion-input>
     </ion-item>
-    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'name', this.error)" [innerHTML]="error.name"></div>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'name', this.error)">
+      <span class="ion-margin-start">
+        {{error.name}}
+      </span>
+    </div>
     <!--Ionic 4 bug: Custom validators must be styled like this-->
     <ion-item [class.ion-invalid]="email.hasError('emailAvailable')">
       <ion-label position="floating">Email</ion-label>
@@ -22,12 +26,21 @@
         <ion-spinner *ngIf="email.status==='PENDING'" color="primary"></ion-spinner>
       </ion-input>
     </ion-item>
-    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'email', this.error)" [innerHTML]="error.email"></div>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'email', this.error)">
+      <span class="ion-margin-start">
+          {{error.email}}
+          <a (click)="resetPassword()">Forgot Password?</a>
+      </span>
+    </div>
     <ion-item>
       <ion-label position="floating">Password</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
-    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'password', this.error)" [innerHTML]="error.password"></div>
+    <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'password', this.error)">
+      <span class="ion-margin-start">
+        {{error.password}}
+      </span>
+    </div>
     <!-- TODO: Handle already saved browser credentials -->
     <ion-button margin-top type="submit" [disabled]="!registerForm.valid" expand="block">
       Register

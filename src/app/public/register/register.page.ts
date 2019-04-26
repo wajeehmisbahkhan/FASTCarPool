@@ -29,9 +29,9 @@ export class RegisterPage implements OnInit {
     ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email], authService.emailAvailable.bind(this.authService)],
+      email: [authService.passingEmail, [Validators.required, Validators.email], authService.emailAvailable.bind(this.authService)],
       password: ['', [Validators.required, Validators.minLength(6)]]
-    }, {updateOn: 'blur'});
+    });
   }
 
   ngOnInit() {
@@ -48,6 +48,10 @@ export class RegisterPage implements OnInit {
       // Make place in database
       this.db.createNewUser(this.authService.user);
     }).catch(this.alertService.error);
+  }
+
+  resetPassword() {
+    this.authService.resetPassword(this.email.value);
   }
 
   // Getters
