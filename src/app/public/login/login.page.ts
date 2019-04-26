@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
       this.loginForm = this.formBuilder.group({
         email: ['', [Validators.required, Validators.email], authService.emailExists.bind(this.authService)],
         password: ['', [Validators.required]]
-      }, {updateOn: 'blur'});
+      });
     }
 
   ngOnInit() { }
@@ -46,11 +46,11 @@ export class LoginPage implements OnInit {
     });
   }
 
-  //Getters
-  get email():AbstractControl {
+  // Getters
+  get email(): AbstractControl {
     return this.loginForm.get('email');
   }
-  get password():AbstractControl {
+  get password(): AbstractControl {
     return this.loginForm.get('password');
     // ** CHANGE **
   }
