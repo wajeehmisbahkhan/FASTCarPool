@@ -17,15 +17,26 @@
     <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'email', this.error)">
       <span class="ion-margin-start">
         {{error.email}}
-        <!-- If no such email exists-->
-        <a routerLink="../register/" routerDirection="forward" *ngIf="error.email.indexOf('No') >= 0">Sign Up!</a>
+        <!-- If no such email exists - Pass email if clicked-->
+        <a (click)="authService.passingEmail = email.value"
+        routerLink="../register/" routerDirection="forward" *ngIf="error.email.indexOf('No') >= 0">Sign Up!</a>
       </span>
     </div>
     <ion-item>
       <ion-label position="floating">Password</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
-    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'password', this.error) || loginFailed" [innerHTML]="error.password"></div>
+    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'password', this.error) || loginFailed">
+      <span class="ion-margin-start">
+        <!-- If invalid password -->
+        <span *ngIf="this.loginFailed; else passwordError">
+          Password is invalid. <a (click)="resetPassword()">Forgot Password?</a>
+        </span>
+        <ng-template #passwordError>
+          {{error.password}}
+        </ng-template>
+      </span>
+    </div>
     <ion-button margin-top type="submit" [disabled]="!loginForm.valid" expand="block">
       Login
       <ion-spinner *ngIf="logging" color="white"></ion-spinner>

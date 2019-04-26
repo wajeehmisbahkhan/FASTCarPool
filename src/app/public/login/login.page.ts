@@ -42,8 +42,12 @@ export class LoginPage implements OnInit {
       // Password failed
       this.loginFailed = true;
       this.logging = false;
-      this.error.password = err.message;
     });
+  }
+
+  resetPassword() {
+    this.authService.resetPassword(this.email.value);
+    this.loginFailed = false;
   }
 
   // Getters
@@ -52,6 +56,5 @@ export class LoginPage implements OnInit {
   }
   get password(): AbstractControl {
     return this.loginForm.get('password');
-    // ** CHANGE **
   }
 }

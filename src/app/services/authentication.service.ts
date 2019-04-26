@@ -15,6 +15,7 @@ const TOKEN_KEY: any = null;
 })
 export class AuthenticationService {
 
+  public passingEmail: string;
   private _user: firebase.User = null;
   private validation_messages = {
     'name': [
@@ -24,7 +25,7 @@ export class AuthenticationService {
       { type: 'required', message: 'Email is required.' },
       { type: 'email', message: 'Enter a valid email.' },
       { type: 'emailExists', message: 'No such email exists.' },
-      { type: 'emailAvailable', message: 'Email already exists. <a (click)="resetPassword()">Forgot Password?</a>' }
+      { type: 'emailAvailable', message: 'Email already exists.' }
     ],
     'password': [
       { type: 'required', message: 'Password is required.' },
@@ -88,7 +89,6 @@ export class AuthenticationService {
     // Delay email check by 0.6 seconds after each value change
     return timer(600).pipe(switchMap(() => {
       return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
-        console.log(signInMethods);
         if (signInMethods.length === 0) {
           return {
             emailExists: {
@@ -99,7 +99,6 @@ export class AuthenticationService {
         return null;
       })
       .catch(error => {
-        console.log(error);
         this.alertService.notice(error);
         return error;
       });
@@ -107,38 +106,43 @@ export class AuthenticationService {
   }
 
   emailAvailable(control: AbstractControl) {
-    return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
-      if (signInMethods.length === 0) {
-        return null;
-      }
-      return {
-        emailAvailable: {
-          passedInEmail: control.value
+    // Delay email check by 0.6 seconds after each value change
+    return timer(600).pipe(switchMap(() => {
+      return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
+        if (signInMethods.length === 0) {
+          return null;
         }
-      };
-    });
+        return {
+          emailAvailable: {
+            passedInEmail: control.value
+          }
+        };
+      })
+      .catch(error => {
+        this.alertService.notice(error);
+        return error;
+      });
+    }));
   }
 
-  async login(email: string, password: string) {
-    // Password is too small, invalid by default
-    if (password.length < 6)
-      throw {
+  login(email: string, password: string) {
+    return new Promise((resolve, reject) => {
+      // Password is too small, invalid by default
+      if (password.length < 6)
+      return reject({
         code: 'auth/wrong-password',
-        message: 'Invalid password. <a href="#">Forgot Password?</a>'
-      };
-    // Sign in - any error will be thrown back
-    let errors = false;
-    await this.afAuth.auth.signInWithEmailAndPassword(email, password).catch(err => {
-      // Wrong password from firebase
-      if (err.code !== 'auth/wrong-password')
-        this.alertService.error(err);
-      errors = true;
+        message: 'Invalid password.'
+      });
+      this.afAuth.auth.signInWithEmailAndPassword(email, password)
+      .then(auth => {
+        if (auth.user) {
+          this.authenticationState.next(true);
+          this.userState.next(true);
+          return resolve();
+        }
+      })
+      .catch(reject);
     });
-    // Authenticated to move forward
-    if (!errors) {
-      this.authenticationState.next(true);
-      this.userState.next(true);
-    }
   }
 
   register(name: string, email: string, password: string) {
@@ -180,9 +184,9 @@ export class AuthenticationService {
     });
   }
 
-  resetPassword() {
+  resetPassword(email: string) {
     this.alertService.confirmation('Are you sure you want to reset your password?', () => { // On Confirmation
-      this.afAuth.auth.sendPasswordResetEmail(this.user.email).then(() => {
+      this.afAuth.auth.sendPasswordResetEmail(email).then(() => {
         this.alertService.notice('Email Confirmation Sent.');
       }).catch(this.alertService.error);
     });
