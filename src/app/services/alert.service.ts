@@ -12,24 +12,25 @@ export class AlertService {
     private lc: LoadingController
   ) { }
 
-  async error(error: firebase.FirebaseError) {
-    const alert = await this.alertController.create({
+  error(error: firebase.FirebaseError) {
+    this.alertController.create({
       header: 'Error',
       subHeader: error.code,
       message: error.message,
       buttons: [{
         text: 'Send Error Report',
         handler: () => {
-          const email = 'k173673@nu.edu.pk',
-                subject = 'Bug Report (FAST CarPool)',
-                body = `Code: ${error.code}
-                        Message: ${error.message}`;
-          document.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+          // const email = 'k173673@nu.edu.pk',
+          //       subject = 'Bug Report (FAST CarPool)',
+          //       body = `Code: ${error.code}
+          //               Message: ${error.message}`;
+          // document.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+          console.error('Error');
         }
       }, 'Okay']
+    }).then(alert => {
+      alert.present();
     });
-
-    await alert.present();
   }
 
   async confirmation(message: string, confirmationHandler: any) {

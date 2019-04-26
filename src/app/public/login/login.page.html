@@ -5,15 +5,22 @@
 </ion-header>
 <ion-content >
   <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <!--Ionic 4 bug: Custom validators must be styled like this-->
+    <!-- Ionic 4 bug: Custom validators must be styled like this -->
     <ion-item [class.ion-invalid]="email.hasError('emailExists')">
       <ion-label position="floating">Email</ion-label>
       <ion-input type="email" formControlName="email">
-        <!--Show spinner when checking mail-->
+        <!-- Show spinner when checking mail -->
         <ion-spinner *ngIf="email.status==='PENDING'" color="primary"></ion-spinner>
       </ion-input>
     </ion-item>
-    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'email', this.error)" [innerHTML]="error.email"></div>
+    <!-- Email Errors -->
+    <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'email', this.error)">
+      <span class="ion-margin-start">
+        {{error.email}}
+        <!-- If no such email exists-->
+        <a routerLink="../register/" routerDirection="forward" *ngIf="error.email.indexOf('No') >= 0">Sign Up!</a>
+      </span>
+    </div>
     <ion-item>
       <ion-label position="floating">Password</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>

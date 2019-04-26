@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { AlertService } from './alert.service';
 
 import { AngularFireAuth } from '@angular/fire/auth';
+import { switchMap } from 'rxjs/operators';
 
 const TOKEN_KEY: any = null;
 
@@ -22,7 +23,7 @@ export class AuthenticationService {
     'email': [
       { type: 'required', message: 'Email is required.' },
       { type: 'email', message: 'Enter a valid email.' },
-      { type: 'emailExists', message: 'No such email exists. <a routerLink="../register/" routerDirection="forward">Sign Up!</a>' },
+      { type: 'emailExists', message: 'No such email exists.' },
       { type: 'emailAvailable', message: 'Email already exists. <a (click)="resetPassword()">Forgot Password?</a>' }
     ],
     'password': [
@@ -83,17 +84,26 @@ export class AuthenticationService {
     return true;
   }
 
-   emailExists(control: AbstractControl) {
-    return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
-      if (signInMethods.length === 0) {
-        return {
-          emailExists: {
-            passedInEmail: control.value
-          }
-        };
-      }
-      return null;
-    }).catch(this.alertService.error);
+  emailExists(control: AbstractControl) {
+    // Delay email check by 0.6 seconds after each value change
+    return timer(600).pipe(switchMap(() => {
+      return this.afAuth.auth.fetchSignInMethodsForEmail(control.value).then(signInMethods => {
+        console.log(signInMethods);
+        if (signInMethods.length === 0) {
+          return {
+            emailExists: {
+              passedInEmail: control.value
+            }
+          };
+        }
+        return null;
+      })
+      .catch(error => {
+        console.log(error);
+        this.alertService.notice(error);
+        return error;
+      });
+    }));
   }
 
   emailAvailable(control: AbstractControl) {
@@ -183,3 +193,28 @@ export class AuthenticationService {
     return this._user;
   }
 }
+
+// Custom Async Validator
+// export class CustomValidator {
+//   // Email
+//   static email(afAuth: AngularFireAuth) {
+//     return (control: AbstractControl) => {
+//       const email = control.value;
+
+//       // 0.5 seconds pause with value change
+//       return control.valueChanges.pipe(debounceTime(500))
+//       .subscribe(() =>
+//         afAuth.auth.fetchSignInMethodsForEmail(email).then(signInMethods => {
+//           if (signInMethods.length === 0) {
+//             return {
+//               emailExists: {
+//                 passedInEmail: email
+//               }
+//             };
+//           }
+//           return null;
+//         }
+//       ));
+//     };
+//   }
+// }
