@@ -1,77 +1,72 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { DatabaseService } from './database.service';
-import { AuthenticationService } from './authentication.service';
 import { Chat, Message, Participant } from './helper-classes';
 import { AlertService } from './alert.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService {
+export class ChatService implements OnDestroy{
 
-  user: firebase.User;
   chatList: Array<string> = [];
   chats: Array<Chat> = [];
 
+  liveSubs: Array<Subscription> = [];
+
   constructor(
     private db: DatabaseService,
-    private authService: AuthenticationService,
     private alertService: AlertService
-  ) {
-// Start construction when user has loaded
-this.authService.userState.subscribe(state => {
-  if (state) {
-    this.user = this.authService.user;
-    // this.alertService.load('Loading Chats...',
-    const promise = new Promise(async resolve => {
+  ) { }
+
+  // TODO: Load messages async not working
+  loadMessages() {
+    return new Promise(async resolve => {
       // Loading user chat list
-      await new Promise(res =>
-      this.db.getLiveDoc('users/' + this.user.email).subscribe(doc => {
-        this.chatList = doc.payload.data()['chats'];
-        res();
-      }));
+      await new Promise(res => {
+        const chatSub = this.db.getLiveDoc('users/' + this.db.userLink.email).subscribe(doc => {
+          this.chatList = doc.payload.data()['chats'];
+          res();
+        });
+        this.liveSubs.push(chatSub);
+      });
       // Load each individual chat
       this.chatList.forEach(async (chatId, index, array) => {
         // Create an empty chat
         const chat = new Chat(chatId);
         // Get entire chat from chats folder in db
         // Live for new messages
-        await new Promise(res =>
-        this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
-          // Chat details
-          const messages: Array<Message> = doc.payload.data()['messages'],
-                participants: Array<Participant> = doc.payload.data()['participants'];
-          // Create chat title accordingly
-          if (participants.length === 2)
-            chat.title = participants[0].email !== this.user.email ? participants[0].name : participants[1].name;
-          else // TODO: Name group
-            chat.title = 'Group';
-          // Other chat stuff
-          chat.messages = messages;
-          chat.participants = participants;
-
-          // Push to chats
-          // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
-          this.chats[index] = chat;
-
-          // If last chat being loaded
-          if (Object.is(array.length - 1, index))
-            res();
-        })
-        );
+        await new Promise(res => {
+          this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
+            // Chat details
+            const messages: Array<Message> = doc.payload.data()['messages'],
+                  participants: Array<Participant> = doc.payload.data()['participants'];
+            // Create chat title accordingly
+            if (participants.length === 2)
+              chat.title = participants[0].email !== this.db.userLink.email ? participants[0].name : participants[1].name;
+            else // TODO: Name group
+              chat.title = 'Group';
+            // Other chat stuff
+            chat.messages = messages;
+            chat.participants = participants;
+            // Push to chats
+            // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
+            this.chats[index] = chat;
+            // If last chat being loaded
+            if (Object.is(array.length - 1, index))
+              res();
+          });
+        });
       });
       return resolve();
     });
-    // );
-  }
-});
   }
 
   async createChat(sender: Participant, receiver: Participant, message: string) {
     // Default chat
     const hi = new Message(0, message); // Sender is at index 0
-    const chat = new Chat(null, [hi], [sender, receiver], 'Chat');
+    const chat = new Chat(null, [hi], [sender, receiver], receiver.name);
     // Create chat
     await this.alertService.load('Creating Chat',
     new Promise(resolve => {
@@ -102,7 +97,7 @@ this.authService.userState.subscribe(state => {
     let sender: number;
     const chat = this.getChat(chatId);
     chat.participants.forEach((participant, index) => {
-      if (participant.email === this.user.email)
+      if (participant.email === this.db.userLink.email)
         sender = index;
     });
     this.db.unionArray(`chats/${chatId}`, 'messages', Object.assign({}, new Message(sender, content)));
@@ -115,6 +110,16 @@ this.authService.userState.subscribe(state => {
         desiredChat = chat;
     });
     return desiredChat;
+  }
+
+  ngOnDestroy() {
+    this.liveSubs.forEach(sub => {
+      sub.unsubscribe();
+    });
+  }
+
+  get user() {
+    return this.db.userLink;
   }
 
 }

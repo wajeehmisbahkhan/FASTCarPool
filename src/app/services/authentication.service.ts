@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, timer, Subscription } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
@@ -7,8 +7,9 @@ import { AlertService } from './alert.service';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
-const TOKEN_KEY: any = null;
+const TOKEN_KEY = 'user_token';
 
 @Injectable({
   providedIn: 'root'
@@ -33,32 +34,24 @@ export class AuthenticationService {
     ]
   };
 
-  authenticationState = new BehaviorSubject(false);
-  userState = new BehaviorSubject(false);
+  authSubscription: Subscription;
+
+  authState = new BehaviorSubject(false);
 
   constructor(
     private storage: Storage,
     private plt: Platform,
     private afAuth: AngularFireAuth,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
     ) {
     // Check on app load
     this.plt.ready().then(() => {
       // Loading screen
       this.alertService.load('Loading...', new Promise((resolve, reject) => {
         // Subscribe to authentication state
-        this.afAuth.authState.subscribe(user => {
-          if (user) {
-            this._user = user;
-            this.userState.next(true);
-            // Store token in local storage
-            user.getIdToken().then(idToken => {
-              this.storage.set(TOKEN_KEY, idToken);
-            });
-          } else {
-            this.userState.next(false);
-            this.storage.set(TOKEN_KEY, null);
-          }
+        this.authSubscription = this.afAuth.authState.subscribe(user => {
+          this.loginHandler(user);
           resolve();
         });
         // TODO: Timeout
@@ -69,6 +62,22 @@ export class AuthenticationService {
       // Token checker
       this.checkToken();
     });
+  }
+
+  loginHandler(user: firebase.User) {
+      if (user) {
+        this._user = user;
+        this.authState.next(true);
+        // Store token in local storage
+        user.getIdToken().then(idToken => {
+          this.storage.set(TOKEN_KEY, idToken);
+          this.router.navigate(['members', 'dashboard']);
+        });
+      } else {
+        this.router.navigate(['login']);
+        this.authState.next(false);
+        this.storage.set(TOKEN_KEY, '');
+      }
   }
 
   validate(form: FormGroup, field: string, error: Object): boolean {
@@ -136,8 +145,7 @@ export class AuthenticationService {
       this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then(auth => {
         if (auth.user) {
-          this.authenticationState.next(true);
-          this.userState.next(true);
+          this.authState.next(true);
           return resolve();
         }
       })
@@ -155,8 +163,7 @@ export class AuthenticationService {
         displayName: name
       })
       .then(() => {
-        _this.authenticationState.next(true);
-        _this.userState.next(true);
+        _this.authState.next(true);
         resolve();
       });
     });
@@ -165,21 +172,21 @@ export class AuthenticationService {
 
   async logout() {
     // Sign in - any error will be thrown back
-    await this.afAuth.auth.signOut().catch(this.alertService.error);
-    await this.storage.remove(TOKEN_KEY);
-    this.authenticationState.next(false);
-    this.userState.next(false);
+    await  this.afAuth.auth.signOut().catch(this.alertService.error);
+    await this.storage.set(TOKEN_KEY, '');
+    this.authState.next(false);
   }
 
   isAuthenticated() {
-    return this.authenticationState.value;
+    return this.authState.value;
   }
 
   checkToken() {
     return this.storage.get(TOKEN_KEY).then(res => {
-      // TODO: If TOKEN_KEY is valid/!= null or not undefined/removed
       if (res) {
-        this.authenticationState.next(true);
+        this.authState.next(true);
+      } else {
+        this.authState.next(false);
       }
     });
   }
@@ -197,28 +204,3 @@ export class AuthenticationService {
     return this._user;
   }
 }
-
-// Custom Async Validator
-// export class CustomValidator {
-//   // Email
-//   static email(afAuth: AngularFireAuth) {
-//     return (control: AbstractControl) => {
-//       const email = control.value;
-
-//       // 0.5 seconds pause with value change
-//       return control.valueChanges.pipe(debounceTime(500))
-//       .subscribe(() =>
-//         afAuth.auth.fetchSignInMethodsForEmail(email).then(signInMethods => {
-//           if (signInMethods.length === 0) {
-//             return {
-//               emailExists: {
-//                 passedInEmail: email
-//               }
-//             };
-//           }
-//           return null;
-//         }
-//       ));
-//     };
-//   }
-// }

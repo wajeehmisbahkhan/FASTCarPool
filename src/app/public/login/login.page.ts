@@ -1,5 +1,5 @@
 import { AuthenticationService } from './../../services/authentication.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -7,27 +7,35 @@ import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/fo
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
 
   public loginForm: FormGroup;
   // For ease in reference
-  public error = {
-    email: '',
-    password: ''
-  };
+  public error: any;
   public logging = false;
   public loginFailed = false;
   constructor(
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private formBuilder: FormBuilder
-    ) {
-      this.loginForm = this.formBuilder.group({
-        email: ['', [Validators.required, Validators.email], authService.emailExists.bind(this.authService)],
-        password: ['', [Validators.required]]
-      });
-    }
+    ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email], this.authService.emailExists.bind(this.authService)],
+      password: ['', [Validators.required]]
+    });
+    this.error = {
+      email: '',
+      password: ''
+    };
+  }
+
+  ngOnDestroy() {
+    this.authService = null;
+    this.formBuilder = null;
+    this.loginForm = null;
+    this.error = null;
+  }
 
   login() {
     // If user gets past the initial checks

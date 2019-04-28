@@ -4,8 +4,9 @@ import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { Location, UserLink } from 'src/app/services/helper-classes';
-import { AlertService } from 'src/app/services/alert.service';
+import { InfoWindow } from '@agm/core/services/google-maps-types';
 import { ChatService } from 'src/app/services/chat.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,29 +29,37 @@ export class DashboardPage implements OnInit {
     }
   ];
 
-  // Default location
+  // Marker Location
+  liveLat = 0;
+  liveLng = 0;
+  // Map location
   lat = 0;
   lng = 0;
 
-  pickups: Array<Location>;
-
-  // User link for quick access
-  userLink: UserLink;
+  // Close previous window
+  infoWindowOpened = null;
+  previousInfoWindow = null;
 
   constructor(
     private authService: AuthenticationService,
     private map: MapsService,
     public db: DatabaseService,
-    private cs: ChatService,
     private router: Router,
+    private cs: ChatService,
     private alertService: AlertService
   ) {
     // Check when authenticated
-    this.authService.userState.subscribe(state => {
+    this.authService.authState.subscribe(state => {
       if (state === true) {
-        this.db.getUserData(this.authService.user.email);
-        // User link for quick access
-        this.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
+        // Load all data
+        this.alertService.load('Loading Your Data...', new Promise(async resolve => {
+          await this.db.getUserData(this.authService.user.email);
+          // User link for quick access
+          this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
+          // Load all chats
+          await this.cs.loadMessages();
+          resolve();
+        }));
       }
     });
     // this.makePickup(24.9125912, 67.1398402, 'Sindh Baloch Society');
@@ -59,10 +68,14 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    const watchId = this.map.getLiveLocation().subscribe(resp => {
-      // Coordinates
+    this.map.getCurrentLocation().then(resp => {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
+    });
+    const watchId = this.map.getLiveLocation().subscribe(resp => {
+      // Coordinates
+      this.liveLat = resp.coords.latitude;
+      this.liveLng = resp.coords.longitude;
       watchId.unsubscribe();
     });
     this.showPickups();
@@ -81,66 +94,13 @@ export class DashboardPage implements OnInit {
   }
 
   showPickups() {
-    this.db.getLiveDoc('app/pickups').subscribe(pickups => {
-      this.pickups = pickups.payload.data()['locations'];
-    });
-  }
-
-  addDriver(pickup: Location, index: number) {
-    // Confirm
-    this.alertService.confirmation(`Confirm this message if you pass by ${pickup.name} and can pickup riders from here.\n
-    Note: This will allow riders to contact you through this pickup point.`, () => {
-      // Add locally
-      pickup.drivers.push(this.userLink);
-      this.pickups[index] = pickup;
-      // Update in database
-      this.alertService.load('Adding you as a driver...',
-      this.db.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
-    });
-  }
-
-  removeDriver(pickup: Location, index: number) {
-    // Confirm
-    this.alertService.confirmation(`Do you want to remove yourself from the list of drivers for ${pickup.name}?`, () => {
-      // Remove locally
-      pickup.drivers = pickup.drivers.filter( (driver) => driver.email !== this.userLink.email );
-      this.pickups[index] = pickup;
-      // Update in database
-      this.alertService.load('Removing from drivers list',
-      this.db.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
-    });
-  }
-
-  addRider(pickup: Location, index: number) {
-    // Confirm
-    this.alertService.confirmation(`Confirm this message if you can make it to ${pickup.name}.\n
-    Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
-      // Add locally
-      pickup.riders.push(this.userLink);
-      this.pickups[index] = pickup;
-      // Update in database
-      this.alertService.load('Adding as rider...',
-      this.db.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
-    });
-  }
-
-  // TODO: Being repeated in database OPTIMIZE
-  removeRider(pickup: Location, index: number) {
-    // Confirm
-    this.alertService.confirmation(`Do you want to remove yourself from the list of riders for ${pickup.name}?`, () => {
-      // Remove locally
-      pickup.riders = pickup.riders.filter( (rider) => rider.email !== this.userLink.email );
-      this.pickups[index] = pickup;
-      // Update in database
-      this.alertService.load('Removing from riders list',
-      this.db.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
-    });
+    this.db.getPickups();
   }
 
   addedToLocation(addedAs: string, pickup: Location): boolean {
     // Check if added to drivers or riders
     if (pickup[addedAs])
-      return pickup[addedAs].find(userLink => userLink['email'] === this.userLink.email);
+      return pickup[addedAs].find(userLink => userLink['email'] === this.db.userLink.email);
     return false;
   }
 
@@ -148,36 +108,28 @@ export class DashboardPage implements OnInit {
     let color: string;
     // Look if added as driver or rider
     if (this.db.userData.isDriver)
-      color = pickup.drivers.find(driver => driver['email'] === this.userLink.email) ? 'green' : 'blue';
+      color = pickup.drivers.find(driver => driver['email'] === this.db.userLink.email) ? 'green' : 'blue';
     else
-      color = pickup.riders.find(rider => rider['email'] === this.userLink.email) ? 'green' : 'blue';
+      color = pickup.riders.find(rider => rider['email'] === this.db.userLink.email) ? 'green' : 'blue';
     // Return green if added otherwise blue
     return `../../../assets/img/${color}_location.png`;
   }
 
 
+  closeWindow() {
+    if (this.previousInfoWindow != null )
+      this.previousInfoWindow.close();
+  }
 
-
-
-
-  // TODO: Close previous window
-  infoWindowOpened = null
-previous_info_window = null
-close_window(){
-if (this.previous_info_window != null ) {
-  this.previous_info_window.close()
-  }    
-}
-
-select_marker(data,infoWindow){
- if (this.previous_info_window == null)
-  this.previous_info_window = infoWindow;
- else{
-  this.infoWindowOpened = infoWindow
-  this.previous_info_window.close()
- }
- this.previous_info_window = infoWindow
-}
+  selectMarker(infoWindow: InfoWindow) {
+    if (this.previousInfoWindow == null)
+      this.previousInfoWindow = infoWindow;
+    else {
+      this.infoWindowOpened = infoWindow;
+      this.previousInfoWindow.close();
+    }
+    this.previousInfoWindow = infoWindow;
+  }
 
 
 }

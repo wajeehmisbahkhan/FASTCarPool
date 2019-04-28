@@ -13,11 +13,23 @@
   <ng-template #inboxMessages>
   <ion-list>
     <!-- TODO: Sort by latest message -->
-    <ion-item *ngFor="let chat of cs.chats" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">
-      <h3>{{ chat.title }}</h3><br>
-      <p>
-        <em>{{ getLastSender(chat.messages[chat.messages.length-1].sender, chat.participants) }}</em>: {{ chat.messages[chat.messages.length-1].content }}
-      </p>
+    <ion-item *ngFor="let chat of getSortedChats()" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">
+      <ion-col size="8">
+      <ion-label>
+        {{ chat.title }}<br>
+        {{ getLastSender(chat.messages[chat.messages.length-1].sender, chat.participants) }}: {{ chat.messages[chat.messages.length-1].content }}
+      </ion-label>
+      </ion-col>
+      <ion-col size="4">
+      <ion-label style="float: right">
+          <ion-col size="6">
+            {{ unreadMessages() }}
+          </ion-col>
+          <ion-col size="6">
+            {{ getTime(chat.messages[chat.messages.length-1]) }}
+          </ion-col>
+      </ion-label>
+      </ion-col>
     </ion-item>
   </ion-list>
   </ng-template>
