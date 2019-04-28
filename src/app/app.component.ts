@@ -15,14 +15,10 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authService: AuthenticationService,
-    private router: Router
+    // private authService: AuthenticationService,
+    // private router: Router
   ) {
     this.initializeApp();
-  }
-
-  ionViewDidEnter () {
-    this.platform.backButton.subscribe(this.navigateBack);
   }
 
   navigateBack (e) {
@@ -36,15 +32,14 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-
-      this.authService.authenticationState.subscribe(state => {
-        console.log('Auth Changed: ', state);
-        if (state) {
-          this.router.navigate(['members', 'dashboard']);
-        } else {
-          this.router.navigate(['login']);
-        }
-      })
+      this.platform.backButton.subscribe(this.navigateBack);
+      // this.authService.authenticationState.subscribe(state => {
+      //   if (state) {
+      //     this.router.navigate(['members', 'dashboard']);
+      //   } else {
+      //     this.router.navigate(['login']);
+      //   }
+      // });
     });
   }
 }

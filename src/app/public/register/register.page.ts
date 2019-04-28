@@ -1,5 +1,5 @@
 import { AuthenticationService } from './../../services/authentication.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -9,32 +9,42 @@ import { AlertService } from 'src/app/services/alert.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage implements OnInit, OnDestroy {
 
   public registerForm: FormGroup;
   // For ease in reference
-  public error = {
-    name: '',
-    email: '',
-    password: ''
-  };
+  public error: Object;
 
   public registering = false;
 
   constructor(
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private formBuilder: FormBuilder,
     private db: DatabaseService,
     private alertService: AlertService
-    ) {
-    this.registerForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      email: [authService.passingEmail, [Validators.required, Validators.email], authService.emailAvailable.bind(this.authService)],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
+    ) {}
 
   ngOnInit() {
+    this.registerForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: [this.authService.passingEmail,
+      [Validators.required, Validators.email], this.authService.emailAvailable.bind(this.authService)],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+    this.error = {
+      name: '',
+      email: '',
+      password: ''
+    };
+  }
+
+  ngOnDestroy() {
+    this.authService = null;
+    this.formBuilder = null;
+    this.db = null;
+    this.alertService = null;
+    this.error = null;
+    this.registerForm = null;
   }
 
   register() {
@@ -55,13 +65,13 @@ export class RegisterPage implements OnInit {
   }
 
   // Getters
-  get name():AbstractControl {
+  get name(): AbstractControl {
     return this.registerForm.get('name');
   }
-  get email():AbstractControl {
+  get email(): AbstractControl {
     return this.registerForm.get('email');
   }
-  get password():AbstractControl {
+  get password(): AbstractControl {
     return this.registerForm.get('password');
   }
 

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Participant } from 'src/app/services/helper-classes';
+import { Participant, Chat, Message } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-messages',
@@ -11,26 +10,21 @@ import { Participant } from 'src/app/services/helper-classes';
 })
 export class MessagesPage implements OnInit {
 
-  user: firebase.User;
-
   constructor(
-    private authService: AuthenticationService,
     private router: Router,
     public cs: ChatService
-    ) {
-      this.user = authService.user;
-    }
+    ) { }
 
   ngOnInit() { }
 
   emptyInbox() {
     return this.cs.chatList.length === 0;
   }
-  
+
   getLastSender(sender: number, participants: Array<Participant>): string {
     let lastSender: string;
     // If sender is user
-    if (participants[sender].email === this.user.email)
+    if (participants[sender].email === this.cs.user.email)
       lastSender = 'You';
     else
       // Convert email into name - loop through all participants for match
@@ -40,6 +34,40 @@ export class MessagesPage implements OnInit {
         }
       });
     return lastSender;
+  }
+
+  getTime(message: Message): string {
+    const date = new Date(message.time);
+    let time: string;
+    const now = new Date();
+    // If today
+    if (date.getDate() === now.getDate()
+    && date.getMonth() === now.getMonth()
+    && date.getFullYear() === now.getFullYear())
+      if (date.getMinutes() < 10)
+        time = `${date.getHours()}:0${date.getMinutes()}`;
+      else
+        time = `${date.getHours()}:${date.getMinutes()}`;
+    // If this year
+    else if (date.getFullYear() === now.getFullYear())
+      time += `${date.getDate()}/${date.getMonth()}`;
+    else
+      time += `${date.getFullYear()}`;
+    return time;
+  }
+
+  // TODO: Get number of unread messages
+  unreadMessages(): string {
+    return null;
+  }
+
+  getSortedChats(): Array<Chat> {
+    return this.cs.chats.sort((a, b) => {
+      // Sort by last time for last sent message
+      return a.messages[a.messages.length - 1].time
+           - b.messages[b.messages.length - 1].time;
+    }) // Reverse
+    .reverse();
   }
 
   goToChat(e) {

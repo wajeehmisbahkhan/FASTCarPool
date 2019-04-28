@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
 import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
 import { AlertService } from './alert.service';
@@ -9,11 +9,20 @@ import { AlertService } from './alert.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DatabaseService {
+export class DatabaseService implements OnDestroy {
 
   public users: Users = new Users;
+  // User data - in 3 forms like i dont even
   public userData = new User;
+  public userLink: UserLink;
   public viewUser = new ViewUser;
+
+  // App data
+  pickups: Array<Location>;
+
+  // Live subscriptions
+  subscriptions: Array<Subscription> = [];
+
 
   constructor(
     private db: AngularFirestore,
@@ -31,10 +40,8 @@ export class DatabaseService {
   }
 
   getUserData(email: string) {
-    return this.alertService.load('Fetching your data...',
-    // Resolving this promise will complete the loading phase
-    new Promise(resolve => {
-      this.db.doc(`users/${email}`).get().subscribe(doc => {
+    return new Promise(resolve => {
+      const dataSubscription = this.db.doc(`users/${email}`).get().subscribe(doc => {
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
         this.userData.status = doc.data().status;
@@ -43,10 +50,10 @@ export class DatabaseService {
         this.userData.rate.oneway = doc.data().rate.oneway;
         // Chats
         this.userData.chats = doc.data().chats;
-        resolve(this.userData);
+        dataSubscription.unsubscribe();
+        resolve();
       });
-    })
-    );
+    });
   }
 
   updateUserData(user: firebase.User, newUserData: User) {
@@ -61,7 +68,8 @@ export class DatabaseService {
             this.unionArray('app/users', 'drivers', Object.assign({}, new UserLink(user.displayName, user.email)));
             this.arrayRemove('app/users', 'riders', Object.assign({}, new UserLink(user.displayName, user.email)));
             // Remove 'as rider' from all pickups
-            this.getDoc('app/pickups').subscribe(doc => {
+            const riderSub = this.getDoc('app/pickups').subscribe(doc => {
+              riderSub.unsubscribe();
               const pickups: Array<Location> = doc.data().locations;
               pickups.forEach(pickup => {
                 pickup.riders = pickup.riders.filter((rider) => rider.email !== user.email );
@@ -73,7 +81,8 @@ export class DatabaseService {
             this.arrayRemove('app/users', 'drivers', Object.assign({}, new UserLink(user.displayName, user.email)));
             this.unionArray('app/users', 'riders', Object.assign({}, new UserLink(user.displayName, user.email)));
             // Remove 'as driver' from all pickups
-            this.getDoc('app/pickups').subscribe(doc => {
+            const driverSub = this.getDoc('app/pickups').subscribe(doc => {
+              driverSub.unsubscribe();
               const pickups: Array<Location> = doc.data().locations;
               pickups.forEach(pickup => {
                 pickup.drivers = pickup.drivers.filter((driver) => driver.email !== user.email );
@@ -92,16 +101,18 @@ export class DatabaseService {
 
   getUsers() {
     // Keep a live copy of all users in the database
-    this.getLiveDoc('app/users').subscribe(doc => {
+    const liveSub = this.getLiveDoc('app/users').subscribe(doc => {
       this.users.drivers = doc.payload.data()['drivers'];
       this.users.riders = doc.payload.data()['riders'];
     });
+    this.subscriptions.push(liveSub);
   }
 
   getUserView(user: UserLink) {
     this.alertService.load(`Loading ${user.name}'s Profile`,
-    new Promise(resolve =>
-      this.getDoc(`users/${user.email}`).subscribe(doc => {
+    new Promise(resolve => {
+        const userSub = this.getDoc(`users/${user.email}`).subscribe(doc => {
+        userSub.unsubscribe();
         // Copy to view user
         this.viewUser.name = user.name;
         this.viewUser.email = user.email;
@@ -111,10 +122,72 @@ export class DatabaseService {
         this.viewUser.car = doc.data().car;
         this.viewUser.rate.oneway = doc.data().rate.oneway;
         resolve();
-      })
-    )
+      });
+    })
     );
   }
+
+  // Dashboard
+  getPickups() {
+    const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
+      this.pickups = pickups.payload.data()['locations'];
+    });
+    this.subscriptions.push(liveSub);
+  }
+
+  addDriver(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Confirm this message if you pass by ${pickup.name} and can pickup riders from here.\n
+    Note: This will allow riders to contact you through this pickup point.`, () => {
+      // Add locally
+      pickup.drivers.push(this.userLink);
+      this.pickups[index] = pickup;
+      // Update in database
+      this.alertService.load('Adding you as a driver...',
+      this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
+    });
+  }
+
+
+  removeDriver(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of drivers for ${pickup.name}?`, () => {
+      // Remove locally
+      pickup.drivers = pickup.drivers.filter( (driver) => driver.email !== this.userLink.email );
+      this.pickups[index] = pickup;
+      // Update in database
+      this.alertService.load('Removing from drivers list',
+      this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
+    });
+  }
+
+  addRider(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Confirm this message if you can make it to ${pickup.name}.\n
+    Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
+      // Add locally
+      pickup.riders.push(this.userLink);
+      this.pickups[index] = pickup;
+      // Update in database
+      this.alertService.load('Adding as rider...',
+      this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
+    });
+  }
+
+  // TODO: Being repeated in database OPTIMIZE
+  removeRider(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of riders for ${pickup.name}?`, () => {
+      // Remove locally
+      pickup.riders = pickup.riders.filter( (rider) => rider.email !== this.userLink.email );
+      this.pickups[index] = pickup;
+      // Update in database
+      this.alertService.load('Removing from riders list',
+      this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))}) );
+    });
+  }
+
+
 
 
   // General Methods
@@ -152,6 +225,13 @@ export class DatabaseService {
     const updated = {};
     updated[field] = firestore.FieldValue.arrayRemove(element);
     this.db.doc(path).update(updated);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      console.log(subscription);
+      subscription.unsubscribe();
+    });
   }
 
 }

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <!-- TODO: Chat name -->
-    <ion-title>Chat</ion-title>
+    <ion-title>{{ chat.title }}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button [routerLink]="'../../'"></ion-back-button>
     </ion-buttons>
@@ -18,7 +18,7 @@
             My message for message on left
           -->
           <div class="message-data" [class.align-right]="!userIsSender(message)">
-              <span class="message-data-time" >10:10 AM, Today</span> &nbsp; &nbsp;
+              <span class="message-data-time" >{{ getTime(message) }}</span> &nbsp; &nbsp;
               <span class="message-data-name" >{{ getParticipant(message.sender).name }}</span>
           </div>
           <div class="message" [ngClass]="{

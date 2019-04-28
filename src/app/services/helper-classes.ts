@@ -92,15 +92,15 @@ export class Rate {
 // CHAT
 export class Message {
     public content: string;
-    // TODO: Make sender a user
     public sender: number; // -1 for sample messages
     public status: string;
-    // TODO: Sent time
+    public time: number;
 
     constructor (sender: number, content: string) {
         this.content = content;
         this.sender = sender;
         this.status = 'SENDING';
+        this.time = Date.now();
     }
 }
 

@@ -69,7 +69,8 @@ export class AlertService {
           work
           .then(() => {
             this.lc.dismiss(loader);
-            resolve();
+            loader = null;
+            return resolve();
           });
         });
       });
