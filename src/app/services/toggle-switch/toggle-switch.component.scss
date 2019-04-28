@@ -21,12 +21,12 @@
 .onoffswitch-inner:before {
     content: attr(data-on);
     padding-left: 10px;
-    background-color: #34A7C1; color: #FFFFFF;
+    background-color: var(--ion-color-secondary); color: var(--ion-color-secondary-contrast)
 }
 .onoffswitch-inner:after {
     content: attr(data-off);
     padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
+    background-color: var(--ion-color-primary); color: var(--ion-color-primary-contrast);
     text-align: right;
 }
 .onoffswitch-switch {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, timer, Subscription } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
 import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
 import { FormGroup, AbstractControl } from '@angular/forms';
@@ -34,9 +34,9 @@ export class AuthenticationService {
     ]
   };
 
-  authSubscription: Subscription;
-
   authState = new BehaviorSubject(false);
+  // For double checking that user has completely loaded - only for registration
+  safeAuthState = new BehaviorSubject(false);
 
   constructor(
     private storage: Storage,
@@ -48,14 +48,12 @@ export class AuthenticationService {
     // Check on app load
     this.plt.ready().then(() => {
       // Loading screen
-      this.alertService.load('Loading...', new Promise((resolve, reject) => {
+      this.alertService.load('Loading...', new Promise(resolve => {
         // Subscribe to authentication state
-        this.authSubscription = this.afAuth.authState.subscribe(user => {
+        this.afAuth.authState.subscribe(user => {
           this.loginHandler(user);
-          resolve();
+          return resolve();
         });
-        // TODO: Timeout
-        setTimeout(() => resolve(), 1000);
       })
       );
 
@@ -164,17 +162,21 @@ export class AuthenticationService {
       })
       .then(() => {
         _this.authState.next(true);
+        _this.safeAuthState.subscribe(userHasLoaded => {
+          if (userHasLoaded) {
+            _this.router.navigate(['members', 'dashboard']);
+          }
+        });
         resolve();
       });
     });
     }).catch(this.alertService.error);
   }
 
-  async logout() {
-    // Sign in - any error will be thrown back
-    await  this.afAuth.auth.signOut().catch(this.alertService.error);
-    await this.storage.set(TOKEN_KEY, '');
+  logout() {
     this.authState.next(false);
+    this.afAuth.auth.signOut().catch(this.alertService.error);
+    this.storage.set(TOKEN_KEY, '');
   }
 
   isAuthenticated() {

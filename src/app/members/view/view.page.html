@@ -13,7 +13,7 @@
   </ion-avatar>
   <h3>Status: </h3>
   <ion-item>
-    <p>{{this.db.viewUser.status}}</p>
+    <ion-label>{{this.db.viewUser.status}}</ion-label>
   </ion-item>
   <h3>Schedule:</h3>
   <ion-item class="ion-text-center">
@@ -33,10 +33,12 @@
   <div *ngIf="this.db.viewUser.isDriver">
   <h3>Car Details:</h3>
   <ion-item>
-    <p>Capacity: {{db.viewUser.car.capacity}}</p>
-    <p>Filled: {{db.viewUser.car.filled}}</p>
-    <p>Description: {{db.viewUser.car.description}}</p>
-    <p>Oneway Trip Charges: {{db.viewUser.rate.oneway}}</p>
+    <ion-label>
+    Capacity: {{db.viewUser.car.capacity}}<br>
+    Filled: {{db.viewUser.car.filled}}<br>
+    Description: {{db.viewUser.car.description}}<br>
+    Oneway Trip Charges: {{db.viewUser.rate.oneway}}<br>
+    </ion-label>
   </ion-item>
   </div>
   <ion-button class="ion-margin-top" expand="block"

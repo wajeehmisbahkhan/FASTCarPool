@@ -41,23 +41,21 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authService = null;
     this.formBuilder = null;
-    this.db = null;
     this.alertService = null;
     this.error = null;
     this.registerForm = null;
   }
 
-  register() {
-    const email = this.registerForm.get('email').value;
+  async register() {
     // If user gets past the initial checks
     if (!this.registerForm.valid) return;
-    this.authService.register(this.registerForm.get('name').value, email, this.registerForm.get('password').value)
-    .then(() => {
-      this.registering = false;
-      this.registerForm.reset();
-      // Make place in database
-      this.db.createNewUser(this.authService.user);
-    }).catch(this.alertService.error);
+    await this.authService.register(this.name.value, this.email.value, this.password.value);
+    // Make place in database
+    await this.db.createNewUser(this.name.value, this.email.value);
+    // Now safe to go forward
+    this.authService.safeAuthState.next(true);
+    this.registering = false;
+    this.registerForm.reset();
   }
 
   resetPassword() {

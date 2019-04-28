@@ -1,7 +1,9 @@
 $blue: #94C2ED;
 .chat-message {
+    position: fixed;
     height: 25%;
     background-color: #F2F5F8;
+    bottom: 0;
     textarea {
         width: 100%;
         border: none;
