@@ -15,7 +15,7 @@
     </ion-item>
     <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'name', this.error)">
       <span class="ion-margin-start">
-        {{error.name}}
+        {{error['name']}}
       </span>
     </div>
     <!--Ionic 4 bug: Custom validators must be styled like this-->
@@ -28,8 +28,8 @@
     </ion-item>
     <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'email', this.error)">
       <span class="ion-margin-start">
-          {{error.email}}
-          <a (click)="resetPassword()">Forgot Password?</a>
+          {{error['email']}}
+          <a (click)="resetPassword()" *ngIf="error['email'].indexOf('Email already') >= 0">Forgot Password?</a>
       </span>
     </div>
     <ion-item>
@@ -38,7 +38,7 @@
     </ion-item>
     <div class="error-message" *ngIf="!this.authService.validate(this.registerForm, 'password', this.error)">
       <span class="ion-margin-start">
-        {{error.password}}
+        {{error['password']}}
       </span>
     </div>
     <!-- TODO: Handle already saved browser credentials -->

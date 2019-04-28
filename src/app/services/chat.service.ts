@@ -38,7 +38,7 @@ export class ChatService implements OnDestroy{
         // Get entire chat from chats folder in db
         // Live for new messages
         await new Promise(res => {
-          this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
+          const chatSub = this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
             // Chat details
             const messages: Array<Message> = doc.payload.data()['messages'],
                   participants: Array<Participant> = doc.payload.data()['participants'];
@@ -57,6 +57,7 @@ export class ChatService implements OnDestroy{
             if (Object.is(array.length - 1, index))
               res();
           });
+          this.liveSubs.push(chatSub);
         });
       });
       return resolve();

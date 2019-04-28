@@ -1,35 +1,52 @@
 import { Injectable } from '@angular/core';
 
 import { AlertController, LoadingController } from '@ionic/angular';
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
 
+  alertError = {
+    code: null,
+    message: null
+  };
+
   constructor(
     private alertController: AlertController,
-    private lc: LoadingController
+    private lc: LoadingController,
+    private emailComposer: EmailComposer
   ) { }
 
-  error(error: firebase.FirebaseError) {
+  error(fireError: firebase.FirebaseError) {
+    this.alertError.code = fireError.code;
+    this.alertError.message = fireError.message;
     this.alertController.create({
       header: 'Error',
-      subHeader: error.code,
-      message: error.message,
+      subHeader: this.alertError.code,
+      message: this.alertError.message,
       buttons: [{
         text: 'Send Error Report',
-        handler: () => {
-          // const email = 'k173673@nu.edu.pk',
-          //       subject = 'Bug Report (FAST CarPool)',
-          //       body = `Code: ${error.code}
-          //               Message: ${error.message}`;
-          // document.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-          console.error('Error');
-        }
+        handler: this.sendEmail
       }, 'Okay']
     }).then(alert => {
       alert.present();
+    });
+  }
+
+  sendEmail() {
+    this.emailComposer.isAvailable().then((available) =>{
+      if (available) {
+        // Now we know we can send
+        const email = {
+          to: 'k173673@nu.edu.pk',
+          subject: 'Bug Report (FAST CarPool)',
+          body: `Code: ${this.alertError.code}\nMessage: ${this.alertError.message}`
+        };
+        // Send a text message using default options
+        this.emailComposer.open(email);
+      }
     });
   }
 
@@ -59,6 +76,16 @@ export class AlertService {
   }
 
   load(message: string, work: Promise<any>) {
+    // If taking too long (3 seconds), just resolve
+    let wait: NodeJS.Timeout;
+    const timeout = new Promise(resolve => {
+      wait = setTimeout(() => {
+        console.log('Timeout');
+        return resolve();
+      }, 3000);
+    });
+
+    // Promise to detect when done
     return new Promise(resolve => {
       const loading = this.lc.create({
         message: message
@@ -66,9 +93,10 @@ export class AlertService {
       loading.then(loader => {
         loader.present()
         .then(() => {
-          work
+          Promise.race([work, timeout])
           .then(() => {
-            this.lc.dismiss(loader);
+            clearTimeout(wait);
+            this.lc.dismiss(null, null, loader.id);
             loader = null;
             return resolve();
           });

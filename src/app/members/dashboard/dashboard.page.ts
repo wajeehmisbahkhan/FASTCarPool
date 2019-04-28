@@ -82,13 +82,18 @@ export class DashboardPage implements OnInit {
   }
 
   gotoPage(path: string) {
+    if (this.previousInfoWindow)
+      this.closeWindow();
     this.router.navigateByUrl('members' + path);
   }
 
   logout () {
+    this.db.ngOnDestroy();
+    this.cs.ngOnDestroy();
     this.authService.logout();
   }
 
+  // Pikcups
   makePickup(lat: number, lng: number, name = 'Unnamed Place') {
     this.db.unionArray('app/pickups', 'locations', Object.assign({}, new Location(lat, lng, name)));
   }
@@ -115,10 +120,47 @@ export class DashboardPage implements OnInit {
     return `../../../assets/img/${color}_location.png`;
   }
 
+  addRider(pickup: Location, index: number) {
+    // Confirmation
+    this.alertService.confirmation(`Confirm this message if you can make it to ${pickup.name}.\n
+    Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
+      this.alertService.load('Adding as rider...', this.db.addRider(pickup, index));
+      this.closeWindow();
+    });
+  }
 
+  removeRider(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of riders for ${pickup.name}?`, () => {
+      this.alertService.load('Removing from riders list', this.db.removeRider(pickup, index));
+      this.closeWindow();
+    });
+  }
+
+  addDriver(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Confirm this message if you pass by ${pickup.name} and can pickup riders from here.\n
+    Note: This will allow riders to contact you through this pickup point.`, () => {
+      // Load
+      this.alertService.load('Adding you as a driver...', this.db.addDriver(pickup, index));
+      this.closeWindow();
+    });
+  }
+
+  removeDriver(pickup: Location, index: number) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of drivers for ${pickup.name}?`, () => {
+      // Load
+      this.alertService.load('Removing from drivers list', this.db.removeDriver(pickup, index));
+      this.closeWindow();
+    });
+  }
+
+  // Maps
   closeWindow() {
-    if (this.previousInfoWindow != null )
+    if (this.previousInfoWindow)
       this.previousInfoWindow.close();
+    this.previousInfoWindow = null;
   }
 
   selectMarker(infoWindow: InfoWindow) {
@@ -130,6 +172,5 @@ export class DashboardPage implements OnInit {
     }
     this.previousInfoWindow = infoWindow;
   }
-
 
 }
