@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Inbox</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button [routerLink]="'../../dashboard'"></ion-back-button>
+      <ion-back-button defaultHref="members/dashboard" [routerLink]="'../../dashboard'"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,11 +12,10 @@
   </ion-item>
   <ng-template #inboxMessages>
   <ion-list>
-    <!-- TODO: Sort by latest message -->
     <ion-item *ngFor="let chat of getSortedChats()" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">
       <ion-col size="8">
       <ion-label>
-        {{ chat.title }}<br>
+        <b>{{ chat.title }}</b><br>
         {{ getLastSender(chat.messages[chat.messages.length-1].sender, chat.participants) }}: {{ chat.messages[chat.messages.length-1].content }}
       </ion-label>
       </ion-col>

@@ -20,7 +20,6 @@ export class ChatService implements OnDestroy{
     private alertService: AlertService
   ) { }
 
-  // TODO: Load messages async not working
   loadMessages() {
     return new Promise(async resolve => {
       // Loading user chat list
@@ -105,12 +104,8 @@ export class ChatService implements OnDestroy{
   }
 
   getChat(id: string) {
-    let desiredChat: Chat;
-    this.chats.forEach(chat => {
-      if (chat.id === id)
-        desiredChat = chat;
-    });
-    return desiredChat;
+    const index = this.chats.findIndex(chat => chat.id === id);
+    return this.chats[index];
   }
 
   ngOnDestroy() {
