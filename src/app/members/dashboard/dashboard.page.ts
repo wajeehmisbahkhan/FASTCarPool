@@ -62,9 +62,7 @@ export class DashboardPage implements OnInit {
         }));
       }
     });
-    // this.makePickup(24.9125912, 67.1398402, 'Sindh Baloch Society');
-    // this.makePickup(24.923641, 67.137724, 'Kamran Chowrangi');
-    // this.makePickup(24.920396, 67.134292, 'Munawar Chowrangi');
+    // this.makePickup(24.900868,67.11631, 'Askari 4');
   }
 
   ngOnInit() {

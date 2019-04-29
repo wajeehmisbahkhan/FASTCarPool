@@ -1,7 +1,10 @@
 $blue: #94C2ED;
+ion-content {
+    --background: var(--ion-color-light);
+}
 .chat-message {
     position: fixed;
-    height: 25%;
+    width: 100%;
     background-color: #F2F5F8;
     bottom: 0;
     textarea {
@@ -12,11 +15,11 @@ $blue: #94C2ED;
         margin-bottom: 10px;
         border-radius: 5px;
         resize: none;
-        
     }
     button {
         float: right;
         color: $blue;
+        padding-bottom: 10px;
         font-size: 16px;
         text-transform: uppercase;
         border: none;

@@ -21,11 +21,18 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.chat = this.cs.getChat(params.get('id'));
+      // TODO: Remove DOM manipulation
+      const element = document.getElementsByClassName('chat-history')[0];
+      setTimeout(() => { element.scrollTop = element.scrollHeight; }, 100);
     });
   }
 
   getParticipant(sender: number): Participant {
     return this.chat.participants[sender];
+  }
+
+  scrollMessages(e: Event) {
+    
   }
 
   getTime(message: Message): string {
