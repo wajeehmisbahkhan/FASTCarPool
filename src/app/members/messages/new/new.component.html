@@ -8,7 +8,9 @@
 </ion-header>
 <ion-content>
   <div class="chat-message clearfix">
-    <textarea [(ngModel)]="messageText" name="message-to-send" id="message-to-send" placeholder ="Type your message" rows="3"></textarea>
-    <button (click)="sendMessage()">Send</button>
+    <ion-input [(ngModel)]="messageText" placeholder="Enter a message..." class="chat-message-input" type="text"></ion-input>
+    <button (click)="sendMessage()">
+      <ion-icon name="send"></ion-icon>
+    </button>
   </div> <!-- end chat-message -->
 </ion-content>
