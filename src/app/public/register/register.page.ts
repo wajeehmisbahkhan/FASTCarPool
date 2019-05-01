@@ -2,7 +2,6 @@ import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
-import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -20,8 +19,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   constructor(
     public authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private db: DatabaseService,
-    private alertService: AlertService
+    private db: DatabaseService
     ) {}
 
   ngOnInit() {
@@ -41,7 +39,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authService = null;
     this.formBuilder = null;
-    this.alertService = null;
     this.error = null;
     this.registerForm = null;
   }

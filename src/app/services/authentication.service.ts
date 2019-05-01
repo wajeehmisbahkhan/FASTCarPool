@@ -8,6 +8,7 @@ import { AlertService } from './alert.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { ThemeService } from './theme.service';
 
 const TOKEN_KEY = 'user_token';
 
@@ -43,6 +44,7 @@ export class AuthenticationService {
     private plt: Platform,
     private afAuth: AngularFireAuth,
     private alertService: AlertService,
+    private theme: ThemeService,
     private router: Router
     ) {
     // Check on app load

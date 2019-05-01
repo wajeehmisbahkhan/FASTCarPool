@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
 import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
 import { AlertService } from './alert.service';
+import { ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ export class DatabaseService implements OnDestroy {
 
   constructor(
     private db: AngularFirestore,
+    public theme: ThemeService,
     private alertService: AlertService) {
       this.fast = new Location(24.8568991, 67.2646838, 'FAST NUCES');
     }
@@ -38,6 +40,8 @@ export class DatabaseService implements OnDestroy {
   // Registration
   createNewUser(name: string, email: string) {
     return this.alertService.load('Creating your account...', new Promise(resolve => {
+      // Set theme to rider
+      this.theme.setTheme(false);
       // Add to users folder - reference by email users/email.get(property)
       this.setDoc(`users/${email}`, (new User).toObject()).then(() => {
         // Add to riders list
@@ -63,6 +67,8 @@ export class DatabaseService implements OnDestroy {
         this.userData.rate.oneway = doc.data().rate.oneway;
         // Chats
         this.userData.chats = doc.data().chats;
+        // Set theme according to user data
+        this.theme.setTheme(this.userData.isDriver);
         dataSubscription.unsubscribe();
         resolve();
       });
@@ -115,6 +121,8 @@ export class DatabaseService implements OnDestroy {
       this.updateDoc(`users/${this.userLink.email}`, newUserData).then(() => {
         // If driver changed
         if (this.userData.isDriver !== newUserData.isDriver) {
+          // Set theme according to new user data
+          this.theme.setTheme(newUserData.isDriver);
           if (newUserData.isDriver) {
             // Add to drivers and remove from riders
             this.unionArray('app/users', 'drivers', Object.assign({}, this.userLink));

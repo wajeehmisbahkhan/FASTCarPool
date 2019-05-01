@@ -42,7 +42,7 @@ export class DashboardPage implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private map: MapsService,
+    public map: MapsService,
     public db: DatabaseService,
     private router: Router,
     private cs: ChatService,
@@ -86,6 +86,7 @@ export class DashboardPage implements OnInit {
   }
 
   logout () {
+    this.db.theme.setTheme(false);
     this.db.ngOnDestroy();
     this.cs.ngOnDestroy();
     this.authService.logout();

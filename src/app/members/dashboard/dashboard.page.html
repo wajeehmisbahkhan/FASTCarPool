@@ -31,7 +31,9 @@
 </ion-menu>
 <ion-content fullscreen="true">
   <ion-router-outlet main>
-    <agm-map (mapClick)="closeWindow()" [zoomControl]="false" [streetViewControl]="false" [clickableIcons]="false" [latitude]="lat" [longitude]="lng" [zoom]="14">
+    <agm-map (mapClick)="closeWindow()" [zoomControl]="false" [streetViewControl]="false"
+    [clickableIcons]="false" [latitude]="lat" [longitude]="lng" [zoom]="14"
+    [styles]="db.userData.isDriver ? map.darkMap : map.lightMap">
       <agm-marker [latitude]="liveLat" [longitude]="liveLng"></agm-marker>
       <agm-marker (markerClick)=selectMarker(infoWindow) *ngFor="let pickup of db.pickups; index as i" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="pickupUrl(pickup, i)">
         <agm-info-window #infoWindow>

@@ -216,3 +216,33 @@ export class ViewUser extends User {
         this.email = null;
     }
 }
+
+// THEME
+export class Theme {
+    // Default values
+    primary = '#3880ff';
+    secondary = '#0cd1e8';
+    tertiary = '#7044ff';
+    success = '#10dc60';
+    warning = '#ffce00';
+    danger = '#f04141';
+    dark = '#222428';
+    medium = '#989aa2';
+    light = '#f4f5f8';
+
+    setTheme(
+        primary?: string, secondary?: string, tertiary?: string,
+        success?: string, warning?: string, danger?: string,
+        dark?: string, medium?: string, light?: string
+        ) {
+            this.primary = primary;
+            this.secondary = secondary;
+            this.tertiary = tertiary;
+            this.success = success;
+            this.warning = warning;
+            this.danger = danger;
+            this.dark = dark;
+            this.medium = medium;
+            this.light = light;
+    }
+}

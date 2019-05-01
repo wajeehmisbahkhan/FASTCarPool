@@ -38,16 +38,16 @@ export class MessagesPage implements OnInit {
 
   getTime(message: Message): string {
     const date = new Date(message.time);
-    let time: string;
+    let time = '';
     const now = new Date();
     // If today
     if (date.getDate() === now.getDate()
     && date.getMonth() === now.getMonth()
     && date.getFullYear() === now.getFullYear())
       if (date.getMinutes() < 10)
-        time = `${date.getHours()}:0${date.getMinutes()}`;
+        time += `${date.getHours()}:0${date.getMinutes()}`;
       else
-        time = `${date.getHours()}:${date.getMinutes()}`;
+        time += `${date.getHours()}:${date.getMinutes()}`;
     // If this year
     else if (date.getFullYear() === now.getFullYear())
       time += `${date.getDate()}/${date.getMonth()}`;
