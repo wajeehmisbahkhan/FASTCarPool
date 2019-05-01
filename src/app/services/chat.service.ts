@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class ChatService implements OnDestroy{
 
   chatList: Array<string> = [];
+  previousChatListLength = 0;
   chats: Array<Chat> = [];
 
   liveSubs: Array<Subscription> = [];
@@ -26,41 +27,39 @@ export class ChatService implements OnDestroy{
       await new Promise(res => {
         const chatSub = this.db.getLiveDoc('users/' + this.db.userLink.email).subscribe(doc => {
           this.chatList = doc.payload.data()['chats'];
+          // Reload new chats only
+          for (let i = this.previousChatListLength; i < this.chatList.length; i++)
+            this.loadChat(i, this.chatList[i]);
+          this.previousChatListLength = this.chatList.length;
           res();
         });
         this.liveSubs.push(chatSub);
       });
-      // Load each individual chat
-      this.chatList.forEach(async (chatId, index, array) => {
-        // Create an empty chat
-        const chat = new Chat(chatId);
-        // Get entire chat from chats folder in db
-        // Live for new messages
-        await new Promise(res => {
-          const chatSub = this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
-            // Chat details
-            const messages: Array<Message> = doc.payload.data()['messages'],
-                  participants: Array<Participant> = doc.payload.data()['participants'];
-            // Create chat title accordingly
-            if (participants.length === 2)
-              chat.title = participants[0].email !== this.db.userLink.email ? participants[0].name : participants[1].name;
-            else // TODO: Name group
-              chat.title = 'Group';
-            // Other chat stuff
-            chat.messages = messages;
-            chat.participants = participants;
-            // Push to chats
-            // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
-            this.chats[index] = chat;
-            // If last chat being loaded
-            if (Object.is(array.length - 1, index))
-              res();
-          });
-          this.liveSubs.push(chatSub);
-        });
-      });
       return resolve();
     });
+  }
+
+  loadChat(index: number, chatId: string) {
+    const chat = new Chat(chatId);
+    // Get entire chat from chats folder in db
+    // Live for new messages
+    const chatSub = this.db.getLiveDoc(`chats/${chatId}`).subscribe(doc => {
+      // Chat details
+      const messages: Array<Message> = doc.payload.data()['messages'],
+            participants: Array<Participant> = doc.payload.data()['participants'];
+      // Create chat title accordingly
+      if (participants.length === 2)
+        chat.title = participants[0].email !== this.db.userLink.email ? participants[0].name : participants[1].name;
+      else // TODO: Name group
+        chat.title = 'Group';
+      // Other chat stuff
+      chat.messages = messages;
+      chat.participants = participants;
+      // Push to chats
+      // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
+      this.chats[index] = chat;
+    });
+    this.liveSubs.push(chatSub);
   }
 
   async createChat(sender: Participant, receiver: Participant, message: string) {
@@ -82,9 +81,6 @@ export class ChatService implements OnDestroy{
         resolve();
       });
     }));
-    // Push to local chat
-    this.chatList.push(chat.id);
-    this.chats.push(chat);
     // Return document id
     return new Promise<string>(resolve => resolve(chat.id));
   }
