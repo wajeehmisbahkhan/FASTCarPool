@@ -66,15 +66,15 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.map.getCurrentLocation().then(resp => {
-      this.lat = resp.coords.latitude;
-      this.lng = resp.coords.longitude;
-    });
-    const watchId = this.map.getLiveLocation().subscribe(resp => {
-      // Coordinates
+    this.map.getLiveLocation().subscribe(resp => {
+      // Map coords will update once
+      if (this.lat === 0 && this.lng === 0) {
+        this.lat = resp.coords.latitude;
+        this.lng = resp.coords.longitude;
+      }
+      // Position marker will keep changing
       this.liveLat = resp.coords.latitude;
       this.liveLng = resp.coords.longitude;
-      watchId.unsubscribe();
     });
     this.showPickups();
   }
