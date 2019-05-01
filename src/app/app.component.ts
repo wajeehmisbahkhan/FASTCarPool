@@ -22,10 +22,10 @@ export class AppComponent {
   }
 
   navigateBack (e) {
-    // const url = this.router.url;
-    // if (url === '/login') {
+    const url = window.location.pathname;
+    if (url === '/login' || url === '/members/dashboard') {
       navigator['app'].exitApp();
-    // }
+    }
   }
 
   initializeApp() {
