@@ -6,6 +6,7 @@ import { firestore } from 'firebase/app';
 import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
 import { AlertService } from './alert.service';
 import { ThemeService } from './theme.service';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class DatabaseService implements OnDestroy {
 
   public users: Users = new Users;
   // User data - in 3 forms like i dont even
-  public userData = new User;
+  public userData: User;
   public userLink: UserLink;
   public viewUser = new ViewUser;
 
@@ -30,7 +31,11 @@ export class DatabaseService implements OnDestroy {
   constructor(
     private db: AngularFirestore,
     public theme: ThemeService,
-    private alertService: AlertService) {
+    private alertService: AlertService,
+    private storage: Storage
+    ) {
+      this.userData = new User;
+      this.userLink = new UserLink('', '');
       this.fast = new Location(24.8568991, 67.2646838, 'FAST NUCES');
     }
 
@@ -40,6 +45,8 @@ export class DatabaseService implements OnDestroy {
   // Registration
   createNewUser(name: string, email: string) {
     return this.alertService.load('Creating your account...', new Promise(resolve => {
+      // Save default user data locally
+      this.storage.set('userData', JSON.stringify(new User));
       // Set theme to rider
       this.theme.setTheme(false);
       // Add to users folder - reference by email users/email.get(property)
@@ -57,7 +64,7 @@ export class DatabaseService implements OnDestroy {
 
   // Dashboard
   getUserData(email: string) {
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
       const dataSubscription = this.db.doc(`users/${email}`).get().subscribe(doc => {
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
@@ -70,9 +77,15 @@ export class DatabaseService implements OnDestroy {
         // Set theme according to user data
         this.theme.setTheme(this.userData.isDriver);
         dataSubscription.unsubscribe();
+        // Store all locally
+        this.storage.set('userData', JSON.stringify(this.userData));
         resolve();
       });
     });
+  }
+
+  getLocalUserData() {
+    return this.storage.get('userData');
   }
 
   getPickups() {
@@ -157,6 +170,8 @@ export class DatabaseService implements OnDestroy {
         }
         // Update user data
         this.userData = JSON.parse(JSON.stringify(newUserData));
+        // Set locally
+        this.storage.set('userData', JSON.stringify(this.userData));
         resolve();
       });
     })

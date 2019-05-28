@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapsService } from '../../services/maps.service';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { Location, UserLink } from 'src/app/services/helper-classes';
+import { Location, UserLink, User } from 'src/app/services/helper-classes';
 import { InfoWindow } from '@agm/core/services/google-maps-types';
 import { ChatService } from 'src/app/services/chat.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -48,20 +48,39 @@ export class DashboardPage implements OnInit {
     private cs: ChatService,
     private alertService: AlertService
   ) {
-    // Check when authenticated
-    this.authService.authState.subscribe(state => {
-      if (state === true) {
-        // Load all data
-        this.alertService.load('Loading Your Data...', new Promise(async resolve => {
-          await this.db.getUserData(this.authService.user.email);
-          // User link for quick access
-          this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
-          // Load all chats
-          await this.cs.loadMessages();
-          resolve();
-        }));
-      }
-    });
+    // if (!authService.user) {
+    //   // Defaults
+    //   db.userData = new User;
+    //   db.userLink = new UserLink('', '');
+    //   // Get from local storage
+    //   db.getLocalUserData().then(data => {
+    //     db.userData = JSON.parse(data);
+    //     this.db.theme.setTheme(db.userData.isDriver);
+    //   });
+    //   authService.getLocalUser().then(data => {
+    //     authService.user = JSON.parse(data);
+    //     db.userLink.name = authService.user.displayName;
+    //     db.userLink.email = authService.user.email;
+    //   });
+    // }
+    // Load all chats live
+    db.getLiveDoc(`users/${db.userLink.email}`).subscribe(doc => db.userData.chats = doc.payload.data()['chats']);
+    // Update all messages within chats
+    cs.loadMessages();
+    // // Check when authenticated
+    // this.authService.authState.subscribe(state => {
+    //   if (state === true) {
+    //     // Load all data
+    //     this.alertService.load('Loading Your Data...', new Promise(async resolve => {
+    //       await this.db.getUserData(this.authService.user.email);
+    //       // User link for quick access
+    //       this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
+    //       // Load all chats
+    //       await this.cs.loadMessages();
+    //       resolve();
+    //     }));
+    //   }
+    // });
     // this.makePickup(24.900868,67.11631, 'Askari 4');
   }
 

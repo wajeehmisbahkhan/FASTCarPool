@@ -1,6 +1,8 @@
 import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import { DatabaseService } from 'src/app/services/database.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +18,12 @@ export class LoginPage implements OnInit, OnDestroy {
   public loginFailed = false;
   constructor(
     public authService: AuthenticationService,
-    private formBuilder: FormBuilder
-    ) { }
+    private formBuilder: FormBuilder,
+    private db: DatabaseService,
+    private alertService: AlertService
+    ) {
+      console.log(this.db.userData);
+    }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -32,6 +38,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.authService = null;
+    this.db = null;
     this.formBuilder = null;
     this.loginForm = null;
     this.error = null;
@@ -41,11 +48,21 @@ export class LoginPage implements OnInit, OnDestroy {
     // If user gets past the initial checks
     if (!this.loginForm.valid) return;
     this.logging = true;
-    this.authService.login(this.loginForm.get('email').value, this.loginForm.get('password').value)
+    this.authService.login(this.email.value, this.password.value)
     .then(() => {
+      // Login complete
       this.loginFailed = false;
       this.logging = false;
-      this.loginForm.reset();
+      // Load user data
+      this.alertService.load('Loading your data...',
+      this.db.getUserData(this.email.value)).then(() => {
+        // Set user link
+        this.db.userLink.name = this.authService.user.displayName;
+        this.db.userLink.email = this.authService.user.email;
+        // Haye ho forward
+        this.authService.authState.next(true);
+        this.loginForm.reset();
+      });
     }).catch(err => {
       // Password failed
       this.loginFailed = true;

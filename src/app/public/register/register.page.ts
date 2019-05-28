@@ -39,6 +39,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authService = null;
     this.formBuilder = null;
+    this.db = null;
     this.error = null;
     this.registerForm = null;
   }
@@ -46,12 +47,13 @@ export class RegisterPage implements OnInit, OnDestroy {
   async register() {
     // If user gets past the initial checks
     if (!this.registerForm.valid) return;
+    this.registering = true;
     await this.authService.register(this.name.value, this.email.value, this.password.value);
+    this.registering = false;
     // Make place in database
     await this.db.createNewUser(this.name.value, this.email.value);
     // Now safe to go forward
-    this.authService.safeAuthState.next(true);
-    this.registering = false;
+    this.authService.authState.next(true);
     this.registerForm.reset();
   }
 
@@ -69,6 +71,5 @@ export class RegisterPage implements OnInit, OnDestroy {
   get password(): AbstractControl {
     return this.registerForm.get('password');
   }
-
 
 }
