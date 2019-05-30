@@ -43,6 +43,7 @@
     "cordova-plugin-whitelist": "^1.3.3",
     "core-js": "^2.5.4",
     "firebase": "^5.9.0",
+    "javac": "^1.0.0",
     "rxjs": "^6.5.1",
     "rxjs-compat": "^6.5.1",
     "zone.js": "~0.8.29"
