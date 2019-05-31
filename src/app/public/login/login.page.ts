@@ -21,9 +21,7 @@ export class LoginPage implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private db: DatabaseService,
     private alertService: AlertService
-    ) {
-      console.log(this.db.userData);
-    }
+    ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -47,6 +45,11 @@ export class LoginPage implements OnInit, OnDestroy {
   login() {
     // If user gets past the initial checks
     if (!this.loginForm.valid) return;
+    // If outdated version
+    if (!this.db.usable) {
+      this.alertService.error(this.db.outdatedError);
+      return;
+    }
     this.logging = true;
     this.authService.login(this.email.value, this.password.value)
     .then(() => {
@@ -62,7 +65,7 @@ export class LoginPage implements OnInit, OnDestroy {
         // Haye ho forward
         this.authService.authState.next(true);
         this.loginForm.reset();
-      });
+      }).catch(this.alertService.error.bind(this.alertService));
     }).catch(err => {
       // Password failed
       this.loginFailed = true;

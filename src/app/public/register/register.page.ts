@@ -2,6 +2,7 @@ import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -13,13 +14,13 @@ export class RegisterPage implements OnInit, OnDestroy {
   public registerForm: FormGroup;
   // For ease in reference
   public error: Object;
-
   public registering = false;
 
   constructor(
     public authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private db: DatabaseService
+    private db: DatabaseService,
+    private alertService: AlertService
     ) {}
 
   ngOnInit() {
@@ -47,11 +48,28 @@ export class RegisterPage implements OnInit, OnDestroy {
   async register() {
     // If user gets past the initial checks
     if (!this.registerForm.valid) return;
+    // If outdated version
+    // if (!this.db.usable) {
+    //   this.alertService.error(this.db.outdatedError);
+    //   return;
+    // }
     this.registering = true;
-    await this.authService.register(this.name.value, this.email.value, this.password.value);
-    this.registering = false;
+    // Register
+    try {
+      await this.authService.register(this.name.value, this.email.value, this.password.value);
+      this.registering = false;
+    } catch (err) {
+      this.registering = false;
+      this.alertService.error(err);
+      return;
+    }
     // Make place in database
-    await this.db.createNewUser(this.name.value, this.email.value);
+    try {
+      await this.db.createNewUser(this.name.value, this.email.value);
+    } catch (err) {
+      this.alertService.error(err);
+      return;
+    }
     // Now safe to go forward
     this.authService.authState.next(true);
     this.registerForm.reset();

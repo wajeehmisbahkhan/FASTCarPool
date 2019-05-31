@@ -48,40 +48,13 @@ export class DashboardPage implements OnInit {
     private cs: ChatService,
     private alertService: AlertService
   ) {
-    // if (!authService.user) {
-    //   // Defaults
-    //   db.userData = new User;
-    //   db.userLink = new UserLink('', '');
-    //   // Get from local storage
-    //   db.getLocalUserData().then(data => {
-    //     db.userData = JSON.parse(data);
-    //     this.db.theme.setTheme(db.userData.isDriver);
-    //   });
-    //   authService.getLocalUser().then(data => {
-    //     authService.user = JSON.parse(data);
-    //     db.userLink.name = authService.user.displayName;
-    //     db.userLink.email = authService.user.email;
-    //   });
-    // }
     // Load all chats live
-    db.getLiveDoc(`users/${db.userLink.email}`).subscribe(doc => db.userData.chats = doc.payload.data()['chats']);
+    db.getLiveDoc(`users/${db.userLink.email}`).subscribe(
+      doc => db.userData.chats = doc.payload.data()['chats'],
+      err => this.alertService.error.bind(this.alertService, err)
+    );
     // Update all messages within chats
     cs.loadMessages();
-    // // Check when authenticated
-    // this.authService.authState.subscribe(state => {
-    //   if (state === true) {
-    //     // Load all data
-    //     this.alertService.load('Loading Your Data...', new Promise(async resolve => {
-    //       await this.db.getUserData(this.authService.user.email);
-    //       // User link for quick access
-    //       this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
-    //       // Load all chats
-    //       await this.cs.loadMessages();
-    //       resolve();
-    //     }));
-    //   }
-    // });
-    // this.makePickup(24.900868,67.11631, 'Askari 4');
   }
 
   ngOnInit() {
@@ -113,7 +86,7 @@ export class DashboardPage implements OnInit {
 
   // Pikcups
   makePickup(lat: number, lng: number, name = 'Unnamed Place') {
-    this.db.unionArray('app/pickups', 'locations', Object.assign({}, new Location(lat, lng, name)));
+    this.db.unionArray('app/pickups', 'locations', Object.assign({}, new Location(lat, lng, name))).catch(this.alertService.error);
   }
 
   showPickups() {
@@ -142,7 +115,8 @@ export class DashboardPage implements OnInit {
     // Confirmation
     this.alertService.confirmation(`Confirm this message if you can make it to ${pickup.name}.\n
     Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
-      this.alertService.load('Adding as rider...', this.db.addRider(pickup, index));
+      // Adding
+      this.alertService.load('Adding as rider...', this.db.addRider(pickup, index).catch(this.alertService.error));
       this.closeWindow();
     });
   }

@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService implements OnDestroy{
+export class ChatService implements OnDestroy {
 
   chatList: Array<string> = [];
   previousChatListLength = 0;
@@ -58,7 +58,7 @@ export class ChatService implements OnDestroy{
       // Push to chats
       // Hacky indexing because .push() pushes old chats on even the smallest changes (like new messages)
       this.chats[index] = chat;
-    });
+    }, this.alertService.error);
     this.liveSubs.push(chatSub);
   }
 
@@ -102,6 +102,10 @@ export class ChatService implements OnDestroy{
   getChat(id: string) {
     const index = this.chats.findIndex(chat => chat.id === id);
     return this.chats[index];
+  }
+
+  isUsable() {
+    return this.db.usable;
   }
 
   ngOnDestroy() {
