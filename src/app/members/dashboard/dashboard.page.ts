@@ -55,22 +55,7 @@ export class DashboardPage implements OnInit {
     );
     // Update all messages within chats
     cs.loadMessages();
-<<<<<<< HEAD
-=======
-    // // Check when authenticated
-    // this.authService.authState.subscribe(state => {
-    //   if (state === true) {
-    //     // Load all data
-    //     this.alertService.load('Loading Your Data...', new Promise(async resolve => {
-    //       await this.db.getUserData(this.authService.user.email);
-    //       // User link for quick access
-    //       this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
-    //       // Load all chats
-    //       await this.cs.loadMessages();
-    //       resolve();
-    //     }));
-    //   }
-    // });
+    // PICKUPS
     // this.makePickup(24.900868,67.11631, 'Askari 4');
     // this.makePickup(24.934478,67.177173, 'MalirCanttgate6Phasell');
     // this.makePickup(24.940228,67.18198,'Askri5');
@@ -251,7 +236,6 @@ export class DashboardPage implements OnInit {
     // this.makePickup(24.834717, 67.071679, 'AkhterColony');
     // this.makePickup(24.833491, 67.080648, 'DeffanceView');
     // this.makePickup(24.862392, 67.087594, 'PAFChapter');
->>>>>>> 785050b2458d4373001f3bfa4f4da64bab84c88f
   }
 
   ngOnInit() {
