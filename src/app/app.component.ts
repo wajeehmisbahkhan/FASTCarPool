@@ -75,10 +75,19 @@ export class AppComponent {
         }
       });
       // Default stuff
-      this.statusBar.styleDefault();
+      //this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.platform.backButton.subscribe(this.navigateBack);
+      
+      
     });
+
+    // let status bar overlay webview
+    this.statusBar.overlaysWebView(true);
+
+    // set status bar to white
+    this.statusBar.backgroundColorByHexString('#ffffff');
+
   }
 
   versionDifference(localVersion: string, serverVersion: string): string {
