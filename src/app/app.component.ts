@@ -12,6 +12,8 @@ import { AlertService } from './services/alert.service';
 import { Storage } from '@ionic/storage';
 import { DatabaseService } from './services/database.service';
 
+import * as firebase from 'firebase/app';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -41,6 +43,8 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(async () => {
+      // Track performance
+      console.log(firebase);
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
