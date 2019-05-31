@@ -51,7 +51,7 @@ export class AppComponent {
         if (localVersion) // TODO: When coming from alpha to beta, only major version difference will cause app to stop working
           this.db.usable = this.versionDifference(localVersion, serverVersion) === 'minor' ? false : true;
         else // Testing purposes
-          this.db.usable = this.versionDifference('3.2.1', '3.3.2') === 'minor' ? false : true;
+          this.db.usable = this.versionDifference('3.3.1', '3.3.2') === 'minor' ? false : true;
       });
       // Check if user is stored in cache
       const user = await this.storage.get('user');
@@ -75,11 +75,9 @@ export class AppComponent {
         }
       });
       // Default stuff
-      //this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.platform.backButton.subscribe(this.navigateBack);
-      
-      
     });
 
     // let status bar overlay webview
