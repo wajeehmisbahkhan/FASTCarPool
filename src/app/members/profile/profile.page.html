@@ -11,7 +11,6 @@
   <form #profileForm="ngForm" (submit)="updateProfile($event)">
     <ion-item>
       <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
-      <!--TODO: Change app theme when option updates-->
       <toggle-switch name="isDriver" [(ngModel)]="localCopy.isDriver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
     </ion-item>
     <ion-item>

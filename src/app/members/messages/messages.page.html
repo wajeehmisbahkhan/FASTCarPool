@@ -7,9 +7,14 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
-  <ion-item *ngIf="emptyInbox(); else inboxMessages">
-    <ion-img [src]="'../../../assets/img/forever_alone.png'"></ion-img>
+  <ion-item *ngIf="!this.cs.isUsable(); else foreverAlone">
+    <ion-text [color]="'danger'" class="ion-text-center ion-margin">Notice: Please update your app to view your inbox.</ion-text>
   </ion-item>
+  <ng-template #foreverAlone>
+    <ion-item *ngIf="emptyInbox(); else inboxMessages">
+      <ion-img [src]="'../../../assets/img/forever_alone.png'"></ion-img>
+    </ion-item>
+  </ng-template>
   <ng-template #inboxMessages>
   <ion-list>
     <ion-item *ngFor="let chat of getSortedChats()" (click)="goToChat($event)" [attr.data-chat-id]="chat.id">

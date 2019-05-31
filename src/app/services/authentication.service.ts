@@ -63,7 +63,7 @@ export class AuthenticationService {
   }
 
   register(name: string, email: string, password: string) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
     this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(auth => {
       // Update name
       auth.user.updateProfile({
@@ -73,15 +73,9 @@ export class AuthenticationService {
         this._user = auth.user;
         this.storage.set('user', JSON.stringify(auth.user));
         resolve();
-        // _this.authState.next(true);
-        // _this.safeAuthState.subscribe(userHasLoaded => {
-        //   if (userHasLoaded) {
-        //     _this.router.navigate(['members', 'dashboard']);
-        //   }
-        // });
       });
+    }).catch(reject);
     });
-    }).catch(this.alertService.error);
   }
 
   logout() {

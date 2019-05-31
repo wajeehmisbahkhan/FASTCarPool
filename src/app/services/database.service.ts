@@ -21,12 +21,17 @@ export class DatabaseService implements OnDestroy {
 
   // App data
   pickups: Array<Location>;
+  usable: boolean; // Set to true by app at init if local version matches firebase version
 
   // Live subscriptions
   subscriptions: Array<Subscription> = [];
 
   // Easy reference
   fast: Location;
+  outdatedError = {
+    code: 405,
+    message: 'Your app version seems to be out of date. Make sure you have the latest version.'
+  };
 
   constructor(
     private db: AngularFirestore,
@@ -36,6 +41,7 @@ export class DatabaseService implements OnDestroy {
     ) {
       this.userData = new User;
       this.userLink = new UserLink('', '');
+      this.usable = true;
       this.fast = new Location(24.8568991, 67.2646838, 'FAST NUCES');
     }
 
@@ -59,12 +65,14 @@ export class DatabaseService implements OnDestroy {
         this.addRider(this.fast, 0);
         resolve();
       });
-    })).catch(this.alertService.error);
+    })) // TODO: Decide where to display errors
+    .catch(this.alertService.error.bind(this.alertService));
   }
 
   // Dashboard
   getUserData(email: string) {
-    return new Promise(async resolve => {
+    if (this.usable)
+    return new Promise(async (resolve, reject) => {
       const dataSubscription = this.db.doc(`users/${email}`).get().subscribe(doc => {
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
@@ -80,8 +88,9 @@ export class DatabaseService implements OnDestroy {
         // Store all locally
         this.storage.set('userData', JSON.stringify(this.userData));
         resolve();
-      });
+      }, reject);
     });
+    throw this.outdatedError;
   }
 
   getLocalUserData() {
@@ -89,40 +98,51 @@ export class DatabaseService implements OnDestroy {
   }
 
   getPickups() {
-    const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
-      this.pickups = pickups.payload.data()['locations'];
-    });
-    this.subscriptions.push(liveSub);
+    if (this.usable) {
+      const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
+        this.pickups = pickups.payload.data()['locations'];
+      });
+      this.subscriptions.push(liveSub);
+    } else
+      throw this.outdatedError;
   }
 
   addDriver(pickup: Location, index: number) {
     // Add locally
-    pickup.drivers.push(this.userLink);
-    this.pickups[index] = pickup;
+    if (this.usable) {
+      pickup.drivers.push(this.userLink);
+      this.pickups[index] = pickup;
+    }
     // Update in database
     return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
   }
 
   removeDriver(pickup: Location, index: number) {
     // Remove locally
-    pickup.drivers = pickup.drivers.filter( (driver) => driver.email !== this.userLink.email );
-    this.pickups[index] = pickup;
+    if (this.usable) {
+      pickup.drivers = pickup.drivers.filter( driver => driver.email !== this.userLink.email );
+      this.pickups[index] = pickup;
+    }
     // Update in database
     return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
   }
 
   addRider(pickup: Location, index: number) {
     // Add locally
-    pickup.riders.push(this.userLink);
-    this.pickups[index] = pickup;
+    if (this.usable) {
+      pickup.riders.push(this.userLink);
+      this.pickups[index] = pickup;
+    }
     // Update in database
     return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
   }
 
   removeRider(pickup: Location, index: number) {
       // Remove locally
-      pickup.riders = pickup.riders.filter( (rider) => rider.email !== this.userLink.email );
-      this.pickups[index] = pickup;
+      if (this.usable) {
+        pickup.riders = pickup.riders.filter( rider => rider.email !== this.userLink.email );
+        this.pickups[index] = pickup;
+      }
       // Update in database
       return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
   }
@@ -130,7 +150,7 @@ export class DatabaseService implements OnDestroy {
   updateUserData(newUserData: User) {
     return this.alertService.load('Updating your profile...',
     // Resolving this promise will complete the updating phase
-    new Promise(resolve => {
+    new Promise((resolve, reject) => {
       this.updateDoc(`users/${this.userLink.email}`, newUserData).then(() => {
         // If driver changed
         if (this.userData.isDriver !== newUserData.isDriver) {
@@ -138,8 +158,8 @@ export class DatabaseService implements OnDestroy {
           this.theme.setTheme(newUserData.isDriver);
           if (newUserData.isDriver) {
             // Add to drivers and remove from riders
-            this.unionArray('app/users', 'drivers', Object.assign({}, this.userLink));
-            this.arrayRemove('app/users', 'riders', Object.assign({}, this.userLink));
+            this.unionArray('app/users', 'drivers', Object.assign({}, this.userLink)).catch(reject);
+            this.arrayRemove('app/users', 'riders', Object.assign({}, this.userLink)).catch(reject);
             // Remove 'as rider' from all pickups
             const riderSub = this.getDoc('app/pickups').subscribe(doc => {
               riderSub.unsubscribe();
@@ -173,8 +193,10 @@ export class DatabaseService implements OnDestroy {
         // Set locally
         this.storage.set('userData', JSON.stringify(this.userData));
         resolve();
-      });
+      }).catch(reject);
     })
+    .then(this.alertService.notice.bind(this.alertService, 'Profile updated Successfully'))
+    .catch(this.alertService.error.bind(this.alertService))
     );
   }
 
@@ -200,39 +222,55 @@ export class DatabaseService implements OnDestroy {
 
   // General Methods
   getCollection(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.QuerySnapshot> {
-    return this.db.collection(path).get(options);
+    if (this.usable)
+      return this.db.collection(path).get(options);
+    throw this.outdatedError;
   }
 
   createDoc(path: string, data: Object) {
-    return this.db.collection(path).add(data);
+    if (this.usable)
+      return this.db.collection(path).add(data);
+    throw this.outdatedError;
   }
 
   getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
-    return this.db.doc(path).get(options);
+    if (this.usable)
+      return this.db.doc(path).get(options);
+    throw this.outdatedError;
   }
 
   getLiveDoc(path: string) {
-    return this.db.doc(path).snapshotChanges();
+    if (this.usable)
+      return this.db.doc(path).snapshotChanges();
+    throw this.outdatedError;
   }
 
   setDoc(path: string, data: Object, options?: firebase.firestore.SetOptions) {
-    return this.db.doc(path).set(data, options);
+    if (this.usable)
+      return this.db.doc(path).set(data, options);
+      throw this.outdatedError;
   }
 
   updateDoc(path: string, data: Object) {
-    return this.db.doc(path).update(data);
+    if (this.usable)
+      return this.db.doc(path).update(data);
+    throw this.outdatedError;
   }
 
   unionArray(path: string, field: string, element: any) {
     const updated = {};
     updated[field] = firestore.FieldValue.arrayUnion(element);
-    return this.db.doc(path).update(updated);
+    if (this.usable)
+      return this.db.doc(path).update(updated);
+    throw this.outdatedError;
   }
 
   arrayRemove(path: string, field: string, element: any) {
     const updated = {};
     updated[field] = firestore.FieldValue.arrayRemove(element);
-    this.db.doc(path).update(updated);
+    if (this.usable)
+      return this.db.doc(path).update(updated);
+    throw this.outdatedError;
   }
 
   ngOnDestroy() {

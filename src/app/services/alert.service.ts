@@ -8,10 +8,8 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
 })
 export class AlertService {
 
-  alertError = {
-    code: null,
-    message: null
-  };
+  app: Object;
+  device: Object;
 
   constructor(
     private alertController: AlertController,
@@ -19,30 +17,36 @@ export class AlertService {
     private emailComposer: EmailComposer
   ) { }
 
-  error(fireError: firebase.FirebaseError) {
-    this.alertError.code = fireError.code;
-    this.alertError.message = fireError.message;
+  error(error: firebase.FirebaseError | Object) {
+    // If undefined object
+    const data = { };
+    data['code'] = error['code'] ? error['code'] : '666';
+    data['message'] = error['message'] ? error['message'] : error;
+    // Create alert
     this.alertController.create({
       header: 'Error',
-      subHeader: this.alertError.code,
-      message: this.alertError.message,
+      subHeader: data['code'],
+      message: data['message'],
       buttons: [{
         text: 'Send Error Report',
-        handler: this.sendEmail
+        handler: () => // Send email as handler
+        this.sendEmail('k173673@nu.edu.pk',
+        'Bug Report (FAST CarPool)',
+        `Device:\n${JSON.stringify(this.device)}\nApp:\n${JSON.stringify(this.app)}\nCode: ${data['code']}\nMessage: ${data['message']}`)
       }, 'Okay']
     }).then(alert => {
       alert.present();
     });
   }
 
-  sendEmail() {
-    this.emailComposer.isAvailable().then((available) =>{
+  sendEmail(to: string, subject: string, body: string) {
+    this.emailComposer.isAvailable().then((available) => {
       if (available) {
         // Now we know we can send
         const email = {
-          to: 'k173673@nu.edu.pk',
-          subject: 'Bug Report (FAST CarPool)',
-          body: `Code: ${this.alertError.code}\nMessage: ${this.alertError.message}`
+          to: to,
+          subject: subject,
+          body: body
         };
         // Send a text message using default options
         this.emailComposer.open(email);
@@ -86,7 +90,7 @@ export class AlertService {
     });
 
     // Promise to detect when done
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const loading = this.lc.create({
         message: message
       });
@@ -101,8 +105,11 @@ export class AlertService {
             return resolve();
           });
         });
+      }).catch(err => {
+        this.error.bind(this, err);
+        reject();
       });
-    }).catch(this.error);
+    });
   }
 
 }

@@ -33,9 +33,7 @@ export class ProfilePage implements OnInit {
 
   updateProfile(e: Event) {
     e.preventDefault();
-    this.db.updateUserData(this.localCopy).then(() => {
-      this.alertService.notice('Profile updated successfully!');
-    });
+    this.db.updateUserData(this.localCopy);
   }
 
 }
