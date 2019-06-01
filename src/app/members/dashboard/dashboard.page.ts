@@ -243,8 +243,8 @@ export class DashboardPage implements OnInit {
       if (this.lat === 0 && this.lng === 0) {
         this.lat = resp.coords.latitude;
         this.lng = resp.coords.longitude;
-      }
-      // Position marker will keep changing
+      }else
+  // Position marker will keep changing
       this.liveLat = resp.coords.latitude;
       this.liveLng = resp.coords.longitude;
     });

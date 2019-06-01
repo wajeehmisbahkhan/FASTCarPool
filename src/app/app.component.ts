@@ -13,12 +13,16 @@ import { Storage } from '@ionic/storage';
 import { DatabaseService } from './services/database.service';
 
 import * as firebase from 'firebase/app';
+import { timer } from 'rxjs/observable/timer';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  showSplash = true;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -81,6 +85,7 @@ export class AppComponent {
       // Default stuff
       // this.statusBar.styleDefault();
       this.splashScreen.hide();
+      timer(3000).subscribe(() => this.showSplash = false);
       this.platform.backButton.subscribe(this.navigateBack);
     });
 
