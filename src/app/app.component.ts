@@ -81,7 +81,7 @@ export class AppComponent {
       });
       // Default stuff
       // this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      this.splashScreen.show();
       timer(3000).subscribe(() => this.showSplash = false)
       this.platform.backButton.subscribe(this.navigateBack);
     });
@@ -90,7 +90,7 @@ export class AppComponent {
     this.statusBar.overlaysWebView(true);
 
     // set status bar to white
-    this.statusBar.backgroundColorByHexString('#ffffff');
+    this.statusBar.backgroundColorByHexString('#000000');
 
   }
 
