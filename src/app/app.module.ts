@@ -16,10 +16,13 @@ import { IonicStorageModule } from '@ionic/storage';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { environment } from '../environments/environment';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
+
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { AgmCoreModule } from '@agm/core';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
+
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +35,7 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    AngularFirePerformanceModule,
     AgmCoreModule.forRoot({
       apiKey: environment.googleMaps.apiKey
     })

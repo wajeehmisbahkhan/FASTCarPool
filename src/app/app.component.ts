@@ -12,6 +12,7 @@ import { AlertService } from './services/alert.service';
 import { Storage } from '@ionic/storage';
 import { DatabaseService } from './services/database.service';
 
+import * as firebase from 'firebase/app';
 import { timer } from 'rxjs/observable/timer';
 
 @Component({
@@ -46,6 +47,8 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(async () => {
+      // Track performance
+      console.log(firebase);
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
@@ -82,7 +85,7 @@ export class AppComponent {
       // Default stuff
       // this.statusBar.styleDefault();
       this.splashScreen.show();
-      timer(3000).subscribe(() => this.showSplash = false)
+      timer(15000).subscribe(() => this.showSplash = false);
       this.platform.backButton.subscribe(this.navigateBack);
     });
 
