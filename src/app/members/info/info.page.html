@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Welcome, {{ this.user.displayName }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-text>
+      In order for you to have the best experience, we will require
+      you to input some of your information below:
+    </ion-text>
+  </ion-item>
+  <ion-item>
+    <ion-label>Your Home Address: </ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+  <ion-label>Your Courses: </ion-label>
+  <ion-item>
+    <ion-input [placeholder]="'Course'"></ion-input>
+    <ion-input [placeholder]="'Section'"></ion-input>
+  </ion-item>
+</ion-content>

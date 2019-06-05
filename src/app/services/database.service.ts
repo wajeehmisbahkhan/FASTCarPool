@@ -97,14 +97,17 @@ export class DatabaseService implements OnDestroy {
     return this.storage.get('userData');
   }
 
-  getPickups() {
-    if (this.usable) {
-      const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
-        this.pickups = pickups.payload.data()['locations'];
-      });
-      this.subscriptions.push(liveSub);
+  getLivePickups(): Observable<Array<Location>> {
+    return new Observable(observer => {
+      if (this.usable) {
+        const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
+          this.pickups = pickups.payload.data()['locations'];
+          observer.next(this.pickups);
+        });
+        this.subscriptions.push(liveSub);
     } else
-      throw this.outdatedError;
+      observer.error(this.outdatedError);
+    });
   }
 
   addDriver(pickup: Location, index: number) {

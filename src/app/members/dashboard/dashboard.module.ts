@@ -9,6 +9,7 @@ import { DashboardPage } from './dashboard.page';
 
 import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
+import { GoogleMapComponent } from 'src/app/components/google-map/google-map.component';
 
 const routes: Routes = [
   {
@@ -22,11 +23,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMaps.apiKey
-    })
+    RouterModule.forChild(routes)
   ],
-  declarations: [DashboardPage]
+  declarations: [DashboardPage, GoogleMapComponent]
 })
 export class DashboardPageModule {}

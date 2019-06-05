@@ -1,10 +1,8 @@
 import { AuthenticationService } from './../../services/authentication.service';
-import { Component, OnInit } from '@angular/core';
-import { MapsService } from '../../services/maps.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { Location, UserLink, User } from 'src/app/services/helper-classes';
-import { InfoWindow } from '@agm/core/services/google-maps-types';
 import { ChatService } from 'src/app/services/chat.service';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -29,20 +27,18 @@ export class DashboardPage implements OnInit {
     }
   ];
 
-  // Marker Location
-  liveLat = 0;
-  liveLng = 0;
+  // Map reference
+  @ViewChild('map') map;
   // Map location
   lat = 0;
   lng = 0;
-
-  // Close previous window
-  infoWindowOpened = null;
-  previousInfoWindow = null;
+  updated = false;
+  // Marker Location
+  liveLat = 0;
+  liveLng = 0;
 
   constructor(
     private authService: AuthenticationService,
-    public map: MapsService,
     public db: DatabaseService,
     private router: Router,
     private cs: ChatService,
@@ -56,7 +52,6 @@ export class DashboardPage implements OnInit {
     // Update all messages within chats
     cs.loadMessages();
     // PICKUPS
-    // this.makePickup(24.900868, 67.11631, 'Askari 4');
     // this.makePickup(24.934478, 67.177173, 'Malir Cantt Gate 6 Phase II');
     // this.makePickup(24.940228, 67.18198, 'Askari 5');
     // this.makePickup(24.961253, 67.187153, 'Phase 1');
@@ -95,7 +90,6 @@ export class DashboardPage implements OnInit {
     // this.makePickup(24.959528, 67.050178, 'Sakhi Hassan');
     // this.makePickup(24.947471, 67.065896, 'DC Office');
     // this.makePickup(24.9328, 67.082907, 'UBL Sports(KIHD)');
-    // this.makePickup(24.900868, 67.11631, 'Malir');
     // this.makePickup(24.985161, 67.055121, 'Ajmair Nagri');
     // this.makePickup(24.978726, 67.0555, 'Bara Dari');
     // this.makePickup(24.955192, 67.058664, 'Babul Islam');
@@ -113,7 +107,6 @@ export class DashboardPage implements OnInit {
     // this.makePickup(24.941094, 67.060381, 'Niaz Manzil');
     // this.makePickup(24.94261, 67.06193, 'Dental College');
     // this.makePickup(24.936819, 67.075986, 'Gulberg');
-    // this.makePickup(24.900868, 67.11631, 'Malir');
     // this.makePickup(24.96492, 67.053357, 'Anda More');
     // this.makePickup(24.971885, 67.056017, 'Disco More');
     // this.makePickup(24.960589, 67.072985, 'Café 2 days');
@@ -239,21 +232,34 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     this.map.getLiveLocation().subscribe(resp => {
-      // Map coords will update once
-      if (this.lat === 0 && this.lng === 0) {
+      // Map coords will update once when map location is enabled
+      if (resp.coords.latitude !== 0 && resp.coords.longitude !== 0)
+      if (!this.updated) {
         this.lat = resp.coords.latitude;
         this.lng = resp.coords.longitude;
-      }else
-  // Position marker will keep changing
-      this.liveLat = resp.coords.latitude;
-      this.liveLng = resp.coords.longitude;
+        this.updated = true;
+        const mapOptions: google.maps.MapOptions = {
+          center: new google.maps.LatLng(this.lat, this.lng),
+          zoom: 14,
+          disableDefaultUI: true,
+          clickableIcons: false,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: this.db.userData.isDriver ? this.map.darkMap : this.map.lightMap
+        };
+        this.map.initMap(mapOptions);
+      } else {
+        // Position marker will keep changing
+        this.liveLat = resp.coords.latitude;
+        this.liveLng = resp.coords.longitude;
+        // Add marker for live location
+        this.map.addMarker(new google.maps.LatLng(this.liveLat, this.liveLng));
+      }
     });
     this.showPickups();
   }
 
   gotoPage(path: string) {
-    if (this.previousInfoWindow)
-      this.closeWindow();
+    this.map.closeWindow();
     this.router.navigateByUrl('members' + path);
   }
 
@@ -270,7 +276,91 @@ export class DashboardPage implements OnInit {
   }
 
   showPickups() {
-    this.db.getPickups();
+    this.db.getLivePickups().subscribe(pickups => {
+      // Show each pickup point
+      pickups.forEach((pickup, index) => {
+        // Lat Lng
+        const latLng = new google.maps.LatLng(pickup.lat, pickup.lng);
+        // Icon URL
+        let color: string;
+        // Look if added as driver or rider
+        if (this.db.userData.isDriver)
+          color = pickup.drivers.find(driver => driver['email'] === this.db.userLink.email) ? 'green' : 'blue';
+        else
+          color = pickup.riders.find(rider => rider['email'] === this.db.userLink.email) ? 'green' : 'blue';
+        // Use green if added otherwise blue
+        const icon = `../../../assets/img/${color}_location.png`;
+        // Content
+        let content = `<h3>${pickup.name}</h3>`;
+        // Show if user is rider
+        if (!this.db.userData.isDriver) {
+          if (pickup.drivers.length === 0) {
+            content += '<p>There are currently no drivers who pass by this point.</p>';
+          } else {
+            content += `<b>Tap to see driver's profile: </b>`;
+            pickup.drivers.forEach(driver => {
+              content += `
+              <span>
+              <ion-chip data-email="${driver.email}">${driver.name}</ion-chip>
+              </span>
+              `;
+            });
+          }
+          // Button
+          if (!this.addedToLocation('riders', pickup)) {
+            content += `
+            <ion-button class="pickup-button" id="addRider" size="small" expand="block"
+            data-location='${JSON.stringify(pickup)}' data-index="${index}">
+            I can be picked up from this location
+            </ion-button>
+            `;
+          } else {
+            content  += `
+            <ion-button class="pickup-button" id="removeRider" size="small" expand="block"
+            data-location='${JSON.stringify(pickup)}' data-index="${index}">
+              Added Successfully As Rider
+            </ion-button>
+            `;
+          }
+        } else {
+          if (pickup.riders.length === 0) {
+            content += '<p>There are currently no riders who can make it to this point.</p>';
+          } else {
+            content += `<b>Tap to see rider's profile: </b><br>`;
+            pickup.riders.forEach(rider => {
+              content += `
+              <span>
+              <ion-chip data-email="${rider.email}">${rider.name}</ion-chip>
+              </span>
+              `;
+            });
+          }
+          // Button
+          if (!this.addedToLocation('drivers', pickup)) {
+            content += `
+            <ion-button class="pickup-button" id="addDriver" size="small" expand="block"
+            data-location='${JSON.stringify(pickup)}' data-index="${index}">
+              I can pickup riders from this location
+            </ion-button>
+            `;
+          } else {
+            content  += `
+            <ion-button class="pickup-button" id="removeDriver" size="small" expand="block"
+            data-location='${JSON.stringify(pickup)}' data-index="${index}">
+              Added Successfully As Driver
+            </ion-button>
+            `;
+          }
+        }
+        // Add to map
+        this.map.addMarker(latLng, icon, content);
+      });
+    });
+  }
+
+  viewProfile(userInfo: string[]) {
+    this.router.navigateByUrl('members/view');
+    this.db.getUserView(new UserLink(userInfo[0], userInfo[1]));
   }
 
   addedToLocation(addedAs: string, pickup: Location): boolean {
@@ -280,15 +370,9 @@ export class DashboardPage implements OnInit {
     return false;
   }
 
-  pickupUrl(pickup: Location, index: number): string {
-    let color: string;
-    // Look if added as driver or rider
-    if (this.db.userData.isDriver)
-      color = pickup.drivers.find(driver => driver['email'] === this.db.userLink.email) ? 'green' : 'blue';
-    else
-      color = pickup.riders.find(rider => rider['email'] === this.db.userLink.email) ? 'green' : 'blue';
-    // Return green if added otherwise blue
-    return `../../../assets/img/${color}_location.png`;
+  pickupClicked(pickupInfo: string[]) {
+    // Execute -> id(location, index)
+    this[pickupInfo[0]](JSON.parse(pickupInfo[1]), parseInt(pickupInfo[2], 10));
   }
 
   addRider(pickup: Location, index: number) {
@@ -297,7 +381,6 @@ export class DashboardPage implements OnInit {
     Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
       // Adding
       this.alertService.load('Adding as rider...', this.db.addRider(pickup, index).catch(this.alertService.error));
-      this.closeWindow();
     });
   }
 
@@ -305,7 +388,6 @@ export class DashboardPage implements OnInit {
     // Confirm
     this.alertService.confirmation(`Do you want to remove yourself from the list of riders for ${pickup.name}?`, () => {
       this.alertService.load('Removing from riders list', this.db.removeRider(pickup, index));
-      this.closeWindow();
     });
   }
 
@@ -315,7 +397,6 @@ export class DashboardPage implements OnInit {
     Note: This will allow riders to contact you through this pickup point.`, () => {
       // Load
       this.alertService.load('Adding you as a driver...', this.db.addDriver(pickup, index));
-      this.closeWindow();
     });
   }
 
@@ -324,25 +405,8 @@ export class DashboardPage implements OnInit {
     this.alertService.confirmation(`Do you want to remove yourself from the list of drivers for ${pickup.name}?`, () => {
       // Load
       this.alertService.load('Removing from drivers list', this.db.removeDriver(pickup, index));
-      this.closeWindow();
     });
   }
 
-  // Maps
-  closeWindow() {
-    if (this.previousInfoWindow)
-      this.previousInfoWindow.close();
-    this.previousInfoWindow = null;
-  }
-
-  selectMarker(infoWindow: InfoWindow) {
-    if (this.previousInfoWindow == null)
-      this.previousInfoWindow = infoWindow;
-    else {
-      this.infoWindowOpened = infoWindow;
-      this.previousInfoWindow.close();
-    }
-    this.previousInfoWindow = infoWindow;
-  }
 
 }

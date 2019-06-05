@@ -40,6 +40,7 @@ export class AppComponent {
 
   navigateBack (e) {
     const url = window.location.pathname;
+    // TODO: Handle all urls
     if (url === '/login' || url === '/members/dashboard') {
       navigator['app'].exitApp();
     }
@@ -48,7 +49,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(async () => {
       // Track performance
-      console.log(firebase);
+      console.log(firebase.performance);
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
@@ -77,7 +78,11 @@ export class AppComponent {
       // Subscribe to original for above change and any further changes
       this.authService.authState.subscribe(res => {
         if (res) { // User is logged in
-          this.router.navigate(['members', 'dashboard']);
+          // If first time regisration
+          if (window.location.pathname === '/register')
+            this.router.navigate(['members', 'info']);
+          else // Usual member
+            this.router.navigate(['members', 'dashboard']);
         } else { // Redirect to login
           this.router.navigate(['login']);
         }

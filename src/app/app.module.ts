@@ -19,7 +19,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { AgmCoreModule } from '@agm/core';
+import { AgmCoreModule, AgmMap } from '@agm/core';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 import { environment } from '../environments/environment';
@@ -47,7 +47,9 @@ import { environment } from '../environments/environment';
     Device,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Geolocation,
-    EmailComposer
+    EmailComposer,
+    AgmCoreModule,
+    AgmMap
   ],
   bootstrap: [AppComponent]
 })

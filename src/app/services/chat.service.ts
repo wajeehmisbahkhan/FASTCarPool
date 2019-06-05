@@ -96,7 +96,7 @@ export class ChatService implements OnDestroy {
       if (participant.email === this.db.userLink.email)
         sender = index;
     });
-    this.db.unionArray(`chats/${chatId}`, 'messages', Object.assign({}, new Message(sender, content)));
+    this.db.unionArray(`chats/${chatId}`, 'messages', Object.assign({}, new Message(sender, content))).catch(console.error);
   }
 
   getChat(id: string) {
