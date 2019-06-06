@@ -56,16 +56,24 @@ export class LoginPage implements OnInit, OnDestroy {
       // Login complete
       this.loginFailed = false;
       this.logging = false;
+      // Set user link
+      this.db.userLink.name = this.authService.user.displayName;
+      this.db.userLink.email = this.authService.user.email;
       // Load user data
       this.alertService.load('Loading your data...',
       this.db.getUserData(this.email.value)).then(() => {
-        // Set user link
-        this.db.userLink.name = this.authService.user.displayName;
-        this.db.userLink.email = this.authService.user.email;
         // Haye ho forward
         this.authService.authState.next(true);
         this.loginForm.reset();
-      }).catch(this.alertService.error.bind(this.alertService));
+      }).catch(err => {
+        // If registration not completed
+        if (err.code === 601) {
+          // Acknowledge registration is not complete
+          this.db.userData = null;
+          // Haye ho forward
+          this.authService.authState.next(true);
+        }
+      });
     }).catch(err => {
       // Password failed
       this.loginFailed = true;

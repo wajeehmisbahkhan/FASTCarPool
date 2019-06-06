@@ -11,7 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage {
 
   // Menu
   public appPages = [
@@ -230,7 +230,7 @@ export class DashboardPage implements OnInit {
     // this.makePickup(24.862392, 67.087594, 'PAF Chapter');
   }
 
-  ngOnInit() {
+  ionViewDidEnter() {
     this.map.getLiveLocation().subscribe(resp => {
       // Map coords will update once when map location is enabled
       if (resp.coords.latitude !== 0 && resp.coords.longitude !== 0)
@@ -254,7 +254,7 @@ export class DashboardPage implements OnInit {
         // Add marker for live location
         this.map.addMarker(new google.maps.LatLng(this.liveLat, this.liveLng));
       }
-    });
+    }, console.error);
     this.showPickups();
   }
 
@@ -311,14 +311,14 @@ export class DashboardPage implements OnInit {
             content += `
             <ion-button class="pickup-button" id="addRider" size="small" expand="block"
             data-location='${JSON.stringify(pickup)}' data-index="${index}">
-            I can be picked up from this location
+            I can be picked up<br>from this location
             </ion-button>
             `;
           } else {
             content  += `
             <ion-button class="pickup-button" id="removeRider" size="small" expand="block"
             data-location='${JSON.stringify(pickup)}' data-index="${index}">
-              Added Successfully As Rider
+              Added Successfully<br>As Rider
             </ion-button>
             `;
           }
@@ -340,14 +340,14 @@ export class DashboardPage implements OnInit {
             content += `
             <ion-button class="pickup-button" id="addDriver" size="small" expand="block"
             data-location='${JSON.stringify(pickup)}' data-index="${index}">
-              I can pickup riders from this location
+              I can pickup riders<br>from this location
             </ion-button>
             `;
           } else {
             content  += `
             <ion-button class="pickup-button" id="removeDriver" size="small" expand="block"
             data-location='${JSON.stringify(pickup)}' data-index="${index}">
-              Added Successfully As Driver
+              Added Successfully<br>As Driver
             </ion-button>
             `;
           }

@@ -74,6 +74,14 @@ export class DatabaseService implements OnDestroy {
     if (this.usable)
     return new Promise(async (resolve, reject) => {
       const dataSubscription = this.db.doc(`users/${email}`).get().subscribe(doc => {
+        // If data does not exist - first time registration
+        if (!doc.data()) {
+          reject({
+            code: 601,
+            message: 'Registration is incomplete'
+          });
+          return;
+        }
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
         this.userData.status = doc.data().status;

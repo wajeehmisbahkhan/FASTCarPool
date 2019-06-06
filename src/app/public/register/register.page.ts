@@ -1,7 +1,6 @@
 import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
-import { DatabaseService } from '../../services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   constructor(
     public authService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private db: DatabaseService,
     private alertService: AlertService
     ) {}
 
@@ -40,7 +38,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.authService = null;
     this.formBuilder = null;
-    this.db = null;
     this.error = null;
     this.registerForm = null;
   }
@@ -63,14 +60,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.alertService.error(err);
       return;
     }
-    // Make place in database
-    try {
-      await this.db.createNewUser(this.name.value, this.email.value);
-    } catch (err) {
-      this.alertService.error(err);
-      return;
-    }
-    // Now safe to go forward
+    // Now safe to go forward - on to the info page
     this.authService.authState.next(true);
     this.registerForm.reset();
   }

@@ -103,11 +103,13 @@ export class AlertService {
             this.lc.dismiss(null, null, loader.id);
             loader = null;
             return resolve();
+          }).catch(err => {
+            clearTimeout(wait);
+            this.lc.dismiss(null, null, loader.id);
+            loader = null;
+            return reject(err);
           });
         });
-      }).catch(err => {
-        this.error.bind(this, err);
-        reject();
       });
     });
   }
