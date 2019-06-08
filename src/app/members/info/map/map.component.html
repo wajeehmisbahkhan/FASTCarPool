@@ -1,0 +1,8 @@
+<ion-content>
+  <ion-searchbar></ion-searchbar>
+  <google-map (screenDragged)="updateMarkerPosition($event)" #map></google-map>
+  <div class="address-controls">
+    <ion-button size="medium" expand="block">Confirm Address</ion-button>
+    <ion-button size="medium" expand="block">Cancel</ion-button>
+  </div>
+</ion-content>

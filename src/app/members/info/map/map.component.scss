@@ -1,0 +1,13 @@
+ion-searchbar, div.address-controls {
+    position: absolute;
+    z-index: 9999;
+}
+div.address-controls {
+    bottom: 10vh;
+    width: 100%;
+    text-align: center;
+    ion-button {
+        display: inline-block;
+        margin-inline-end: 5vw;
+    }
+}

@@ -92,15 +92,21 @@ export class GoogleMapComponent {
 
   public lightMap = [];
 
+  // Markers
+  markers: Array<google.maps.Marker>;
+
   // Close previous window
   infoWindowOpened = null;
   previousInfoWindow = null;
 
-  map: any;
+  map: google.maps.Map;
 
   // Get reference to map element in html file
   @ViewChild('map') mapElement;
 
+  // Output signals to info page
+  @Output()
+  screenDragged = new EventEmitter<number[]>();
   // Output signals to dashboard for click events
   @Output()
   userChipClicked = new EventEmitter<string[]>();
@@ -123,12 +129,23 @@ export class GoogleMapComponent {
 
   constructor(
     private geolocation: Geolocation
-    ) { }
+    ) {
+      this.markers = [];
+    }
 
   initMap(mapOptions: google.maps.MapOptions) {
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     // Close any info window on click
     this.map.addListener('click', () => this.selectMarker(null));
+    // For map info marker dragging
+    this.map.addListener('drag', () =>
+      this.screenDragged.emit([this.map.getCenter().lat(), this.map.getCenter().lng()])
+    );
+  }
+
+  // For quick event adding
+  addEventListener(event: string, callBack: any) {
+    this.map.addListener(event, callBack);
   }
 
   addMarker(position, icon?, content?) {
@@ -148,10 +165,12 @@ export class GoogleMapComponent {
         this.selectMarker(infoWindow);
       });
     }
+    this.markers.push(marker);
   }
 
-  test() {
-    console.log('asd');
+  // TODO?: Implement in dashboard
+  getMarker(index: number) {
+    return this.markers[index];
   }
 
   getCurrentLocation() {
@@ -178,6 +197,5 @@ export class GoogleMapComponent {
     }
     this.previousInfoWindow = infoWindow;
   }
-
 
 }

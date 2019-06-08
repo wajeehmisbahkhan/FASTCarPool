@@ -64,6 +64,18 @@ export class Day {
         this.departure = departure;
     }
 }
+export class Address {
+    address: string;
+    position: Coordinate;
+}
+export class Course {
+    name: string;
+    section: string;
+    constructor(name: string, section: string) {
+        this.name = name;
+        this.section = section;
+    }
+}
 export class Car {
     // TODO?: Number Plate & Color
     capacity: number;
@@ -144,7 +156,9 @@ export class User {
     chats: Array<String>;
     isDriver: boolean;
     status: string;
+    courses: Array<Course>;
     schedule: Array<Day>;
+    home: Address;
     // Driver specific
     car: Car;
     rate: Rate;
@@ -152,6 +166,7 @@ export class User {
         this.chats = [];
         this.isDriver = false;
         this.status = 'Hey there! I\'m using FAST CarPool.';
+        this.courses = [];
         // Making default schedule
         const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         this.schedule = [];
@@ -160,6 +175,10 @@ export class User {
         });
         this.car = new Car;
         this.rate = new Rate;
+    }
+
+    addCourse(name: string, section: string) {
+        this.courses.push(new Course(name, section));
     }
 
     toObject(): Object {

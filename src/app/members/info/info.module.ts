@@ -1,16 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
 import { InfoPage } from './info.page';
+import { MapComponent } from './map/map.component';
+import { GoogleMapComponent } from 'src/app/components/google-map/google-map.component';
 
 const routes: Routes = [
   {
     path: '',
     component: InfoPage
+  },
+  {
+    path: 'map/:location',
+    component: MapComponent
   }
 ];
 
@@ -19,8 +25,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
   ],
-  declarations: [InfoPage]
+  declarations: [InfoPage, GoogleMapComponent, MapComponent]
 })
 export class InfoPageModule {}
