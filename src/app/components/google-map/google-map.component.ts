@@ -181,6 +181,39 @@ export class GoogleMapComponent {
     return this.geolocation.watchPosition();
   }
 
+  getAddress(lat: number, lng: number) {
+    return new Promise((resolve, reject) => {
+      // For lat lng to address
+      const geocoder = new google.maps.Geocoder;
+      // Reverse geocoding
+      geocoder.geocode({
+        location: new google.maps.LatLng(lat, lng)
+      }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          // Result is the first elemnt
+          const result = results[0];
+          if (result !== null) {
+            resolve(result.formatted_address);
+            return;
+          }
+          reject({
+            code: 702,
+            message: 'Geocoding result is null.'
+          });
+          return;
+        }
+        reject({
+          code: 701,
+          message: 'Geocoding status is not OK'
+        });
+      });
+    });
+  }
+
+  setLatLng(lat: number, lng: number) {
+    this.map.setCenter(new google.maps.LatLng(lat, lng));
+  }
+
   // Maps
   closeWindow() {
     if (this.previousInfoWindow)

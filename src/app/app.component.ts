@@ -92,11 +92,13 @@ export class AppComponent {
         this.authService.authState.next(true);
       }
       // Subscribe to original for above change and any further changes
-      this.authService.authState.subscribe(res => {
+      this.authService.authState.subscribe(async res => {
         if (res) { // User is logged in
           // If first time registration - or incomplete registration
-          if (window.location.pathname === '/register' || !this.db.userData)
+          if (window.location.pathname === '/register' || !this.db.userData) {
+            await this.db.loadInfoData();
             this.router.navigate(['members', 'info']);
+          }
           else // Usual member
             this.router.navigate(['members', 'dashboard']);
         } else { // Redirect to login

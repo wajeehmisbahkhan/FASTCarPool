@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
-import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
+import { User, UserLink, Users, Location, ViewUser, CourseDetails, Section } from './helper-classes';
 import { AlertService } from './alert.service';
 import { ThemeService } from './theme.service';
 import { Storage } from '@ionic/storage';
@@ -22,6 +22,9 @@ export class DatabaseService implements OnDestroy {
   // App data
   pickups: Array<Location>;
   usable: boolean; // Set to true by app at init if local version matches firebase version
+
+  // Courses
+  coursesDetails: Array<CourseDetails>;
 
   // Live subscriptions
   subscriptions: Array<Subscription> = [];
@@ -67,6 +70,25 @@ export class DatabaseService implements OnDestroy {
       });
     })) // TODO: Decide where to display errors
     .catch(this.alertService.error.bind(this.alertService));
+  }
+
+  // Info
+  getCourses() {
+    return new Promise((resolve, reject) => {
+      // TODO: Get from server
+      this.coursesDetails = [];
+      this.coursesDetails.push(new CourseDetails('English Language (ENG)', 'SS123',
+      [new Section('C1', 'Miss Nazia Imam'), new Section('C2', 'Sir Wahid Haris')]));
+      this.coursesDetails.push(new CourseDetails('Calculus (CAL-I)', 'MT101',
+      [new Section('A', 'Sir Nadeem Khan'), new Section('B', 'Miss Farah')]));
+      this.coursesDetails.push(new CourseDetails('Data Structure (DS)', 'CS201',
+      [new Section('GR1', 'Miss Nida'), new Section('GR2', 'Miss Nida')]));
+      resolve();
+    });
+  }
+
+  async loadInfoData() {
+    await this.getCourses();
   }
 
   // Dashboard

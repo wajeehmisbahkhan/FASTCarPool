@@ -70,10 +70,32 @@ export class Address {
 }
 export class Course {
     name: string;
-    section: string;
-    constructor(name: string, section: string) {
+    code: string;
+    constructor(name: string, code: string) {
         this.name = name;
+        this.code = code;
+    }
+}
+export class CourseUser extends Course {
+    section: Section;
+    constructor(name: string, code: string, section: Section) {
+        super(name, code);
         this.section = section;
+    }
+}
+export class CourseDetails extends Course {
+    sections: Array<Section>;
+    constructor(name: string, code: string, sections: Array<Section>) {
+        super(name, code);
+        this.sections = sections;
+    }
+}
+export class Section {
+    code: string;
+    teacher: string;
+    constructor(code: string, teacher: string) {
+        this.code = code;
+        this.teacher = teacher;
     }
 }
 export class Car {

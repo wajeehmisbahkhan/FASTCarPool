@@ -58,7 +58,7 @@
   <!-- Address -->
   <ion-item>
     <ion-label position="floating">Your Home Address</ion-label>
-    <ion-input formControlName="address" (click)="goToMap($event.target)"></ion-input>
+    <ion-input formControlName="address" (click)="goToMap()"></ion-input>
   </ion-item>
   <!-- Courses -->
   <div id="courses">
@@ -67,11 +67,24 @@
   </ion-item>
   <!-- Listed -->
   <div formArrayName="courses">
-    <ion-item *ngFor="let course of coursesArray.controls; let i = index"
+    <ion-item class="courses-options" *ngFor="let course of coursesArray.controls; let i = index"
     [formGroupName]="i">
-    <ion-input formControlName="name" [placeholder]="'Course'"></ion-input>
-    <ion-input formControlName="section" [placeholder]="'Section'"></ion-input>
-    <ion-icon *ngIf="i > 0" (click)="removeCourse(i)" name="remove-circle"></ion-icon>
+    <ion-select #courseSelection formControlName="name" [placeholder]="'Course'">
+      <ion-label>Course</ion-label>
+      <ion-select-option *ngFor="let courseDetails of coursesDetails">
+        {{ courseDetails.name }}
+      </ion-select-option>
+    </ion-select>
+    <ion-select formControlName="section" [placeholder]="'Section'">
+      <ion-label>Section</ion-label>
+      <!-- Only read if option is selected -->
+      <div *ngIf="courseSelected(i)">
+      <ion-select-option *ngFor="let section of getSections(i)">
+        {{ section.code }}
+      </ion-select-option>
+      </div>
+    </ion-select>
+    <ion-icon class="absolute-vertical-center" *ngIf="i > 0" (click)="removeCourse(i)" name="remove-circle"></ion-icon>
     </ion-item>
   </div>
   <!-- Add More Courses -->

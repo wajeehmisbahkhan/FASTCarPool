@@ -6,6 +6,18 @@ div.error-message {
         text-decoration-style: none;
     }
 }
+.courses-options {
+    ion-select:first-child {
+        max-width: 100%;
+        width: 65%;
+    }
+    ion-select:nth-child(2) {
+        width: 30%;
+    }
+    ion-icon {
+        right: 2px;
+    }
+}
 // ion-input, ion-button {
 //     position: relative;
 //     ion-spinner {
