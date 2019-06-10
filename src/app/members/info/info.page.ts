@@ -4,7 +4,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Section } from 'src/app/services/helper-classes';
+import { Section, User, CourseUser, Course, CourseDetails } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'info',
@@ -19,9 +19,6 @@ export class InfoPage implements OnInit {
   lat: number;
   lng: number;
   address: string;
-
-  // For Courses
-  selectedIndexes: Array<number>;
 
   constructor(
     private authService: AuthenticationService,
@@ -43,23 +40,18 @@ export class InfoPage implements OnInit {
         this.lng = 0;
       }
     });
-    // Default Courses/Sections
-    this.selectedIndexes = [];
   }
 
   ngOnInit() {
-    let initialAddress = this.address;
-    if (!this.address)
-      initialAddress = 'This will not be displayed publicly...';
     this.infoForm = this.formBuilder.group({
-      address: [initialAddress, Validators.required],
+      address: [this.address, Validators.required],
       courses: this.formBuilder.array([this.addCourseGroup()])
     });
-    this.infoForm.get('address').disable();
   }
 
   // Map
-  goToMap() {
+  goToMap(e) {
+    e.preventDefault();
     this.router.navigate(['members', 'info', 'map', 'temp', this.lat, this.lng]);
   }
 
@@ -78,8 +70,6 @@ export class InfoPage implements OnInit {
       name: ['', Validators.required],
       section: ['', Validators.required]
     });
-    // Disable section by default
-    courseGroup.get('section').disable();
     return courseGroup;
   }
 
@@ -88,20 +78,26 @@ export class InfoPage implements OnInit {
   }
 
   getSections(index: number): Array<Section> {
-    // Enable Section selection
-    this.coursesArray.controls[index].get('section').enable();
     // Get section
-    const courseName = this.coursesArray.controls[index].get('name').value;
-    // Find match and return
-    const courseDetailIndex = this.db.coursesDetails.findIndex(courseDetail => courseDetail.name.trim() === courseName.trim());
-    if (courseDetailIndex >= 0)
-      return this.db.coursesDetails[courseDetailIndex].sections;
+    const course = this.coursesArray.controls[index].get('name').value as CourseDetails;
+    return course.sections;
   }
 
   async createUser() {
     // Make place in database
     try {
+      // Default stuff
+      this.db.userData = new User;
+      // Home Address
+      this.db.userData.setHome(this.address, this.lat, this.lng);
+      // Courses
+      this.selectedCoursesUser.forEach(courseUser => {
+        this.db.userData.addCourse(courseUser);
+      });
+      // Important for adding as rider
+      await this.db.getPickups();
       await this.db.createNewUser(this.user.displayName, this.user.email);
+      this.router.navigate(['members', 'dashboard']);
     } catch (err) {
       this.alertService.error(err);
       return;
@@ -120,6 +116,20 @@ export class InfoPage implements OnInit {
   // Course details loaded from database
   get coursesDetails() {
     return this.db.coursesDetails;
+  }
+
+  // Locally selected courses - Converted to user
+  get selectedCoursesUser(): Array<CourseUser> {
+    const coursesUser = [];
+    this.coursesArray.controls.forEach(control => {
+      const course = control.get('name').value; // Course
+      const section = control.get('section').value; // Section
+      if (section) {
+        const courseUser = new CourseUser(course, section);
+        coursesUser.push(courseUser);
+      }
+    });
+    return coursesUser;
   }
 
 }

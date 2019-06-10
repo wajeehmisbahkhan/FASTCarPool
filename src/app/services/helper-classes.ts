@@ -67,6 +67,10 @@ export class Day {
 export class Address {
     address: string;
     position: Coordinate;
+    constructor(address: string, lat: number, lng: number) {
+        this.address = address;
+        this.position = new Coordinate(lat, lng);
+    }
 }
 export class Course {
     name: string;
@@ -78,8 +82,8 @@ export class Course {
 }
 export class CourseUser extends Course {
     section: Section;
-    constructor(name: string, code: string, section: Section) {
-        super(name, code);
+    constructor(course: Course, section: Section) {
+        super(course.name, course.code);
         this.section = section;
     }
 }
@@ -178,7 +182,7 @@ export class User {
     chats: Array<String>;
     isDriver: boolean;
     status: string;
-    courses: Array<Course>;
+    courses: Array<CourseUser>;
     schedule: Array<Day>;
     home: Address;
     // Driver specific
@@ -199,10 +203,15 @@ export class User {
         this.rate = new Rate;
     }
 
-    addCourse(name: string, section: string) {
-        this.courses.push(new Course(name, section));
+    setHome(address: string, lat: number, lng: number) {
+        this.home = new Address(address, lat, lng);
     }
 
+    addCourse(courseUser: CourseUser) {
+        this.courses.push(courseUser);
+    }
+
+    // TODO: Remove if completely useless
     toObject(): Object {
         // Convert Schedule
         const schedule = [];

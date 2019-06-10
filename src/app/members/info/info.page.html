@@ -58,7 +58,8 @@
   <!-- Address -->
   <ion-item>
     <ion-label position="floating">Your Home Address</ion-label>
-    <ion-input formControlName="address" (click)="goToMap()"></ion-input>
+    <ion-input autocomplete="off" placeholder="This will not be displayed publicly..."
+    formControlName="address" (click)="goToMap($event)"></ion-input>
   </ion-item>
   <!-- Courses -->
   <div id="courses">
@@ -71,18 +72,21 @@
     [formGroupName]="i">
     <ion-select #courseSelection formControlName="name" [placeholder]="'Course'">
       <ion-label>Course</ion-label>
-      <ion-select-option *ngFor="let courseDetails of coursesDetails">
+      <ion-select-option *ngFor="let courseDetails of coursesDetails" [value]="courseDetails">
         {{ courseDetails.name }}
       </ion-select-option>
     </ion-select>
     <ion-select formControlName="section" [placeholder]="'Section'">
       <ion-label>Section</ion-label>
       <!-- Only read if option is selected -->
-      <div *ngIf="courseSelected(i)">
-      <ion-select-option *ngFor="let section of getSections(i)">
+      <div *ngIf="courseSelected(i); else selectCourse">
+      <ion-select-option *ngFor="let section of getSections(i)" [value]="section">
         {{ section.code }}
       </ion-select-option>
       </div>
+      <ng-template #selectCourse>
+        <ion-select-option>Select a Course</ion-select-option>
+      </ng-template>
     </ion-select>
     <ion-icon class="absolute-vertical-center" *ngIf="i > 0" (click)="removeCourse(i)" name="remove-circle"></ion-icon>
     </ion-item>
@@ -92,6 +96,8 @@
   <ion-icon (click)="addCourse()" name="add-circle"></ion-icon>
   </ion-item>
   </div>
+
+  <ion-button expand="block" type="submit" [disabled]="infoForm.invalid">Submit</ion-button>
   </form>
   
 </ion-content>

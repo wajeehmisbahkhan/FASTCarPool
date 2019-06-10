@@ -38,7 +38,7 @@ import { environment } from '../environments/environment';
     AngularFirePerformanceModule,
     AgmCoreModule.forRoot({
       apiKey: environment.googleMaps.apiKey
-    })
+    }),
   ],
   providers: [
     StatusBar,

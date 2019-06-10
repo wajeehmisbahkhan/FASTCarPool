@@ -59,7 +59,7 @@ export class DatabaseService implements OnDestroy {
       // Set theme to rider
       this.theme.setTheme(false);
       // Add to users folder - reference by email users/email.get(property)
-      this.setDoc(`users/${email}`, (new User).toObject()).then(() => {
+      this.setDoc(`users/${email}`, JSON.parse(JSON.stringify(this.userData))).then(() => {
         // Add to riders list
         this.userLink = new UserLink(name, email);
         this.unionArray('app/users', 'riders', Object.assign({}, this.userLink));
@@ -125,6 +125,15 @@ export class DatabaseService implements OnDestroy {
 
   getLocalUserData() {
     return this.storage.get('userData');
+  }
+
+  getPickups() {
+    return new Promise((resolve, reject) => {
+      this.getDoc('app/pickups').subscribe(pickups => {
+        this.pickups = pickups.data()['locations'];
+        resolve();
+      }, reject);
+    });
   }
 
   getLivePickups(): Observable<Array<Location>> {

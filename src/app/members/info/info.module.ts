@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { InfoPage } from './info.page';
 import { MapComponent } from './map/map.component';
-import { GoogleMapComponent } from 'src/app/components/google-map/google-map.component';
+import { SharedModule } from 'src/app/components/shared.module';
 
 const routes: Routes = [
   {
@@ -31,8 +31,9 @@ const routes: Routes = [
     IonicModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [InfoPage, GoogleMapComponent, MapComponent]
+  declarations: [InfoPage, MapComponent]
 })
 export class InfoPageModule {}

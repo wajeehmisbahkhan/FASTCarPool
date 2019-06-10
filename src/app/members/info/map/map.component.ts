@@ -34,6 +34,7 @@ export class MapComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.search.setFocus();
     // If position not set
     if (this.lat === 0 && this.lng === 0)
       this.map.getCurrentLocation().then(this.initMap.bind(this));
