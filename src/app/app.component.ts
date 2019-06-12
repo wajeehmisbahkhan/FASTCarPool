@@ -85,7 +85,7 @@ export class AppComponent {
       // Default stuff
       // this.statusBar.styleDefault();
       this.splashScreen.show();
-      timer(15000).subscribe(() => this.showSplash = false);
+      timer(5000).subscribe(() => this.showSplash = false);
       this.platform.backButton.subscribe(this.navigateBack);
     });
 
