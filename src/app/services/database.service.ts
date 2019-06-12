@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
-import { User, UserLink, Users, Location, ViewUser } from './helper-classes';
+import { User, UserLink, Users, Location, ViewUser, CourseDetails, Section } from './helper-classes';
 import { AlertService } from './alert.service';
 import { ThemeService } from './theme.service';
 import { Storage } from '@ionic/storage';
@@ -22,6 +22,9 @@ export class DatabaseService implements OnDestroy {
   // App data
   pickups: Array<Location>;
   usable: boolean; // Set to true by app at init if local version matches firebase version
+
+  // Courses
+  coursesDetails: Array<CourseDetails>;
 
   // Live subscriptions
   subscriptions: Array<Subscription> = [];
@@ -56,7 +59,7 @@ export class DatabaseService implements OnDestroy {
       // Set theme to rider
       this.theme.setTheme(false);
       // Add to users folder - reference by email users/email.get(property)
-      this.setDoc(`users/${email}`, (new User).toObject()).then(() => {
+      this.setDoc(`users/${email}`, JSON.parse(JSON.stringify(this.userData))).then(() => {
         // Add to riders list
         this.userLink = new UserLink(name, email);
         this.unionArray('app/users', 'riders', Object.assign({}, this.userLink));
@@ -69,11 +72,38 @@ export class DatabaseService implements OnDestroy {
     .catch(this.alertService.error.bind(this.alertService));
   }
 
+  // Info
+  getCourses() {
+    return new Promise((resolve, reject) => {
+      // TODO: Get from server
+      this.coursesDetails = [];
+      this.coursesDetails.push(new CourseDetails('English Language (ENG)', 'SS123',
+      [new Section('C1', 'Miss Nazia Imam'), new Section('C2', 'Sir Wahid Haris')]));
+      this.coursesDetails.push(new CourseDetails('Calculus (CAL-I)', 'MT101',
+      [new Section('A', 'Sir Nadeem Khan'), new Section('B', 'Miss Farah')]));
+      this.coursesDetails.push(new CourseDetails('Data Structure (DS)', 'CS201',
+      [new Section('GR1', 'Miss Nida'), new Section('GR2', 'Miss Nida')]));
+      resolve();
+    });
+  }
+
+  async loadInfoData() {
+    await this.getCourses();
+  }
+
   // Dashboard
   getUserData(email: string) {
     if (this.usable)
     return new Promise(async (resolve, reject) => {
       const dataSubscription = this.db.doc(`users/${email}`).get().subscribe(doc => {
+        // If data does not exist - first time registration
+        if (!doc.data()) {
+          reject({
+            code: 601,
+            message: 'Registration is incomplete'
+          });
+          return;
+        }
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
         this.userData.status = doc.data().status;
@@ -98,13 +128,25 @@ export class DatabaseService implements OnDestroy {
   }
 
   getPickups() {
-    if (this.usable) {
-      const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
-        this.pickups = pickups.payload.data()['locations'];
-      });
-      this.subscriptions.push(liveSub);
+    return new Promise((resolve, reject) => {
+      this.getDoc('app/pickups').subscribe(pickups => {
+        this.pickups = pickups.data()['locations'];
+        resolve();
+      }, reject);
+    });
+  }
+
+  getLivePickups(): Observable<Array<Location>> {
+    return new Observable(observer => {
+      if (this.usable) {
+        const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
+          this.pickups = pickups.payload.data()['locations'];
+          observer.next(this.pickups);
+        });
+        this.subscriptions.push(liveSub);
     } else
-      throw this.outdatedError;
+      observer.error(this.outdatedError);
+    });
   }
 
   addDriver(pickup: Location, index: number) {

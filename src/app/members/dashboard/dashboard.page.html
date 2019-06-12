@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 4f50ff2a64e03bf97385acf8c9a622d2a22be301
 <ion-header no-border>
   <ion-toolbar color="translucent">
     <ion-buttons>
@@ -31,6 +36,8 @@
 </ion-menu>
 <ion-content fullscreen="true">
   <ion-router-outlet main>
+    <google-map (userChipClicked)="viewProfile($event)" (pickupButtonClicked)="pickupClicked($event)" #map></google-map>
+    <!--
     <agm-map (mapClick)="closeWindow()" [zoomControl]="false" [streetViewControl]="false"
     [clickableIcons]="false" [latitude]="lat" [longitude]="lng" [zoom]="14"
     [styles]="db.userData.isDriver ? map.darkMap : map.lightMap">
@@ -39,7 +46,7 @@
         <agm-info-window #infoWindow>
           <h3>{{ pickup.name }}</h3>
           <!-- Show if user is rider -->
-          <div *ngIf="!db.userData.isDriver; else notRider">
+     <!--     <div *ngIf="!db.userData.isDriver; else notRider">
           <p *ngIf="pickup.drivers.length === 0; else driversAvailable">There are currently no drivers who pass by this point.</p>
           <ng-template #driversAvailable>
             <b>Tap to see driver's profile: </b>
@@ -52,7 +59,7 @@
           <ng-template #addedRider><ion-button size="small" expand="block" (click)="removeRider(pickup, i)">Added Successfully<br>As Rider</ion-button></ng-template>
           </div>
           <!-- Show if user is driver -->
-          <ng-template #notRider>
+      <!--    <ng-template #notRider>
           <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no riders who can make it to this point.</p>
           <ng-template #ridersAvailable>
             <b>Tap to see rider's profile: </b>
@@ -66,6 +73,6 @@
           </ng-template>
         </agm-info-window>
       </agm-marker>
-    </agm-map>
+    </agm-map>-->
   </ion-router-outlet>
 </ion-content>

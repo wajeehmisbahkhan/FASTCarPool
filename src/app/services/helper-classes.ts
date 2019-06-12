@@ -64,6 +64,44 @@ export class Day {
         this.departure = departure;
     }
 }
+export class Address {
+    address: string;
+    position: Coordinate;
+    constructor(address: string, lat: number, lng: number) {
+        this.address = address;
+        this.position = new Coordinate(lat, lng);
+    }
+}
+export class Course {
+    name: string;
+    code: string;
+    constructor(name: string, code: string) {
+        this.name = name;
+        this.code = code;
+    }
+}
+export class CourseUser extends Course {
+    section: Section;
+    constructor(course: Course, section: Section) {
+        super(course.name, course.code);
+        this.section = section;
+    }
+}
+export class CourseDetails extends Course {
+    sections: Array<Section>;
+    constructor(name: string, code: string, sections: Array<Section>) {
+        super(name, code);
+        this.sections = sections;
+    }
+}
+export class Section {
+    code: string;
+    teacher: string;
+    constructor(code: string, teacher: string) {
+        this.code = code;
+        this.teacher = teacher;
+    }
+}
 export class Car {
     // TODO?: Number Plate & Color
     capacity: number;
@@ -144,7 +182,9 @@ export class User {
     chats: Array<String>;
     isDriver: boolean;
     status: string;
+    courses: Array<CourseUser>;
     schedule: Array<Day>;
+    home: Address;
     // Driver specific
     car: Car;
     rate: Rate;
@@ -152,6 +192,7 @@ export class User {
         this.chats = [];
         this.isDriver = false;
         this.status = 'Hey there! I\'m using FAST CarPool.';
+        this.courses = [];
         // Making default schedule
         const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         this.schedule = [];
@@ -162,6 +203,15 @@ export class User {
         this.rate = new Rate;
     }
 
+    setHome(address: string, lat: number, lng: number) {
+        this.home = new Address(address, lat, lng);
+    }
+
+    addCourse(courseUser: CourseUser) {
+        this.courses.push(courseUser);
+    }
+
+    // TODO: Remove if completely useless
     toObject(): Object {
         // Convert Schedule
         const schedule = [];

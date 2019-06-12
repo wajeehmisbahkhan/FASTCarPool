@@ -50,7 +50,7 @@ export class AuthenticationService {
       .then(auth => {
         if (auth.user) {
           this.user = auth.user;
-          this.storage.set('user', JSON.stringify(this.user));
+          // this.storage.set('user', JSON.stringify(this.user));
           return resolve();
         }
       })
@@ -58,8 +58,17 @@ export class AuthenticationService {
     });
   }
 
-  getLocalUser() {
-    return this.storage.get('user');
+  async getLocalUser() {
+    return new Promise(resolve => {
+      if (!this.user)
+        this.afAuth.user.subscribe(user => {
+          this.user = user;
+          resolve(this.user);
+        });
+      else {
+        resolve(this.user);
+      }
+    });
   }
 
   register(name: string, email: string, password: string) {
@@ -71,7 +80,6 @@ export class AuthenticationService {
       })
       .then(() => {
         this._user = auth.user;
-        this.storage.set('user', JSON.stringify(auth.user));
         resolve();
       });
     }).catch(reject);
@@ -81,7 +89,6 @@ export class AuthenticationService {
   logout() {
     this.authState.next(false);
     this.afAuth.auth.signOut().catch(this.alertService.error);
-    this.storage.remove('user');
     this.storage.remove('userData');
   }
 

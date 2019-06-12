@@ -1,0 +1,103 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Welcome, {{ this.user.displayName }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!-- <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <!-- Ionic 4 bug: Custom validators must be styled like this -->
+  <!--<ion-item [class.ion-invalid]="email.hasError('emailExists')">
+    <ion-label position="floating">Email</ion-label>
+    <ion-input type="email" formControlName="email">
+      <!-- Show spinner when checking mail -->
+    <!--  <ion-spinner *ngIf="email.status==='PENDING'" color="primary"></ion-spinner>
+    </ion-input>
+  </ion-item>
+  <!-- Email Errors -->
+  <!--<div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'email', this.error)">
+    <span class="ion-margin-start">
+      {{error.email}}
+      <!-- If no such email exists - Pass email if clicked-->
+    <!--  <a (click)="authService.passingEmail = email.value"
+      routerLink="../register/" routerDirection="forward" *ngIf="error.email.indexOf('No') >= 0">Sign Up!</a>
+    </span>
+  </div>
+  <ion-item>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input type="password" formControlName="password"></ion-input>
+  </ion-item>
+  <div class="error-message" *ngIf="!this.authService.validate(this.loginForm, 'password', this.error) || loginFailed">
+    <span class="ion-margin-start">
+      <!-- If invalid password -->
+    <!--  <span *ngIf="this.loginFailed; else passwordError">
+        Password is invalid. <a (click)="resetPassword()">Forgot Password?</a>
+      </span>
+      <ng-template #passwordError>
+        {{error.password}}
+      </ng-template>
+    </span>
+  </div>
+  <ion-button margin-top type="submit" [disabled]="!loginForm.valid" expand="block">
+    Login
+    <ion-spinner *ngIf="logging" color="white"></ion-spinner>
+  </ion-button>
+  <ion-item>
+    <p>Not registered? <a routerLink="../register/" routerDirection="forward">Create an account!</a></p>
+  </ion-item>
+</form> -->
+
+
+<ion-content>
+  <ion-item>
+    <ion-text class="ion-padding ion-text-center">
+      In order for you to have the best experience, we will require
+      you to input some of your information below:
+    </ion-text>
+  </ion-item>
+  <form [formGroup]="infoForm" (ngSubmit)="createUser()">
+  <!-- Address -->
+  <ion-item>
+    <ion-label position="floating">Your Home Address</ion-label>
+    <ion-input autocomplete="off" placeholder="This will not be displayed publicly..."
+    formControlName="address" (click)="goToMap($event)"></ion-input>
+  </ion-item>
+  <!-- Courses -->
+  <div id="courses">
+  <ion-item>
+  <ion-label class="ion-padding ion-text-center">Your Courses: </ion-label>
+  </ion-item>
+  <!-- Listed -->
+  <div formArrayName="courses">
+    <ion-item class="courses-options" *ngFor="let course of coursesArray.controls; let i = index"
+    [formGroupName]="i">
+    <ion-select #courseSelection formControlName="name" [placeholder]="'Course'">
+      <ion-label>Course</ion-label>
+      <ion-select-option *ngFor="let courseDetails of coursesDetails" [value]="courseDetails">
+        {{ courseDetails.name }}
+      </ion-select-option>
+    </ion-select>
+    <ion-select formControlName="section" [placeholder]="'Section'">
+      <ion-label>Section</ion-label>
+      <!-- Only read if option is selected -->
+      <div *ngIf="courseSelected(i); else selectCourse">
+      <ion-select-option *ngFor="let section of getSections(i)" [value]="section">
+        {{ section.code }}
+      </ion-select-option>
+      </div>
+      <ng-template #selectCourse>
+        <ion-select-option>Select a Course</ion-select-option>
+      </ng-template>
+    </ion-select>
+    <ion-icon class="absolute-vertical-center" *ngIf="i > 0" (click)="removeCourse(i)" name="remove-circle"></ion-icon>
+    </ion-item>
+  </div>
+  <!-- Add More Courses -->
+  <ion-item>
+  <ion-icon (click)="addCourse()" name="add-circle"></ion-icon>
+  </ion-item>
+  </div>
+
+  <ion-button expand="block" type="submit" [disabled]="infoForm.invalid">Submit</ion-button>
+  </form>
+  
+</ion-content>

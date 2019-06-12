@@ -9,7 +9,6 @@ import { Device } from '@ionic-native/device/ngx';
 import { AuthenticationService } from './services/authentication.service';
 import { Router } from '@angular/router';
 import { AlertService } from './services/alert.service';
-import { Storage } from '@ionic/storage';
 import { DatabaseService } from './services/database.service';
 
 import * as firebase from 'firebase/app';
@@ -32,7 +31,6 @@ export class AppComponent {
     private alertService: AlertService,
     private authService: AuthenticationService,
     private db: DatabaseService,
-    private storage: Storage,
     private router: Router
   ) {
     this.initializeApp();
@@ -40,6 +38,7 @@ export class AppComponent {
 
   navigateBack (e) {
     const url = window.location.pathname;
+    // TODO: Handle all urls
     if (url === '/login' || url === '/members/dashboard') {
       navigator['app'].exitApp();
     }
@@ -48,7 +47,22 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(async () => {
       // Track performance
-      console.log(firebase);
+      console.log(firebase.performance);
+      // Enable local caching
+      firebase.firestore().settings({
+        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+      });
+      firebase.firestore().enablePersistence().catch(err => {
+        if (err.code === 'failed-precondition') {
+            // Multiple tabs open, persistence can only be enabled
+            // in one tab at a a time.
+            // ...
+        } else if (err.code === 'unimplemented') {
+            // The current browser does not support all of the
+            // features required to enable persistence
+            // ...
+        }
+      });
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
@@ -62,22 +76,31 @@ export class AppComponent {
           this.db.usable = this.versionDifference('3.3.1', '3.3.2') === 'minor' ? false : true;
       });
       // Check if user is stored in cache
-      const user = await this.storage.get('user');
+      const user = await this.authService.getLocalUser();
       if (user) {
-        this.authService.user = JSON.parse(user);
         // Get user data from cache as well
-        const userData = await this.storage.get('userData');
-        this.db.userData = JSON.parse(userData);
-        this.db.userLink.name = this.authService.user.displayName;
-        this.db.userLink.email = this.authService.user.email;
-        this.db.theme.setTheme(this.db.userData.isDriver);
+        const userData = await this.db.getLocalUserData();
+        if (userData) {
+          this.db.userData = JSON.parse(userData);
+          this.db.userLink.name = this.authService.user.displayName;
+          this.db.userLink.email = this.authService.user.email;
+          this.db.theme.setTheme(this.db.userData.isDriver);
+        } else {
+          this.db.userData = null;
+        }
         // Can move forward now
         this.authService.authState.next(true);
       }
       // Subscribe to original for above change and any further changes
-      this.authService.authState.subscribe(res => {
+      this.authService.authState.subscribe(async res => {
         if (res) { // User is logged in
-          this.router.navigate(['members', 'dashboard']);
+          // If first time registration - or incomplete registration
+          if (window.location.pathname === '/register' || !this.db.userData) {
+            await this.db.loadInfoData();
+            this.router.navigate(['members', 'info']);
+          }
+          else // Usual member
+            this.router.navigate(['members', 'dashboard']);
         } else { // Redirect to login
           this.router.navigate(['login']);
         }

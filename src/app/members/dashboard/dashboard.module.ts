@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { DashboardPage } from './dashboard.page';
 
-import { AgmCoreModule } from '@agm/core';
-import { environment } from 'src/environments/environment';
+import { SharedModule } from 'src/app/components/shared.module';
 
 const routes: Routes = [
   {
@@ -22,10 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMaps.apiKey
-    })
+    SharedModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [DashboardPage]
 })

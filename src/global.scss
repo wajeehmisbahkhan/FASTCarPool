@@ -15,6 +15,7 @@ ion-toolbar {
     --color: var(--ion-color-primary-contrast);
 }
 
+<<<<<<< HEAD
 
 .splash {
     position: absolute;
@@ -55,4 +56,10 @@ ion-toolbar {
       transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
       -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
     }
+=======
+.absolute-vertical-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+>>>>>>> 4f50ff2a64e03bf97385acf8c9a622d2a22be301
 }
