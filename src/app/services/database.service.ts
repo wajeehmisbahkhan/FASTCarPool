@@ -169,7 +169,11 @@ export class DatabaseService implements OnDestroy {
     return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
   }
 
-  addRider(pickup: Location, index: number) {
+  addRider(pickup: Location, index?: number) {
+    if (!index) {
+      // Search for pickup location locally
+      index = this.pickups.findIndex(pickupPoint => pickupPoint === pickup);
+    }
     // Add locally
     if (this.usable) {
       pickup.riders.push(this.userLink);

@@ -1,7 +1,7 @@
 import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location, UserLink, User } from 'src/app/services/helper-classes';
 import { ChatService } from 'src/app/services/chat.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -41,6 +41,7 @@ export class DashboardPage {
     private authService: AuthenticationService,
     public db: DatabaseService,
     private router: Router,
+    private route: ActivatedRoute,
     private cs: ChatService,
     private alertService: AlertService
   ) {
@@ -255,7 +256,22 @@ export class DashboardPage {
         this.map.addMarker(new google.maps.LatLng(this.liveLat, this.liveLng));
       }
     }, console.error);
-    this.showPickups();
+    this.showPickups().then(() => {
+      // If coming from info page
+      this.route.paramMap.subscribe(params => {
+        // Query nearby pickup points for passed in lat lng
+        if (params.has('lat')) {
+          const nearbyPoints: Array<Location> = this.map.getNearbyPoints({
+            lat: params.get('lat'),
+            lng: params.get('lng')
+          }, this.db.pickups, 3000);
+          nearbyPoints.forEach(point => {
+            this.db.addRider(point);
+          });
+          this.alertService.notice('You have been added to nearby pickups automatically,');
+        }
+      });
+    });
   }
 
   gotoPage(path: string) {
@@ -276,6 +292,7 @@ export class DashboardPage {
   }
 
   showPickups() {
+    return new Promise((resolve, reject) =>
     this.db.getLivePickups().subscribe(pickups => {
       // Show each pickup point
       pickups.forEach((pickup, index) => {
@@ -355,7 +372,8 @@ export class DashboardPage {
         // Add to map
         this.map.addMarker(latLng, icon, content);
       });
-    });
+      resolve();
+    }, reject));
   }
 
   viewProfile(userInfo: string[]) {

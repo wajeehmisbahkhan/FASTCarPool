@@ -97,7 +97,7 @@ export class InfoPage implements OnInit {
       // Important for adding as rider
       await this.db.getPickups();
       await this.db.createNewUser(this.user.displayName, this.user.email);
-      this.router.navigate(['members', 'dashboard']);
+      this.router.navigate(['members', 'dashboard', this.lat, this.lng]);
     } catch (err) {
       this.alertService.error(err);
       return;
