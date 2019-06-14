@@ -1,5 +1,5 @@
 import { AuthenticationService } from './../../services/authentication.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -8,7 +8,7 @@ import { AlertService } from 'src/app/services/alert.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
 })
-export class RegisterPage implements OnInit, OnDestroy {
+export class RegisterPage implements OnInit {
 
   public registerForm: FormGroup;
   // For ease in reference
@@ -33,13 +33,6 @@ export class RegisterPage implements OnInit, OnDestroy {
       email: '',
       password: ''
     };
-  }
-
-  ngOnDestroy() {
-    this.authService = null;
-    this.formBuilder = null;
-    this.error = null;
-    this.registerForm = null;
   }
 
   async register() {

@@ -1,4 +1,5 @@
 // DASHBOARD
+// Quick User Reference (name + email)
 export class UserLink {
     public name: string;
     public email: string;
@@ -54,8 +55,7 @@ export class Location extends Coordinate {
 // PROFILE
 export class Day {
     public name: string;
-    // TODO: Completely rewrite later to make this a time picker - do when we have our own time scheduler
-    // ALSO keep in mind the returning User object
+    // Always follow format HH:mm (12:42)
     public arrival: string;
     public departure: string;
     constructor(name: string, arrival: string, departure: string) {
@@ -71,46 +71,18 @@ export class Address {
         this.address = address;
         this.position = new Coordinate(lat, lng);
     }
-}
-export class Course {
-    name: string;
-    code: string;
-    constructor(name: string, code: string) {
-        this.name = name;
-        this.code = code;
-    }
-}
-export class CourseUser extends Course {
-    section: Section;
-    constructor(course: Course, section: Section) {
-        super(course.name, course.code);
-        this.section = section;
-    }
-}
-export class CourseDetails extends Course {
-    sections: Array<Section>;
-    constructor(name: string, code: string, sections: Array<Section>) {
-        super(name, code);
-        this.sections = sections;
-    }
-}
-export class Section {
-    code: string;
-    teacher: string;
-    constructor(code: string, teacher: string) {
-        this.code = code;
-        this.teacher = teacher;
-    }
-}
-export class Car {
+}export class Car {
     // TODO?: Number Plate & Color
     capacity: number;
     filled: number;
     description: string;
+    // TODO: Replace price with rate
+    price: number;
     constructor() {
         this.capacity = null;
         this.filled = null;
         this.description = '';
+        this.price = null;
     }
 }
 export class Rate {
@@ -178,70 +150,25 @@ export class Chat {
 }
 
 // REGISTRATION
-export class User {
+// For storing db related user data
+export class UserData {
     chats: Array<String>;
     isDriver: boolean;
     status: string;
-    courses: Array<CourseUser>;
     schedule: Array<Day>;
     home: Address;
     // Driver specific
     car: Car;
-    rate: Rate;
-    constructor() {
+    // rate: Rate;
+    constructor(isDriver: boolean, home: Address, schedule: Array<Day>, car: Car) {
+        this.isDriver = isDriver;
+        this.home = home;
+        this.schedule = schedule;
+        // May default to null
+        this.car = car;
+        // Default Stuff
         this.chats = [];
-        this.isDriver = false;
         this.status = 'Hey there! I\'m using FAST CarPool.';
-        this.courses = [];
-        // Making default schedule
-        const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-        this.schedule = [];
-        dayNames.forEach(day => {
-            this.schedule.push(new Day(day, '08:00', '16:00'));
-        });
-        this.car = new Car;
-        this.rate = new Rate;
-    }
-
-    setHome(address: string, lat: number, lng: number) {
-        this.home = new Address(address, lat, lng);
-    }
-
-    addCourse(courseUser: CourseUser) {
-        this.courses.push(courseUser);
-    }
-
-    // TODO: Remove if completely useless
-    toObject(): Object {
-        // Convert Schedule
-        const schedule = [];
-        for (let i = 0; i < 5; i++) {
-            const day = this.schedule[i];
-            schedule[i] = {
-                name: day.name,
-                arrival: day.arrival,
-                departure: day.departure
-            };
-        }
-        // Convert Car
-        const car = {
-            capacity: this.car.capacity,
-            filled: this.car.filled,
-            description: this.car.description
-        };
-        // Convert rate
-        const rate = {
-            oneway: this.rate.oneway
-        };
-        // Convert User
-        return {
-            chats: this.chats,
-            isDriver: this.isDriver,
-            status: this.status,
-            schedule: schedule,
-            car: car,
-            rate: rate
-        };
     }
 }
 
@@ -257,11 +184,12 @@ export class Users {
 
 
 // VIEW
-export class ViewUser extends User {
+// UserLink + UserData
+export class ViewUser extends UserData {
     public name: string;
     public email: string;
-    constructor() {
-        super();
+    constructor(userData: UserData) {
+        super(userData.isDriver, userData.home, userData.schedule, userData.car);
         this.name = 'Loading';
         this.email = null;
     }

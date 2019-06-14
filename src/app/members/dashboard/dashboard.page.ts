@@ -1,8 +1,8 @@
 import { AuthenticationService } from './../../services/authentication.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { Location, UserLink, User } from 'src/app/services/helper-classes';
+import { Location, UserLink, UserData } from 'src/app/services/helper-classes';
 import { ChatService } from 'src/app/services/chat.service';
 import { AlertService } from 'src/app/services/alert.service';
 
@@ -11,7 +11,7 @@ import { AlertService } from 'src/app/services/alert.service';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
 
   // Menu
   public appPages = [
@@ -230,7 +230,7 @@ export class DashboardPage {
     // this.makePickup(24.862392, 67.087594, 'PAF Chapter');
   }
 
-  ionViewDidEnter() {
+  ngOnInit() {
     this.map.getLiveLocation().subscribe(resp => {
       // Map coords will update once when map location is enabled
       if (resp.coords.latitude !== 0 && resp.coords.longitude !== 0)
@@ -272,7 +272,7 @@ export class DashboardPage {
 
   // Pikcups
   makePickup(lat: number, lng: number, name = 'Unnamed Place') {
-    this.db.unionArray('app/pickups', 'locations', Object.assign({}, new Location(lat, lng, name))).catch(this.alertService.error);
+    this.db.unionArray('app/pickups', 'locations', new Location(lat, lng, name)).catch(this.alertService.error);
   }
 
   showPickups() {

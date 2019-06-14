@@ -1,57 +1,28 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'toggle-switch',
   templateUrl: './toggle-switch.component.html',
-  styleUrls: ['./toggle-switch.component.scss'],
-  providers: [
-    {       provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => ToggleSwitchComponent),
-            multi: true
-    }
-  ]
+  styleUrls: ['./toggle-switch.component.scss']
 })
 
-export class ToggleSwitchComponent implements ControlValueAccessor {
+// Supports two way binding [(switchStatus)]
+// For boolean switchOn?
+export class ToggleSwitchComponent {
 
   @Input() onText: string;
   @Input() offText: string;
 
-  private _value = false;
-
-  onChange: any = () => { };
-  onTouched: any = () => { };
-
+  // Output signal for value change
+  @Input() switchStatus: boolean;
+  @Output()
+  switchStatusChange = new EventEmitter<boolean>();
 
   constructor() {}
 
-  get value(): boolean {
-    return this._value;
-  }
-
-  set value(value: boolean) {
-    this._value = value;
-  }
-
-  registerOnChange(fn) {
-    this.onChange = (obj) => fn(obj);
-  }
-
-  registerOnTouched(fn) {
-    this.onTouched = fn;
-  }
-
-  writeValue(value) {
-    if (value) {
-      this.value = value;
-    }
-  }
-
-  switch() {
-    this.value = !this.value;
-    this.onChange(this.value);
-    // console.log(this.value);
+  flip() {
+    this.switchStatus = !this.switchStatus;
+    this.switchStatusChange.emit(this.switchStatus);
   }
 
 

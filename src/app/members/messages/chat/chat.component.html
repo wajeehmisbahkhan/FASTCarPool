@@ -28,6 +28,9 @@
             }">
             {{ message.content }}
           </div>
+          <div class="message-data" [class.align-right]="!userIsSender(message)">
+            <span class="message-data-sent">{{ message.status }}</span>
+          </div>
         </li>
       </ul>
     </div> <!-- end chat-history -->

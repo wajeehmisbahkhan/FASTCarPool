@@ -13,6 +13,7 @@ import { DatabaseService } from './services/database.service';
 
 import * as firebase from 'firebase/app';
 import { timer } from 'rxjs/observable/timer';
+import { UserLink } from './services/helper-classes';
 
 @Component({
   selector: 'app-root',
@@ -82,11 +83,8 @@ export class AppComponent {
         const userData = await this.db.getLocalUserData();
         if (userData) {
           this.db.userData = JSON.parse(userData);
-          this.db.userLink.name = this.authService.user.displayName;
-          this.db.userLink.email = this.authService.user.email;
+          this.db.userLink = new UserLink(user.displayName, user.email);
           this.db.theme.setTheme(this.db.userData.isDriver);
-        } else {
-          this.db.userData = null;
         }
         // Can move forward now
         this.authService.authState.next(true);
@@ -95,12 +93,12 @@ export class AppComponent {
       this.authService.authState.subscribe(async res => {
         if (res) { // User is logged in
           // If first time registration - or incomplete registration
-          if (window.location.pathname === '/register' || !this.db.userData) {
-            await this.db.loadInfoData();
+          if (!this.db.userData) {
+            // TODO: Load courses from server before moving on
             this.router.navigate(['members', 'info']);
-          }
-          else // Usual member
+          } else { // Usual member
             this.router.navigate(['members', 'dashboard']);
+          }
         } else { // Redirect to login
           this.router.navigate(['login']);
         }

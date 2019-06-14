@@ -69,7 +69,7 @@ export class ChatService implements OnDestroy {
     // Create chat
     await this.alertService.load('Creating Chat',
     new Promise(resolve => {
-      this.db.createDoc('chats', JSON.parse(JSON.stringify(chat))).then(async doc => {
+      this.db.createDoc('chats', chat).then(async doc => {
         // Send document id to both users
         chat.id = doc.id;
         await this.db.unionArray(`users/${sender.email}`, 'chats', chat.id);
@@ -89,16 +89,27 @@ export class ChatService implements OnDestroy {
     return this.chats[index].participants[sender];
   }
 
+  // Send message using chat id (where to send)
+  // and content of message (what to send)
   sendMessage(chatId: string, content: string) {
+    // Sender is just an index for the user in an array of participants
     let sender: number;
+    // Get chat from locally stored array of chats
     const chat = this.getChat(chatId);
+    // Search for sender
     chat.participants.forEach((participant, index) => {
       if (participant.email === this.db.userLink.email)
         sender = index;
     });
-    this.db.unionArray(`chats/${chatId}`, 'messages', Object.assign({}, new Message(sender, content))).catch(console.error);
+    // Message to send
+    const message = new Message(sender, content);
+    chat.messages.push(message); // Local chat
+    message.status = 'SENT'; // Message is sent when it reaches server
+    this.db.unionArray(`chats/${chatId}`, 'messages', message)
+    .catch(console.error);
   }
 
+  // Returns chat from locally cached chat based on id
   getChat(id: string) {
     const index = this.chats.findIndex(chat => chat.id === id);
     return this.chats[index];

@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
 import { firestore } from 'firebase/app';
-import { User, UserLink, Users, Location, ViewUser, CourseDetails, Section } from './helper-classes';
+import { UserData, UserLink, Users, Location, ViewUser } from './helper-classes';
 import { AlertService } from './alert.service';
 import { ThemeService } from './theme.service';
 import { Storage } from '@ionic/storage';
@@ -15,16 +15,13 @@ export class DatabaseService implements OnDestroy {
 
   public users: Users = new Users;
   // User data - in 3 forms like i dont even
-  public userData: User;
+  public userData: UserData;
   public userLink: UserLink;
-  public viewUser = new ViewUser;
+  public viewUser: ViewUser;
 
   // App data
   pickups: Array<Location>;
   usable: boolean; // Set to true by app at init if local version matches firebase version
-
-  // Courses
-  coursesDetails: Array<CourseDetails>;
 
   // Live subscriptions
   subscriptions: Array<Subscription> = [];
@@ -42,8 +39,6 @@ export class DatabaseService implements OnDestroy {
     private alertService: AlertService,
     private storage: Storage
     ) {
-      this.userData = new User;
-      this.userLink = new UserLink('', '');
       this.usable = true;
       this.fast = new Location(24.8568991, 67.2646838, 'FAST NUCES');
     }
@@ -52,17 +47,18 @@ export class DatabaseService implements OnDestroy {
   // Specific Methods
 
   // Registration
-  createNewUser(name: string, email: string) {
+  createNewUser(userData: UserData, userLink: UserLink) {
     return this.alertService.load('Creating your account...', new Promise(resolve => {
-      // Save default user data locally
-      this.storage.set('userData', JSON.stringify(new User));
+      this.userData = userData;
       // Set theme to rider
-      this.theme.setTheme(false);
+      this.theme.setTheme(userData.isDriver);
       // Add to users folder - reference by email users/email.get(property)
-      this.setDoc(`users/${email}`, JSON.parse(JSON.stringify(this.userData))).then(() => {
+      this.setDoc(`users/${userLink.email}`, this.userData).then(() => {
+        // Save default user data locally
+        this.storage.set('userData', JSON.stringify(userData));
         // Add to riders list
-        this.userLink = new UserLink(name, email);
-        this.unionArray('app/users', 'riders', Object.assign({}, this.userLink));
+        this.userLink = userLink;
+        this.unionArray('app/users', 'riders', this.userLink);
         // Add to FAST location by default
         // FAST will always be at index 0 in the db and locally
         this.addRider(this.fast, 0);
@@ -70,25 +66,6 @@ export class DatabaseService implements OnDestroy {
       });
     })) // TODO: Decide where to display errors
     .catch(this.alertService.error.bind(this.alertService));
-  }
-
-  // Info
-  getCourses() {
-    return new Promise((resolve, reject) => {
-      // TODO: Get from server
-      this.coursesDetails = [];
-      this.coursesDetails.push(new CourseDetails('English Language (ENG)', 'SS123',
-      [new Section('C1', 'Miss Nazia Imam'), new Section('C2', 'Sir Wahid Haris')]));
-      this.coursesDetails.push(new CourseDetails('Calculus (CAL-I)', 'MT101',
-      [new Section('A', 'Sir Nadeem Khan'), new Section('B', 'Miss Farah')]));
-      this.coursesDetails.push(new CourseDetails('Data Structure (DS)', 'CS201',
-      [new Section('GR1', 'Miss Nida'), new Section('GR2', 'Miss Nida')]));
-      resolve();
-    });
-  }
-
-  async loadInfoData() {
-    await this.getCourses();
   }
 
   // Dashboard
@@ -106,10 +83,11 @@ export class DatabaseService implements OnDestroy {
         }
         // Copying all data
         this.userData.isDriver = doc.data().isDriver;
-        this.userData.status = doc.data().status;
+        this.userData.home = doc.data().home;
         this.userData.schedule = doc.data().schedule;
         this.userData.car = doc.data().car;
-        this.userData.rate.oneway = doc.data().rate.oneway;
+        this.userData.status = doc.data().status;
+        // this.userData.rate.oneway = doc.data().rate.oneway;
         // Chats
         this.userData.chats = doc.data().chats;
         // Set theme according to user data
@@ -156,7 +134,7 @@ export class DatabaseService implements OnDestroy {
       this.pickups[index] = pickup;
     }
     // Update in database
-    return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
+    return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
   removeDriver(pickup: Location, index: number) {
@@ -166,7 +144,7 @@ export class DatabaseService implements OnDestroy {
       this.pickups[index] = pickup;
     }
     // Update in database
-    return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
+    return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
   addRider(pickup: Location, index: number) {
@@ -176,7 +154,7 @@ export class DatabaseService implements OnDestroy {
       this.pickups[index] = pickup;
     }
     // Update in database
-    return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
+    return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
   removeRider(pickup: Location, index: number) {
@@ -186,10 +164,10 @@ export class DatabaseService implements OnDestroy {
         this.pickups[index] = pickup;
       }
       // Update in database
-      return this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(this.pickups))});
+      return this.updateDoc('app/pickups', {locations: this.pickups});
   }
   // Profile
-  updateUserData(newUserData: User) {
+  updateUserData(newUserData: UserData) {
     return this.alertService.load('Updating your profile...',
     // Resolving this promise will complete the updating phase
     new Promise((resolve, reject) => {
@@ -200,8 +178,8 @@ export class DatabaseService implements OnDestroy {
           this.theme.setTheme(newUserData.isDriver);
           if (newUserData.isDriver) {
             // Add to drivers and remove from riders
-            this.unionArray('app/users', 'drivers', Object.assign({}, this.userLink)).catch(reject);
-            this.arrayRemove('app/users', 'riders', Object.assign({}, this.userLink)).catch(reject);
+            this.unionArray('app/users', 'drivers', this.userLink).catch(reject);
+            this.arrayRemove('app/users', 'riders', this.userLink).catch(reject);
             // Remove 'as rider' from all pickups
             const riderSub = this.getDoc('app/pickups').subscribe(doc => {
               riderSub.unsubscribe();
@@ -209,14 +187,14 @@ export class DatabaseService implements OnDestroy {
               pickups.forEach(pickup => {
                 pickup.riders = pickup.riders.filter((rider) => rider.email !== this.userLink.email );
               });
-              this.updateDoc('app/pickups', {locations: JSON.parse(JSON.stringify(pickups))});
+              this.updateDoc('app/pickups', {locations: pickups});
               // Add to FAST as driver by default
               this.addDriver(this.fast, 0);
             });
           } else {
             // Remove from drivers and add to riders
-            this.arrayRemove('app/users', 'drivers', Object.assign({}, this.userLink));
-            this.unionArray('app/users', 'riders', Object.assign({}, this.userLink));
+            this.arrayRemove('app/users', 'drivers', this.userLink);
+            this.unionArray('app/users', 'riders', this.userLink);
             // Remove 'as driver' from all pickups
             const driverSub = this.getDoc('app/pickups').subscribe(doc => {
               driverSub.unsubscribe();
@@ -224,13 +202,13 @@ export class DatabaseService implements OnDestroy {
               pickups.forEach(pickup => {
                 pickup.drivers = pickup.drivers.filter((driver) => driver.email !== this.userLink.email );
               });
-              this.updateDoc('app/pickups', { locations: JSON.parse(JSON.stringify(pickups))});
+              this.updateDoc('app/pickups', { locations: pickups});
               // Add to FAST as rider by default
               this.addRider(this.fast, 0);
             });
           }
         }
-        // Update user data
+        // Update user data - deep copy
         this.userData = JSON.parse(JSON.stringify(newUserData));
         // Set locally
         this.storage.set('userData', JSON.stringify(this.userData));
@@ -255,7 +233,7 @@ export class DatabaseService implements OnDestroy {
         this.viewUser.status = doc.data().status;
         this.viewUser.schedule = doc.data().schedule;
         this.viewUser.car = doc.data().car;
-        this.viewUser.rate.oneway = doc.data().rate.oneway;
+        // this.viewUser.rate.oneway = doc.data().rate.oneway;
         resolve();
       });
     })
@@ -289,19 +267,19 @@ export class DatabaseService implements OnDestroy {
 
   setDoc(path: string, data: Object, options?: firebase.firestore.SetOptions) {
     if (this.usable)
-      return this.db.doc(path).set(data, options);
+      return this.db.doc(path).set(JSON.parse(JSON.stringify(data)), options);
       throw this.outdatedError;
   }
 
   updateDoc(path: string, data: Object) {
     if (this.usable)
-      return this.db.doc(path).update(data);
+      return this.db.doc(path).update(JSON.parse(JSON.stringify(data)));
     throw this.outdatedError;
   }
 
   unionArray(path: string, field: string, element: any) {
     const updated = {};
-    updated[field] = firestore.FieldValue.arrayUnion(element);
+    updated[field] = firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(element)));
     if (this.usable)
       return this.db.doc(path).update(updated);
     throw this.outdatedError;

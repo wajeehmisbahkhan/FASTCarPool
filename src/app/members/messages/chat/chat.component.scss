@@ -73,7 +73,7 @@ body {
   }
   
   .chat-message {
-    height: 10%;
+    height: 10% !important;
     display: flex;
     align-items: center;
     background-color: var(--ion-item-background-color);

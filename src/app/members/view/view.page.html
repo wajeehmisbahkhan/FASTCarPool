@@ -1,43 +1,43 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ this.db.viewUser.name }}</ion-title>
+    <ion-title>{{ db.viewUser.name }}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content *ngIf="db.viewUser" padding>
   <ion-avatar>
-    <img [src]="'https://ui-avatars.com/api/?name='+this.db.viewUser.name">
+    <img [src]="'https://ui-avatars.com/api/?name='+db.viewUser.name">
   </ion-avatar>
   <h3>Status: </h3>
   <ion-item>
-    <ion-label>{{this.db.viewUser.status}}</ion-label>
+    <ion-label>{{db.viewUser.status}}</ion-label>
   </ion-item>
   <h3>Schedule:</h3>
   <ion-item class="ion-text-center">
     <ion-row size="4">
     <ion-col size="12"><h3>Day</h3></ion-col>
-      <ion-col size="12" *ngFor="let day of this.db.viewUser.schedule">{{day.name}}</ion-col>
+      <ion-col size="12" *ngFor="let day of db.viewUser.schedule">{{day.name}}</ion-col>
     </ion-row>
     <ion-row size="4">
     <ion-col size="12"><h3>Arrival</h3></ion-col>
-      <ion-col size="12" *ngFor="let day of this.db.viewUser.schedule">{{day.arrival}}</ion-col>
+      <ion-col size="12" *ngFor="let day of db.viewUser.schedule">{{day.arrival}}</ion-col>
     </ion-row>
     <ion-row size="4">
     <ion-col size="12"><h3>Departure</h3></ion-col>
-      <ion-col size="12" *ngFor="let day of this.db.viewUser.schedule">{{day.departure}}</ion-col>
+      <ion-col size="12" *ngFor="let day of db.viewUser.schedule">{{day.departure}}</ion-col>
     </ion-row>
   </ion-item>
-  <div *ngIf="this.db.viewUser.isDriver">
+  <div *ngIf="db.viewUser.isDriver">
   <h3>Car Details:</h3>
   <ion-item>
     <ion-label>
     Capacity: {{db.viewUser.car.capacity}}<br>
     Filled: {{db.viewUser.car.filled}}<br>
     Description: {{db.viewUser.car.description}}<br>
-    Oneway Trip Charges: {{db.viewUser.rate.oneway}}<br>
+    Oneway Trip Charges: {{db.viewUser.car.price}}<br>
     </ion-label>
   </ion-item>
   </div>

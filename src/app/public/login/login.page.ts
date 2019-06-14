@@ -3,13 +3,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { UserLink } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit, OnDestroy {
+export class LoginPage implements OnInit {
 
   public loginForm: FormGroup;
   // For ease in reference
@@ -34,14 +35,6 @@ export class LoginPage implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy() {
-    this.authService = null;
-    this.db = null;
-    this.formBuilder = null;
-    this.loginForm = null;
-    this.error = null;
-  }
-
   login() {
     // If user gets past the initial checks
     if (!this.loginForm.valid) return;
@@ -57,8 +50,7 @@ export class LoginPage implements OnInit, OnDestroy {
       this.loginFailed = false;
       this.logging = false;
       // Set user link
-      this.db.userLink.name = this.authService.user.displayName;
-      this.db.userLink.email = this.authService.user.email;
+      this.db.userLink = new UserLink(this.authService.user.displayName, this.authService.user.email);
       // Load user data
       this.alertService.load('Loading your data...',
       this.db.getUserData(this.email.value)).then(() => {
@@ -68,8 +60,6 @@ export class LoginPage implements OnInit, OnDestroy {
       }).catch(err => {
         // If registration not completed
         if (err.code === 601) {
-          // Acknowledge registration is not complete
-          this.db.userData = null;
           // Haye ho forward
           this.authService.authState.next(true);
         }
@@ -93,4 +83,5 @@ export class LoginPage implements OnInit, OnDestroy {
   get password(): AbstractControl {
     return this.loginForm.get('password');
   }
+
 }

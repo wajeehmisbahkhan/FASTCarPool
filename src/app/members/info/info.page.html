@@ -50,53 +50,28 @@
 <ion-content>
   <ion-item>
     <ion-text class="ion-padding ion-text-center">
-      In order for you to have the best experience, we will require
-      you to input some of your information below:
+      In order for you to have the best experience, we will require you to input
+      some of your information below. You can change these settings after completing signing up:
     </ion-text>
   </ion-item>
   <form [formGroup]="infoForm" (ngSubmit)="createUser()">
+  <!-- Driver or Rider -->
+  <ion-item>
+    <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
+    <toggle-switch class="ion-padding" name="isDriver" [(switchStatus)]="driver"
+    [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
+  </ion-item>
   <!-- Address -->
   <ion-item>
     <ion-label position="floating">Your Home Address</ion-label>
     <ion-input autocomplete="off" placeholder="This will not be displayed publicly..."
     formControlName="address" (click)="goToMap($event)"></ion-input>
   </ion-item>
-  <!-- Courses -->
-  <div id="courses">
-  <ion-item>
-  <ion-label class="ion-padding ion-text-center">Your Courses: </ion-label>
-  </ion-item>
-  <!-- Listed -->
-  <div formArrayName="courses">
-    <ion-item class="courses-options" *ngFor="let course of coursesArray.controls; let i = index"
-    [formGroupName]="i">
-    <ion-select #courseSelection formControlName="name" [placeholder]="'Course'">
-      <ion-label>Course</ion-label>
-      <ion-select-option *ngFor="let courseDetails of coursesDetails" [value]="courseDetails">
-        {{ courseDetails.name }}
-      </ion-select-option>
-    </ion-select>
-    <ion-select formControlName="section" [placeholder]="'Section'">
-      <ion-label>Section</ion-label>
-      <!-- Only read if option is selected -->
-      <div *ngIf="courseSelected(i); else selectCourse">
-      <ion-select-option *ngFor="let section of getSections(i)" [value]="section">
-        {{ section.code }}
-      </ion-select-option>
-      </div>
-      <ng-template #selectCourse>
-        <ion-select-option>Select a Course</ion-select-option>
-      </ng-template>
-    </ion-select>
-    <ion-icon class="absolute-vertical-center" *ngIf="i > 0" (click)="removeCourse(i)" name="remove-circle"></ion-icon>
-    </ion-item>
-  </div>
-  <!-- Add More Courses -->
-  <ion-item>
-  <ion-icon (click)="addCourse()" name="add-circle"></ion-icon>
-  </ion-item>
-  </div>
-
+  <!-- Schedule -->
+  <schedule-input [(schedule)]="schedule"></schedule-input>
+  <!-- Car if Driver -->
+  <!-- Driver or Rider -->
+  <car-details-input [(car)]="car" *ngIf="driver"></car-details-input>
   <ion-button expand="block" type="submit" [disabled]="infoForm.invalid">Submit</ion-button>
   </form>
   

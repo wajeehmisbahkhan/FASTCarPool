@@ -1,5 +1,5 @@
 <div class="onoffswitch">
-  <input [(ngModel)]="value" [checked]="value" (click)="switch()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+  <input [checked]="switchStatus" (click)="flip()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
   <label class="onoffswitch-label" for="myonoffswitch">
       <span [attr.data-on]="onText" [attr.data-off]="offText" class="onoffswitch-inner"></span>
       <span class="onoffswitch-switch"></span>

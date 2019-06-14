@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { User } from 'src/app/services/helper-classes';
+import { UserData } from 'src/app/services/helper-classes';
 
 @Component({
   selector: 'app-profile',
@@ -11,7 +11,7 @@ import { User } from 'src/app/services/helper-classes';
 export class ProfilePage implements OnInit {
 
   // Will be used to detect changes in input
-  localCopy: User = new User;
+  localCopy: UserData;
 
   constructor(
     private db: DatabaseService,

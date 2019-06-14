@@ -1,0 +1,8 @@
+<ion-item *ngFor="let day of schedule; index as i">
+  <ion-label>{{ day.name }}</ion-label>
+  <!-- Arrival -->
+  <ion-datetime name="arrival-{{i}}" [placeholder]="'Arrival'" display-format="HH:mm" picker-format="HH"
+  [hourValues]="arrivalHours[i]" [value]="day.arrival" (ionChange)="updatedArrivalHours($event, i)" required></ion-datetime>
+  <ion-datetime name="departure-{{i}}" [placeholder]="'Departure'" display-format="HH:mm" picker-format="HH"
+  [hourValues]="departureHours[i]" [value]="day.departure" (ionChange)="updatedDepartureHours($event, i)" required></ion-datetime>
+</ion-item>

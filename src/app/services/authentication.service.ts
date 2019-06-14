@@ -58,7 +58,7 @@ export class AuthenticationService {
     });
   }
 
-  async getLocalUser() {
+  async getLocalUser(): Promise<firebase.User> {
     return new Promise(resolve => {
       if (!this.user)
         this.afAuth.user.subscribe(user => {
