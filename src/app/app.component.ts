@@ -85,6 +85,15 @@ export class AppComponent {
           this.db.userData = JSON.parse(userData);
           this.db.userLink = new UserLink(user.displayName, user.email);
           this.db.theme.setTheme(this.db.userData.isDriver);
+        } else { // Get from server
+          try {
+            await this.db.getUserData(user.email);
+            this.db.userLink = new UserLink(user.displayName, user.email);
+          } catch (err) {
+            if (err.code !== 601) {
+              this.alertService.error.bind(this.alertService, [err]);
+            }
+          }
         }
         // Can move forward now
         this.authService.authState.next(true);

@@ -82,11 +82,14 @@ export class DatabaseService implements OnDestroy {
           return;
         }
         // Copying all data
-        this.userData.isDriver = doc.data().isDriver;
-        this.userData.home = doc.data().home;
-        this.userData.schedule = doc.data().schedule;
-        this.userData.car = doc.data().car;
+        this.userData = new UserData
+        (doc.data().isDriver, doc.data().home,
+          doc.data().schedule, doc.data().car);
+        // Status
         this.userData.status = doc.data().status;
+        // this.userData.rate.oneway = doc.data().rate.oneway;
+        // Chats
+        this.userData.chats = doc.data().chats;
         // this.userData.rate.oneway = doc.data().rate.oneway;
         // Chats
         this.userData.chats = doc.data().chats;

@@ -1,5 +1,6 @@
 import { Component, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 
 @Component({
   selector: 'google-map',
@@ -128,12 +129,14 @@ export class GoogleMapComponent {
   }
 
   constructor(
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private locationAccuracy: LocationAccuracy
     ) {
       this.markers = [];
     }
 
   initMap(mapOptions: google.maps.MapOptions) {
+    // Init Map Code
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     // Close any info window on click
     this.map.addListener('click', () => this.selectMarker(null));
@@ -179,6 +182,24 @@ export class GoogleMapComponent {
 
   getLiveLocation() {
     return this.geolocation.watchPosition();
+  }
+
+  // Confirm Location Access
+  getAccurateLocation() {
+    return new Promise((resolve, reject) => {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        // the accuracy option will be ignored by iOS
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+        .then(() => {
+          resolve();
+        }, reject); // Error while asking for permission
+      } else reject({ // Error before even asking
+          code: 603,
+          message: 'Error detecting location settings'
+        });
+    }).catch(reject);
+    });
   }
 
   getAddress(lat: number, lng: number) {

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Location, UserLink, UserData } from 'src/app/services/helper-classes';
 import { ChatService } from 'src/app/services/chat.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { GoogleMapComponent } from 'src/app/components/google-map/google-map.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,11 +29,11 @@ export class DashboardPage implements OnInit {
   ];
 
   // Map reference
-  @ViewChild('map') map;
+  @ViewChild('map') map: GoogleMapComponent;
   // Map location
   lat = 0;
   lng = 0;
-  updated = false;
+  // updated = false;
   // Marker Location
   liveLat = 0;
   liveLng = 0;
@@ -231,31 +232,47 @@ export class DashboardPage implements OnInit {
   }
 
   ngOnInit() {
-    this.map.getLiveLocation().subscribe(resp => {
-      // Map coords will update once when map location is enabled
-      if (resp.coords.latitude !== 0 && resp.coords.longitude !== 0)
-      if (!this.updated) {
-        this.lat = resp.coords.latitude;
-        this.lng = resp.coords.longitude;
-        this.updated = true;
-        const mapOptions: google.maps.MapOptions = {
-          center: new google.maps.LatLng(this.lat, this.lng),
-          zoom: 14,
-          disableDefaultUI: true,
-          clickableIcons: false,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          styles: this.db.userData.isDriver ? this.map.darkMap : this.map.lightMap
-        };
-        this.map.initMap(mapOptions);
-      } else {
+    // Enable location
+    console.log('Enabling location');
+    this.map.getAccurateLocation().then(this.initMap.bind(this)).catch(err => {
+      if (err === 'cordova_not_available') { // Special case for testing purposes
+        this.initMap();
+      } else
+        this.alertService.error.bind(this.alertService, [err]);
+    });
+  }
+
+  initMap() {
+    console.log('Location enabled');
+    this.map.getCurrentLocation()
+    .then(resp => {
+      // Get location first time
+      this.liveLat = this.lat = resp.coords.latitude;
+      this.liveLng = this.lng = resp.coords.longitude;
+      // this.updated = true;
+      const mapOptions: google.maps.MapOptions = {
+        center: new google.maps.LatLng(this.lat, this.lng),
+        zoom: 14,
+        disableDefaultUI: true,
+        clickableIcons: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        styles: this.db.userData.isDriver ? this.map.darkMap : this.map.lightMap
+      };
+      this.map.initMap(mapOptions);
+      this.showPickups();
+      return;
+    }).then(() => {
+      // Subscribe for changes in current position
+      this.map.getLiveLocation().subscribe(resp => {
         // Position marker will keep changing
         this.liveLat = resp.coords.latitude;
         this.liveLng = resp.coords.longitude;
+        // Remove live location marker if already added
+        this.map.markers = this.map.markers.filter(marker => marker.getIcon());
         // Add marker for live location
         this.map.addMarker(new google.maps.LatLng(this.liveLat, this.liveLng));
-      }
-    }, console.error);
-    this.showPickups();
+      }, console.error);
+    }).catch(this.alertService.error.bind(this.alertService));
   }
 
   gotoPage(path: string) {
