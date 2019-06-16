@@ -188,10 +188,10 @@ export class Users {
 export class ViewUser extends UserData {
     public name: string;
     public email: string;
-    constructor(userData: UserData) {
+    constructor(userData: UserData, userLink: UserLink) {
         super(userData.isDriver, userData.home, userData.schedule, userData.car);
-        this.name = 'Loading';
-        this.email = null;
+        this.name = userLink.name;
+        this.email = userLink.email;
     }
 }
 

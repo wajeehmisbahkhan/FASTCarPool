@@ -45,13 +45,13 @@ export class DashboardPage implements OnInit {
     private cs: ChatService,
     private alertService: AlertService
   ) {
+    // db.getLiveDoc(`users/${db.userLink.email}`).subscribe(
+    //   doc => db.userData.chats = doc.payload.data()['chats'],
+    //   err => this.alertService.error.bind(this.alertService, err)
+    // );
     // Load all chats live
-    db.getLiveDoc(`users/${db.userLink.email}`).subscribe(
-      doc => db.userData.chats = doc.payload.data()['chats'],
-      err => this.alertService.error.bind(this.alertService, err)
-    );
-    // Update all messages within chats
-    cs.loadMessages();
+    // Will detect any new chat
+    cs.loadChats();
     // PICKUPS
     // this.makePickup(24.934478, 67.177173, 'Malir Cantt Gate 6 Phase II');
     // this.makePickup(24.940228, 67.18198, 'Askari 5');
@@ -289,7 +289,7 @@ export class DashboardPage implements OnInit {
 
   // Pikcups
   makePickup(lat: number, lng: number, name = 'Unnamed Place') {
-    this.db.unionArray('app/pickups', 'locations', new Location(lat, lng, name)).catch(this.alertService.error);
+    this.db.arrayUnion('app/pickups', 'locations', new Location(lat, lng, name)).catch(this.alertService.error);
   }
 
   showPickups() {

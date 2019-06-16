@@ -1,17 +1,20 @@
 <ion-header>
   <ion-toolbar>
     <!-- TODO: Chat name -->
-    <ion-title>{{ chat.title }}</ion-title>
+    <ion-title *ngIf="chat; else chatTitle">Chat</ion-title>
+    <ng-template>
+    <ion-title #chatTitle>{{ chat.title }}</ion-title>
+    </ng-template>
     <ion-buttons slot="start">
       <ion-back-button [routerLink]="'../../'"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div class="chat">
-    <div class="chat-history">
+  <div class="chat" *ngIf="chat">
+    <div #history class="chat-history" [scrollTop]="history.scrollHeight">
       <ul>
-        <li class="clearfix" *ngFor="let message of this.chat.messages">
+        <li #messages class="clearfix" *ngFor="let message of chat.messages; let last = last">
           <!--
             Align right class message-data on right
             Float right and other message class for message on right

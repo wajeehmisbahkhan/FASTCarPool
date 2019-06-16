@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Message, Participant, Chat } from 'src/app/services/helper-classes';
+import { Component, OnInit} from '@angular/core';
+import { Message, Participant } from 'src/app/services/helper-classes';
 import { ChatService } from 'src/app/services/chat.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,29 +10,32 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChatComponent implements OnInit {
 
-  public chat: Chat;
+  // Chat related
+  id: string;
+  // Message to send
   messageText: string;
 
   constructor(
     public cs: ChatService,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.messageText = '';
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.chat = this.cs.getChat(params.get('id'));
-      // TODO: Remove DOM manipulation
-      const element = document.getElementsByClassName('chat-history')[0];
-      setTimeout(() => { element.scrollTop = element.scrollHeight; }, 100);
+      this.id = params.get('id');
     });
+  }
+
+  get chat() {
+    if (this.id) {
+      return this.cs.getChat(this.id);
+    } else return null;
   }
 
   getParticipant(sender: number): Participant {
     return this.chat.participants[sender];
-  }
-
-  scrollMessages(e: Event) {
-    
   }
 
   getTime(message: Message): string {
@@ -57,7 +60,7 @@ export class ChatComponent implements OnInit {
   }
 
   submit() {
-    if (!this.messageText) {
+    if (!this.messageText.trim()) {
       // TODO: Empty msg
       return;
     }

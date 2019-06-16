@@ -85,6 +85,8 @@ export class AppComponent {
           this.db.userData = JSON.parse(userData);
           this.db.userLink = new UserLink(user.displayName, user.email);
           this.db.theme.setTheme(this.db.userData.isDriver);
+          // Keep updating
+          this.db.getUserData(user.email);
         } else { // Get from server
           try {
             await this.db.getUserData(user.email);

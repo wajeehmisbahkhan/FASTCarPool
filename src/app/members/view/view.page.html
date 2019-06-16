@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ db.viewUser.name }}</ion-title>
+    <ion-title *ngIf="db.viewUser; else tempName">{{ db.viewUser.name }}</ion-title>
+    <ng-template #tempName>
+      <ion-title>FASTCarPool User</ion-title>
+    </ng-template>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>

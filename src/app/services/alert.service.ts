@@ -50,7 +50,7 @@ export class AlertService {
         };
         // Send a text message using default options
         this.emailComposer.open(email);
-      } else throw 'Email Composer not available';
+      } else throw new Error('Email Composer not available');
     }).catch(err => {
       this.notice(err);
     });
