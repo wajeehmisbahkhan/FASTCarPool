@@ -109,7 +109,6 @@ export class ChatService implements OnDestroy {
         await doc.update({
           id: chat.id
         });
-        this.db.userData.chats.push(chat.id);
         resolve();
       }).catch(reject);
     }));
