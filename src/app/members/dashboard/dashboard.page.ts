@@ -267,10 +267,14 @@ export class DashboardPage implements OnInit {
         // Position marker will keep changing
         this.liveLat = resp.coords.latitude;
         this.liveLng = resp.coords.longitude;
-        // Remove live location marker if already added
-        this.map.markers = this.map.markers.filter(marker => marker.getIcon());
+        const position = new google.maps.LatLng(this.liveLat, this.liveLng);
+        // Relocate live location marker if already added
+        const positionMarker = this.map.markers.find(marker => !marker.getIcon());
+        if (positionMarker) {
+          positionMarker.setPosition(position);
+        } else
         // Add marker for live location
-        this.map.addMarker(new google.maps.LatLng(this.liveLat, this.liveLng));
+        this.map.addMarker(position);
       }, console.error);
     }).catch(this.alertService.error.bind(this.alertService));
   }
@@ -293,6 +297,7 @@ export class DashboardPage implements OnInit {
   }
 
   showPickups() {
+    return new Promise((resolve, reject) =>
     this.db.getLivePickups().subscribe(pickups => {
       // Show each pickup point
       pickups.forEach((pickup, index) => {
@@ -372,7 +377,8 @@ export class DashboardPage implements OnInit {
         // Add to map
         this.map.addMarker(latLng, icon, content);
       });
-    });
+      resolve();
+    }, reject));
   }
 
   viewProfile(userInfo: string[]) {

@@ -2,8 +2,8 @@
   <ion-toolbar>
     <!-- TODO: Chat name -->
     <ion-title *ngIf="chat; else chatTitle">Chat</ion-title>
-    <ng-template>
-    <ion-title #chatTitle>{{ chat.title }}</ion-title>
+    <ng-template #chatTitle>
+    <ion-title>{{ chat.title }}</ion-title>
     </ng-template>
     <ion-buttons slot="start">
       <ion-back-button [routerLink]="'../../'"></ion-back-button>

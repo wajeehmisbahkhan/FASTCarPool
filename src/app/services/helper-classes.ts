@@ -71,7 +71,8 @@ export class Address {
         this.address = address;
         this.position = new Coordinate(lat, lng);
     }
-}export class Car {
+}
+export class Car {
     // TODO?: Number Plate & Color
     capacity: number;
     filled: number;
@@ -151,6 +152,7 @@ export class Chat {
 
 // REGISTRATION
 // For storing db related user data
+
 export class UserData {
     chats: Array<String>;
     isDriver: boolean;
@@ -222,5 +224,129 @@ export class Theme {
             this.dark = dark;
             this.medium = medium;
             this.light = light;
+    }
+}
+
+// Driver & Rider
+
+class Vehicle {
+    name: string;    // Details
+    fare: number;
+    filled: Array<Array<number>>;
+    capacity: number;
+    constructor() {
+        this.filled = [[4, 4, 4, 4, 4], [4, 4, 4, 4, 4]];
+        // for (let i = 0; i < 2; i++) {
+        //     for (let j = 0; j < 5; j++) {
+        //         this.filled[i][j] = 4;
+        //     }
+        // }
+        this.capacity = 4;
+    }
+}
+
+export class Driver {
+
+    // name, section, batch registration details num etc
+    // location
+    // fare and stuff in a vehicle object
+    name: string;
+    timetable: Array<Array<number>>;
+    flexibility: Array <number>; // abstracted from drivers class with relevant stuff only
+    vehicle: Vehicle;
+    matchScore: number;
+    exactScore: number;
+    dayScore: number;
+    total: number;
+
+
+    constructor(name: string, timetable: Array<Array<number>>, flexibility: Array<number>) {
+        this.timetable = timetable;
+        this.flexibility = flexibility;
+        // for (let i = 0; i < 2; i++) {
+        //     for (let j = 0; j < 5; j++) {
+        //         this.timetable[i][j] = timetable[i][j];
+        //     }
+        //     this.flexibility[i] = flexibility[i];
+        // }
+        // Default
+        this.name = name;
+        this.matchScore = 0;
+        this.exactScore = 0;
+        this.dayScore = 0;
+        this.vehicle = new Vehicle();
+    }
+
+    print(x: boolean) {
+        console.log(`Driver Name: ${name}`);
+        if (x) return;
+        console.log(`${this.matchScore}`);
+        console.log(`${this.exactScore}`);
+        console.log(`${this.dayScore}`);
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 5; j++) {
+                console.log(`${this.timetable[i][j]}`);
+            }
+        }
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 5; j++) {
+                console.log(this.vehicle.filled[i][j]);
+            }
+        }
+
+    }
+    calculateTotalScore() {
+        this.total = this.matchScore * 1000 + this.dayScore * 100 + this.exactScore;
+    }
+}
+
+// Rider
+
+export class Rider {
+    // Name, section, batch registration details num location
+    name: string;   // name given by parents
+    driveMap: Array<Array <Array <Driver>>>; // 2D Array of vector of
+                // drivers, each vector is for one trip
+    timetable: Array<Array<number>>; // 2x5 array arrival & dept
+    flexibility: Array<number>; // 0th arrival 1st dept
+    trips: number;
+    constructor(name: string, timetable: Array<Array<number>>, flexibility: Array<number>) {
+        this.timetable = timetable;
+        this.flexibility = flexibility;
+        // 2.5.X
+        this.driveMap = [[[], [], [], [], []], [[], [], [], [], []]];
+        // for (let i = 0; i < 2; i++) {
+        //     for (let j = 0; j < 5; j++) {
+        //         this.timetable[i] = [];
+        //         this.timetable[i][j] = timetable[i][j];
+        //     }
+        //     this.flexibility[i] = flexibility[i];
+        // }
+        this.name = name;
+        this.trips = 0;
+    }
+
+    print() {
+        console.log(`Rider Name: ${name}`);
+        for (let i = 0; i < 5; i++) {
+            // Day
+            console.log(`DAY ${i + 1}`);
+            for (let j = 0; j < 2; j++) {
+                // Trip
+                console.log(`TRIP ${j}`);
+                const drs: Array<Driver> = this.driveMap[j][i];
+                if (drs.length === 0 ) console.log(` No Driver! `);
+                for (let k = 0; k < drs.length; k++) {
+                    drs[k].print(true);
+                }
+            }
+        }
+
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 5; j++) {
+                console.log(`${this.timetable[i][j]} `);
+            }
+        }
+
     }
 }

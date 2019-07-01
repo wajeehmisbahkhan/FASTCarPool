@@ -1,5 +1,5 @@
 <ion-item *ngFor="let detail of carDetails">
   <ion-label position="floating">{{ detail.name | titlecase}}</ion-label>
   <ion-input [name]="detail.name" [value]="car[detail.name]" (ionChange)="changeCarDetails($event, detail.name)"
-  [type]="detail.type" [placeholder]="detail.placeholder" [required]="required"></ion-input>
+  [type]="detail.type" [placeholder]="detail.placeholder" [min]="detail.min" [max]="detail.max" [required]="required"></ion-input>
 </ion-item>

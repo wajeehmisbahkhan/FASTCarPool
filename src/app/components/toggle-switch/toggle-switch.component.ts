@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
   selector: 'toggle-switch',
@@ -18,10 +18,16 @@ export class ToggleSwitchComponent {
   @Output()
   switchStatusChange = new EventEmitter<boolean>();
 
+  @HostListener('document:keyup') handler() {
+    // this.flip();
+    console.log(`Output:: ToggleSwitchComponent -> @HostListener -> this.switchStatus`, this.switchStatus);
+  }
+
   constructor() {}
 
   flip() {
     this.switchStatus = !this.switchStatus;
+    console.log(`Output:: ToggleSwitchComponent -> flip -> this.switchStatus`, this.switchStatus);
     this.switchStatusChange.emit(this.switchStatus);
   }
 

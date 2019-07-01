@@ -8,14 +8,14 @@
 </ion-header>
 
 <ion-content padding>
-  <form #profileForm="ngForm" (submit)="updateProfile($event)">
+  <form [formGroup]="profileForm" (submit)="updateProfile($event)">
     <ion-item>
       <ion-label for="toggle-switch" position="fixed">You are a:</ion-label>
       <toggle-switch name="isDriver" [(switchStatus)]="localCopy.isDriver" [onText]="'Driver'" [offText]="'Rider'"></toggle-switch>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Status</ion-label>
-      <ion-input name="status" [placeholder]="'Cool Status'" [(ngModel)]="localCopy.status" required></ion-input>
+      <ion-input name="status" [placeholder]="'Cool Status'" formControlName="status" required></ion-input>
     </ion-item>
     <div class="ion-text-center">
       <p>Your Schedule (First Class Start & Last Class End)</p>

@@ -1,6 +1,8 @@
 import { Component, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { ThemeService } from 'src/app/services/theme.service';
+import { Location } from '../../services/helper-classes';
 
 @Component({
   selector: 'google-map',
@@ -130,9 +132,18 @@ export class GoogleMapComponent {
 
   constructor(
     private geolocation: Geolocation,
-    private locationAccuracy: LocationAccuracy
+    private locationAccuracy: LocationAccuracy,
+    private themeService: ThemeService
     ) {
       this.markers = [];
+      this.themeService.currentThemeIsDriver.subscribe(isDriver => {
+        // Update map when theme changes
+        if (this.map) {
+          this.map.setOptions({
+            styles: isDriver ? this.darkMap : this.lightMap
+          });
+        }
+      });
     }
 
   initMap(mapOptions: google.maps.MapOptions) {
@@ -229,6 +240,21 @@ export class GoogleMapComponent {
         });
       });
     });
+  }
+
+  // Nearby points for a given point - maxReach defaults to 1000 meters
+  getNearbyPoints(position, pickups: Array<Location>, maxReach?: number) {
+    if (!maxReach) maxReach = 1000;
+    const nearbyPoints = [];
+    const homePosition = new google.maps.LatLng(position.lat, position.lng);
+    pickups.forEach(pickup => {
+      const pickupPosition = new google.maps.LatLng(pickup.lat, pickup.lng);
+      // TODO: Store distance between each pickup point to add preference for nearby pickup point
+      if (google.maps.geometry.spherical.computeDistanceBetween(homePosition, pickupPosition) <= maxReach) {
+        nearbyPoints.push(pickup);
+      }
+    });
+    return nearbyPoints;
   }
 
   setLatLng(lat: number, lng: number) {

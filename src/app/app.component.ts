@@ -15,6 +15,8 @@ import * as firebase from 'firebase/app';
 import { timer } from 'rxjs/observable/timer';
 import { UserLink } from './services/helper-classes';
 
+import { main } from './members/schedule';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -47,6 +49,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(async () => {
+      main();
       // Track performance
       console.log(firebase.performance);
       // Enable local caching
@@ -117,7 +120,7 @@ export class AppComponent {
       // Default stuff
       // this.statusBar.styleDefault();
       this.splashScreen.hide();
-      timer(5000).subscribe(() => this.showSplash = false);
+      timer(500).subscribe(() => this.showSplash = false);
       this.platform.backButton.subscribe(this.navigateBack);
     });
 

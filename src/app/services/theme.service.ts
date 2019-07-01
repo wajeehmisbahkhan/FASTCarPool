@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Theme } from './helper-classes';
 import * as Color from 'color';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ export class ThemeService {
 
   private riderTheme: Theme;
   private driverTheme: Theme;
+
+  currentThemeIsDriver: BehaviorSubject<boolean>;
 
   constructor(
     @Inject(DOCUMENT) private document: Document
@@ -23,6 +26,7 @@ export class ThemeService {
       this.riderTheme.success, this.riderTheme.warning, this.riderTheme.danger,
       '#BCC2C7', '#F7F7FF', '#495867'
     );
+    this.currentThemeIsDriver = new BehaviorSubject(false);
   }
 
   setTheme(isDriver: boolean) {
@@ -32,6 +36,7 @@ export class ThemeService {
     else
       cssText = CSSTextGenerator(this.riderTheme);
     this.setGlobalCSS(cssText);
+    this.currentThemeIsDriver.next(isDriver);
     // this.storage.set('theme', cssText);
   }
 

@@ -32,6 +32,7 @@ plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
 
+privacy-policy.txt
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
