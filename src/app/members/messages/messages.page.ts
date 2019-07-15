@@ -36,25 +36,25 @@ export class MessagesPage implements OnInit {
     return lastSender;
   }
 
-  getTime(message: Message): string {
-    const date = new Date(message.time);
-    let time = '';
-    const now = new Date();
-    // If today
-    if (date.getDate() === now.getDate()
-    && date.getMonth() === now.getMonth()
-    && date.getFullYear() === now.getFullYear())
-      if (date.getMinutes() < 10)
-        time += `${date.getHours()}:0${date.getMinutes()}`;
-      else
-        time += `${date.getHours()}:${date.getMinutes()}`;
-    // If this year
-    else if (date.getFullYear() === now.getFullYear())
-      time += `${date.getDate()}/${date.getMonth()}`;
-    else
-      time += `${date.getFullYear()}`;
-    return time;
-  }
+  // getTime(message: Message): string {
+  //   const date = new Date(message.time);
+  //   let time = '';
+  //   const now = new Date();
+  //   // If today
+  //   if (date.getDate() === now.getDate()
+  //   && date.getMonth() === now.getMonth()
+  //   && date.getFullYear() === now.getFullYear())
+  //     if (date.getMinutes() < 10)
+  //       time += `${date.getHours()}:0${date.getMinutes()}`;
+  //     else
+  //       time += `${date.getHours()}:${date.getMinutes()}`;
+  //   // If this year
+  //   else if (date.getFullYear() === now.getFullYear())
+  //     time += `${date.getDate()}/${date.getMonth()}`;
+  //   else
+  //     time += `${date.getFullYear()}`;
+  //   return time;
+  // }
 
   // TODO: Get number of unread messages
   unreadMessages(): string {

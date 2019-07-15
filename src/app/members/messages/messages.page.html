@@ -30,7 +30,7 @@
             {{ unreadMessages() }}
           </ion-col>
           <ion-col size="6">
-            {{ getTime(chat.messages[chat.messages.length-1]) }}
+            {{ chat.messages[chat.messages.length-1].time | date }}
           </ion-col>
       </ion-label>
       </ion-col>

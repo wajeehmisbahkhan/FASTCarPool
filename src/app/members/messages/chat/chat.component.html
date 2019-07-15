@@ -21,7 +21,7 @@
             My message for message on left
           -->
           <div class="message-data" [class.align-right]="!userIsSender(message)">
-              <span class="message-data-time" >{{ getTime(message) }}</span> &nbsp; &nbsp;
+              <span class="message-data-time" >{{ message.time | date  }}</span> &nbsp; &nbsp;
               <span class="message-data-name" >{{ getParticipant(message.sender).name }}</span>
           </div>
           <div class="message" [ngClass]="{

@@ -38,26 +38,26 @@ export class ChatComponent implements OnInit {
     return this.chat.participants[sender];
   }
 
-  getTime(message: Message): string {
-    const date = new Date(message.time);
-    let time: string;
-    if (date.getMinutes() < 10)
-      time = `${date.getHours()}:0${date.getMinutes()}, `;
-    else
-      time = `${date.getHours()}:${date.getMinutes()}, `;
-    const now = new Date();
-    // If today
-    if (date.getDate() === now.getDate()
-    && date.getMonth() === now.getMonth()
-    && date.getFullYear() === now.getFullYear())
-      time += 'Today';
-    // If this year
-    else if (date.getFullYear() === now.getFullYear())
-      time += `${date.getDate()}/${date.getMonth()}`;
-    else
-      time += `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-    return time;
-  }
+  // getTime(message: Message): string {
+  //   const date = new Date(message.time);
+  //   let time: string;
+  //   if (date.getMinutes() < 10)
+  //     time = `${date.getHours()}:0${date.getMinutes()}, `;
+  //   else
+  //     time = `${date.getHours()}:${date.getMinutes()}, `;
+  //   const now = new Date();
+  //   // If today
+  //   if (date.getDate() === now.getDate()
+  //   && date.getMonth() === now.getMonth()
+  //   && date.getFullYear() === now.getFullYear())
+  //     time += 'Today';
+  //   // If this year
+  //   else if (date.getFullYear() === now.getFullYear())
+  //     time += `${date.getDate()}/${date.getMonth()}`;
+  //   else
+  //     time += `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+  //   return time;
+  // }
 
   submit() {
     if (!this.messageText.trim()) {

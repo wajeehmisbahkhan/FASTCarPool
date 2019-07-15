@@ -1,7 +1,8 @@
 {
   "name": "FASTCarPool",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular",
   "id": "676b59bf"
