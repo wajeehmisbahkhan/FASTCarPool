@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, timer } from 'rxjs';
-import { Storage } from '@ionic/storage';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { AlertService } from './alert.service';
 
@@ -33,7 +32,6 @@ export class AuthenticationService {
   authState = new BehaviorSubject(false);
 
   constructor(
-    private storage: Storage,
     private afAuth: AngularFireAuth,
     private alertService: AlertService
     ) { }
@@ -89,7 +87,6 @@ export class AuthenticationService {
   logout() {
     this.authState.next(false);
     this.afAuth.auth.signOut().catch(this.alertService.error);
-    this.storage.remove('userData');
   }
 
   isAuthenticated() {

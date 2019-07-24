@@ -24,7 +24,12 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
+      // Assign id
       this.id = params.get('id');
+      // For seen-ing messages
+      this.seenMessages();
+      // For new messages
+      this.cs.receivedMessage.subscribe(this.seenMessages);
     });
   }
 
@@ -36,6 +41,21 @@ export class ChatComponent implements OnInit {
 
   getParticipant(sender: number): Participant {
     return this.chat.participants[sender];
+  }
+
+  seenMessages() {
+    if (this.chat) {
+    // Get messages up till last seen
+    const unseenMessages = [];
+    for (let i = this.chat.messages.length - 1; i >= 0; i--) {
+      // Stop if own message or seen message
+      if (this.userIsSender(this.chat.messages[i])
+      ||  this.chat.messages[i].status === 'SEEN')
+        break;
+      unseenMessages.push(this.chat.messages[i]);
+    }
+    this.cs.seenMessages(unseenMessages, this.chat);
+    }
   }
 
   // getTime(message: Message): string {

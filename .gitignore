@@ -4,6 +4,8 @@
 
 src/environments/environment.prod.ts
 src/environments/environment.ts
+admin.service.ts
+admin.service.spec.ts
 *~
 *.sw[mnpcod]
 *.log

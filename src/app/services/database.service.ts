@@ -281,6 +281,12 @@ export class DatabaseService implements OnDestroy {
     throw this.outdatedError;
   }
 
+  deleteDoc(path: string) {
+    if (this.usable)
+      return this.db.doc(path).delete();
+    throw this.outdatedError;
+  }
+
   arrayUnion(path: string, field: string, element: any) {
     const updated = {};
     updated[field] = firestore.FieldValue.arrayUnion(JSON.parse(JSON.stringify(element)));
@@ -295,6 +301,13 @@ export class DatabaseService implements OnDestroy {
     if (this.usable)
       return this.db.doc(path).update(updated);
     throw this.outdatedError;
+  }
+
+  logout() {
+    this.userData = null;
+    this.userLink = null;
+    this.viewUser = null;
+    this.storage.remove('userData');
   }
 
   ngOnDestroy() {

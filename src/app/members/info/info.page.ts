@@ -5,6 +5,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserData, Day, Car, Address, UserLink } from 'src/app/services/helper-classes';
+import { log } from 'util';
 
 @Component({
   selector: 'info',

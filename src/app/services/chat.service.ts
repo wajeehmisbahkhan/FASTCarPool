@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { Chat, Message, Participant } from './helper-classes';
 import { AlertService } from './alert.service';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +14,16 @@ export class ChatService implements OnDestroy {
   previousChatListLength = 0;
   chats: Array<Chat> = [];
 
+  receivedMessage: BehaviorSubject<Message>;
+
   liveSubs: Array<Subscription> = [];
 
   constructor(
     private db: DatabaseService,
     private alertService: AlertService
-  ) { }
+  ) {
+    this.receivedMessage = new BehaviorSubject(null);
+  }
 
   // Detects any new chats
   loadChats() {
@@ -57,6 +61,8 @@ export class ChatService implements OnDestroy {
           if (participants[messages[i].sender].email !== this.db.userLink.email) {
             // Add new message - status updated
             oldChat.messages[i].status = 'RECEIVED';
+            // Inform other compoenents of new message through observable
+            this.receivedMessage.next(oldChat.messages[i]);
           }
           // Update server once we reach the final received message
           if (i === messages.length - 1) {
@@ -78,7 +84,7 @@ export class ChatService implements OnDestroy {
         // Update messages to received for all new chats
         chat.messages.forEach(message => {
           if (participants[message.sender].email !== this.db.userLink.email) {
-            message.status = 'RECIEVED';
+            message.status = 'RECEIVED';
           }
         });
         // If any updates send to server
@@ -150,6 +156,14 @@ export class ChatService implements OnDestroy {
 
   isUsable() {
     return this.db.usable;
+  }
+
+  seenMessages(unseenMessages: Message[], chat: Chat) {
+    // Chat is pointing to same messages so updates automatically
+    unseenMessages.forEach(message => message.status = 'SEEN');
+    if (unseenMessages.length > 0) {
+      this.db.updateDoc(`chats/${chat.id}`, chat);
+    }
   }
 
   ngOnDestroy() {
