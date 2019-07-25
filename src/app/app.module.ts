@@ -36,10 +36,7 @@ import { environment } from '../environments/environment';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    AngularFirePerformanceModule,
-    AgmCoreModule.forRoot({
-      apiKey: environment.googleMaps.apiKey
-    }),
+    AngularFirePerformanceModule
   ],
   providers: [
     StatusBar,
@@ -49,9 +46,7 @@ import { environment } from '../environments/environment';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Geolocation,
     LocationAccuracy,
-    EmailComposer,
-    AgmCoreModule,
-    AgmMap
+    EmailComposer
   ],
   bootstrap: [AppComponent]
 })

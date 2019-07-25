@@ -6,17 +6,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { InfoPage } from './info.page';
-import { MapComponent } from './map/map.component';
 import { SharedModule } from 'src/app/components/shared.module';
+import { GoogleMapInputComponent } from 'src/app/components/google-map-input/google-map-input.component';
 
 const routes: Routes = [
   {
     path: '',
     component: InfoPage
-  },
-  {
-    path: 'map',
-    component: MapComponent
   }
 ];
 
@@ -30,6 +26,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [InfoPage, MapComponent]
+  declarations: [InfoPage],
+  entryComponents: [GoogleMapInputComponent]
 })
 export class InfoPageModule {}

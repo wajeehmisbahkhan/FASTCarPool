@@ -40,7 +40,6 @@ export class DatabaseService implements OnDestroy {
     private storage: Storage
     ) {
       this.usable = true;
-      this.fast = new Location(24.8568991, 67.2646838, 'FAST NUCES');
     }
 
 
@@ -56,12 +55,17 @@ export class DatabaseService implements OnDestroy {
       this.setDoc(`users/${userLink.email}`, this.userData).then(() => {
         // Save default user data locally
         this.storage.set('userData', JSON.stringify(userData));
-        // Add to riders list
         this.userLink = userLink;
-        this.arrayUnion('app/users', 'riders', this.userLink);
-        // Add to FAST location by default
-        // FAST will always be at index 0 in the db and locally
-        this.addRider(this.fast, 0);
+        // Add to users
+        if (this.userData.isDriver) {
+          this.arrayUnion('app/users', 'drivers', this.userLink);
+          // Add to FAST location by default
+          this.addDriver(this.fast);
+        } else {
+          this.arrayUnion('app/users', 'riders', this.userLink);
+          // Add to FAST location by default
+          this.addRider(this.fast);
+        }
         resolve();
       });
     })) // TODO: Decide where to display errors
@@ -104,67 +108,63 @@ export class DatabaseService implements OnDestroy {
     return this.storage.get('userData');
   }
 
-  getPickups() {
+  loadPickups() {
     return new Promise((resolve, reject) => {
       this.getDoc('app/pickups').subscribe(pickups => {
         this.pickups = pickups.data()['locations'];
+        // For quick reference
+        this.fast = this.pickups[0];
         resolve();
       }, reject);
     });
   }
 
-  getLivePickups(): Observable<Array<Location>> {
-    return new Observable(observer => {
+  loadLivePickups() {
+    return new Promise((resolve, reject) => {
       if (this.usable) {
         const liveSub = this.getLiveDoc('app/pickups').subscribe(pickups => {
           this.pickups = pickups.payload.data()['locations'];
-          observer.next(this.pickups);
+          // For quick reference
+          this.fast = this.pickups[0];
+          resolve();
         });
         this.subscriptions.push(liveSub);
     } else
-      observer.error(this.outdatedError);
+      reject(this.outdatedError);
     });
   }
 
-  addDriver(pickup: Location, index: number) {
+  addDriver(pickup: Location) {
     // Add locally
     if (this.usable) {
       pickup.drivers.push(this.userLink);
-      this.pickups[index] = pickup;
     }
     // Update in database
     return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
-  removeDriver(pickup: Location, index: number) {
+  removeDriver(pickup: Location) {
     // Remove locally
     if (this.usable) {
       pickup.drivers = pickup.drivers.filter( driver => driver.email !== this.userLink.email );
-      this.pickups[index] = pickup;
     }
     // Update in database
     return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
-  addRider(pickup: Location, index?: number) {
-    if (!index) {
-      // Search for pickup location locally
-      index = this.pickups.findIndex(pickupPoint => pickupPoint === pickup);
-    }
+  addRider(pickup: Location) {
     // Add locally
     if (this.usable) {
       pickup.riders.push(this.userLink);
-      this.pickups[index] = pickup;
     }
     // Update in database
     return this.updateDoc('app/pickups', {locations: this.pickups});
   }
 
-  removeRider(pickup: Location, index: number) {
+  removeRider(pickup: Location) {
       // Remove locally
       if (this.usable) {
         pickup.riders = pickup.riders.filter( rider => rider.email !== this.userLink.email );
-        this.pickups[index] = pickup;
       }
       // Update in database
       return this.updateDoc('app/pickups', {locations: this.pickups});
@@ -193,7 +193,7 @@ export class DatabaseService implements OnDestroy {
               });
               this.updateDoc('app/pickups', {locations: pickups});
               // Add to FAST as driver by default
-              this.addDriver(this.fast, 0);
+              this.addDriver(this.fast);
             });
           } else {
             // Remove from drivers and add to riders
@@ -208,7 +208,7 @@ export class DatabaseService implements OnDestroy {
               });
               this.updateDoc('app/pickups', { locations: pickups});
               // Add to FAST as rider by default
-              this.addRider(this.fast, 0);
+              this.addRider(this.fast);
             });
           }
         }
@@ -307,6 +307,7 @@ export class DatabaseService implements OnDestroy {
     this.userData = null;
     this.userLink = null;
     this.viewUser = null;
+    this.pickups = null;
     this.storage.remove('userData');
   }
 

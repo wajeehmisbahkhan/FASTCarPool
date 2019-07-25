@@ -86,7 +86,7 @@ export class AuthenticationService {
 
   logout() {
     this.authState.next(false);
-    this.afAuth.auth.signOut().catch(this.alertService.error);
+    return this.afAuth.auth.signOut().catch(this.alertService.error);
   }
 
   isAuthenticated() {

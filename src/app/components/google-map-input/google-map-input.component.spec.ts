@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MapComponent } from './map.component';
+import { GoogleMapInputComponent } from './google-map-input.component';
 
-describe('MapComponent', () => {
-  let component: MapComponent;
-  let fixture: ComponentFixture<MapComponent>;
+describe('GoogleMapInputComponent', () => {
+  let component: GoogleMapInputComponent;
+  let fixture: ComponentFixture<GoogleMapInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapComponent ],
+      declarations: [ GoogleMapInputComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MapComponent);
+    fixture = TestBed.createComponent(GoogleMapInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

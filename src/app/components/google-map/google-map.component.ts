@@ -1,8 +1,11 @@
-import { Component, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, HostListener, EventEmitter, Output, Input } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { ThemeService } from 'src/app/services/theme.service';
-import { Location } from '../../services/helper-classes';
+import { Location, Coordinate } from '../../services/helper-classes';
+import { DatabaseService } from 'src/app/services/database.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { LatLngLiteral } from '@agm/core';
 
 @Component({
   selector: 'google-map',
@@ -12,7 +15,7 @@ import { Location } from '../../services/helper-classes';
 export class GoogleMapComponent {
 
   // Themes
-  public darkMap = [
+  darkMap = [
     {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
     {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
     {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
@@ -92,99 +95,65 @@ export class GoogleMapComponent {
       stylers: [{color: '#17263c'}]
     }
   ];
+  lightMap = [];
+  isDriver = false; // Dark theme and other displays depend on this
 
-  public lightMap = [];
+  // For Map
+  mapCoordinates: Coordinate;
+  @Input() zoom = 14; // Default zoom
 
-  // Markers
-  markers: Array<google.maps.Marker>;
+  // For Markers
+  positionCoordinates: Coordinate;
+  centerCoordinates: Coordinate;
+  @Input() pickupLocations: Array<Location>;
+
+  @Input() showCenter: boolean;
 
   // Close previous window
   infoWindowOpened = null;
   previousInfoWindow = null;
 
-  map: google.maps.Map;
-
-  // Get reference to map element in html file
-  @ViewChild('map') mapElement;
-
-  // Output signals to info page
-  @Output()
-  screenDragged = new EventEmitter<number[]>();
-  // Output signals to dashboard for click events
-  @Output()
-  userChipClicked = new EventEmitter<string[]>();
-  @Output()
-  pickupButtonClicked = new EventEmitter<string[]>();
-
-  @HostListener('click', ['$event.target'])
-  onClick(element: HTMLElement) {
-    // View profile
-    if (element.tagName === 'ION-CHIP') {
-      this.closeWindow();
-      this.userChipClicked.emit([element.textContent, element.getAttribute('data-email')]);
-    }
-    // Add or remove from pickup point
-    if (element.classList[0] === 'pickup-button') {
-      this.closeWindow();
-      this.pickupButtonClicked.emit([element.id, element.getAttribute('data-location'), element.getAttribute('data-index')]);
-    }
-  }
-
   constructor(
     private geolocation: Geolocation,
     private locationAccuracy: LocationAccuracy,
-    private themeService: ThemeService
-    ) {
-      this.markers = [];
-      this.themeService.currentThemeIsDriver.subscribe(isDriver => {
-        // Update map when theme changes
-        if (this.map) {
-          this.map.setOptions({
-            styles: isDriver ? this.darkMap : this.lightMap
-          });
-        }
-      });
-    }
-
-  initMap(mapOptions: google.maps.MapOptions) {
-    // Init Map Code
-    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-    // Close any info window on click
-    this.map.addListener('click', () => this.selectMarker(null));
-    // For map info marker dragging
-    this.map.addListener('drag', () =>
-      this.screenDragged.emit([this.map.getCenter().lat(), this.map.getCenter().lng()])
-    );
-  }
-
-  // For quick event adding
-  addEventListener(event: string, callBack: any) {
-    this.map.addListener(event, callBack);
-  }
-
-  addMarker(position, icon?, content?) {
-    // Marker
-    const marker = new google.maps.Marker({
-      position: position
+    private themeService: ThemeService,
+    public db: DatabaseService,
+    private alertService: AlertService
+  ) {
+    // Default assumed positions (Karachi)
+    this.mapCoordinates = new Coordinate(24.8607, 67.0011);
+    this.positionCoordinates = new Coordinate(24.8607, 67.0011);
+    this.centerCoordinates = new Coordinate(24.8607, 67.0011);
+    this.showCenter = false;
+    // Attempt location access
+    this.getLocationAccess().then(this.setAllCoordinates).catch(err => {
+      // TODO: Handle error
+      if (err === 'cordova_not_available') {
+        // Specific for browser testing
+        this.setAllCoordinates();
+      }
     });
-    if (icon) marker.setIcon(icon);
-    marker.setMap(this.map);
-    if (content) {
-      // Info Window
-      const infoWindow = new google.maps.InfoWindow({
-        content: content
-      });
-      marker.addListener('click', () => {
-        infoWindow.open(this.map, marker);
-        this.selectMarker(infoWindow);
-      });
-    }
-    this.markers.push(marker);
+    // Default pickups are empty
+    this.pickupLocations = [];
+    // Update driver (theme) and other stuff if any change
+    this.themeService.currentThemeIsDriver.subscribe(isDriver => {
+      this.isDriver = isDriver;
+    });
   }
 
-  // TODO?: Implement in dashboard
-  getMarker(index: number) {
-    return this.markers[index];
+  // Got permission for location
+  async setAllCoordinates() {
+    const currentLocation = await this.getCurrentLocation();
+    // Set map and position
+    this.mapCoordinates.lat = currentLocation.coords.latitude;
+    this.mapCoordinates.lng = currentLocation.coords.longitude;
+    this.positionCoordinates.lat = currentLocation.coords.latitude;
+    this.positionCoordinates.lng = currentLocation.coords.longitude;
+    // Keep updating position
+    this.getLiveLocation().subscribe(position => {
+      this.positionCoordinates.lat = position.coords.latitude;
+      this.positionCoordinates.lng = position.coords.longitude;
+    });
   }
 
   getCurrentLocation() {
@@ -196,7 +165,7 @@ export class GoogleMapComponent {
   }
 
   // Confirm Location Access
-  getAccurateLocation() {
+  getLocationAccess() {
     return new Promise((resolve, reject) => {
     this.locationAccuracy.canRequest().then((canRequest: boolean) => {
       if (canRequest) {
@@ -211,6 +180,11 @@ export class GoogleMapComponent {
         });
     }).catch(reject);
     });
+  }
+
+  centerChange(latLng: LatLngLiteral) {
+    this.centerCoordinates.lat = latLng.lat;
+    this.centerCoordinates.lng = latLng.lng;
   }
 
   getAddress(lat: number, lng: number) {
@@ -257,11 +231,68 @@ export class GoogleMapComponent {
     return nearbyPoints;
   }
 
-  setLatLng(lat: number, lng: number) {
-    this.map.setCenter(new google.maps.LatLng(lat, lng));
+  // Specific functions for pickups
+  pickupUrl(pickup: Location) {
+    let color: string;
+    // Look if added as driver or rider
+    if (this.db.userData.isDriver)
+      color = pickup.drivers.find(driver => driver['email'] === this.db.userLink.email) ? 'green' : 'blue';
+    else
+      color = pickup.riders.find(rider => rider['email'] === this.db.userLink.email) ? 'green' : 'blue';
+    // Return green if added otherwise blue
+    return `../../../assets/img/${color}_location.png`;
   }
 
-  // Maps
+  addedToLocation(addedAs: string, pickup: Location): boolean {
+    // Check if added to drivers or riders
+    if (pickup[addedAs])
+      return pickup[addedAs].find(userLink => userLink['email'] === this.db.userLink.email);
+    return false;
+  }
+
+  addRider(pickup: Location) {
+    // Confirmation
+    this.alertService.confirmation(`Confirm this message if you can make it to ${pickup.name}.\n
+    Note: This will allow drivers passing by to contact you through this pickup point.`, () => {
+      // Adding
+      this.db.addRider(pickup).catch(this.alertService.error.bind(this.alertService));
+      // Close info window
+      this.closeWindow();
+    });
+  }
+
+  removeRider(pickup: Location) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of riders for ${pickup.name}?`, () => {
+      // Removing
+      this.db.removeRider(pickup).catch(this.alertService.error.bind(this.alertService));
+      // Close info window
+      this.closeWindow();
+    });
+  }
+
+  addDriver(pickup: Location) {
+    // Confirm
+    this.alertService.confirmation(`Confirm this message if you pass by ${pickup.name} and can pickup riders from here.\n
+    Note: This will allow riders to contact you through this pickup point.`, () => {
+      // Adding
+      this.db.addDriver(pickup).catch(this.alertService.error.bind(this.alertService));
+      // Close info window
+      this.closeWindow();
+    });
+  }
+
+  removeDriver(pickup: Location) {
+    // Confirm
+    this.alertService.confirmation(`Do you want to remove yourself from the list of drivers for ${pickup.name}?`, () => {
+      // Removing
+      this.db.removeDriver(pickup).catch(this.alertService.error.bind(this.alertService));
+      // Close info window
+      this.closeWindow();
+    });
+  }
+
+  // Info Window
   closeWindow() {
     if (this.previousInfoWindow)
       this.previousInfoWindow.close();

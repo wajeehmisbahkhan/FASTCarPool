@@ -1,6 +1,6 @@
 <ion-content>
   <ion-searchbar #search></ion-searchbar>
-  <google-map (screenDragged)="updateMarkerPosition($event)" #map></google-map>
+  <google-map [zoom]="16" [showCenter]="true" #map></google-map>
   <div class="address-controls">
     <ion-button size="medium" expand="block" (click)="confirmAddress()">Confirm Address</ion-button>
     <ion-button size="medium" expand="block" (click)="goBack()">Cancel</ion-button>

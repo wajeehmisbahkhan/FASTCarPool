@@ -31,43 +31,12 @@
 </ion-menu>
 <ion-content fullscreen="true">
   <ion-router-outlet main>
-    <google-map (userChipClicked)="viewProfile($event)" (pickupButtonClicked)="pickupClicked($event)" #map></google-map>
-    <!--
-    <agm-map (mapClick)="closeWindow()" [zoomControl]="false" [streetViewControl]="false"
-    [clickableIcons]="false" [latitude]="lat" [longitude]="lng" [zoom]="14"
-    [styles]="db.userData.isDriver ? map.darkMap : map.lightMap">
-      <agm-marker [latitude]="liveLat" [longitude]="liveLng"></agm-marker>
-      <agm-marker (markerClick)=selectMarker(infoWindow) *ngFor="let pickup of db.pickups; index as i" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="pickupUrl(pickup, i)">
-        <agm-info-window #infoWindow>
-          <h3>{{ pickup.name }}</h3>
-          <!-- Show if user is rider -->
-     <!--     <div *ngIf="!db.userData.isDriver; else notRider">
-          <p *ngIf="pickup.drivers.length === 0; else driversAvailable">There are currently no drivers who pass by this point.</p>
-          <ng-template #driversAvailable>
-            <b>Tap to see driver's profile: </b>
-            <span *ngFor="let driver of pickup.drivers">
-              <ion-chip (click)="db.getUserView(driver)" [routerLink]="'../../view/'">{{ driver.name }}</ion-chip>
-            </span>
-          </ng-template>
-          <ion-button  size="small"
-          *ngIf="!addedToLocation('riders', pickup); else addedRider" expand="block" (click)="addRider(pickup, i)">I can be picked up<br>from this location</ion-button>
-          <ng-template #addedRider><ion-button size="small" expand="block" (click)="removeRider(pickup, i)">Added Successfully<br>As Rider</ion-button></ng-template>
-          </div>
-          <!-- Show if user is driver -->
-      <!--    <ng-template #notRider>
-          <p *ngIf="pickup.riders.length === 0; else ridersAvailable">There are currently no riders who can make it to this point.</p>
-          <ng-template #ridersAvailable>
-            <b>Tap to see rider's profile: </b>
-            <span *ngFor="let rider of pickup.riders">
-              <ion-chip (click)="db.getUserView(rider)" [routerLink]="'../../view/'">{{ rider.name }}</ion-chip>
-            </span>
-          </ng-template>
-          <ion-button size="small" 
-          *ngIf="!addedToLocation('drivers', pickup); else addedDriver" expand="block" (click)="addDriver(pickup, i)">I can pickup riders<br>from this location</ion-button>
-          <ng-template #addedDriver><ion-button size="small" expand="block" (click)="removeDriver(pickup, i)">Added Successfully<br>As Driver</ion-button></ng-template>
-          </ng-template>
-        </agm-info-window>
-      </agm-marker>
-    </agm-map>-->
+    <google-map *ngIf="pickups; else loading" [pickupLocations]="pickups"></google-map>
+    <ng-template #loading>
+      <div style="height: 100%; display: flex" class="flex ion-align-items-center ion-justify-content-center">
+        <ion-spinner name="crescent"></ion-spinner>
+        &nbsp; Loading Pickups...
+      </div>
+    </ng-template>
   </ion-router-outlet>
 </ion-content>

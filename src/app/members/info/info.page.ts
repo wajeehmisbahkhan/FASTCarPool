@@ -5,6 +5,8 @@ import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserData, Day, Car, Address, UserLink } from 'src/app/services/helper-classes';
+import { GoogleMapInputComponent } from '../../components/google-map-input/google-map-input.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'info',
@@ -32,12 +34,13 @@ export class InfoPage implements OnInit {
     private db: DatabaseService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private mc: ModalController
   ) {
     // Default driver
     this.driver = false;
-    // Default Home
-    this.home = new Address('', 0, 0);
+    // Default Home (Karachi)
+    this.home = new Address('', 24.8607, 67.0011);
     // Default schedule
     const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     this.schedule = [];
@@ -51,30 +54,30 @@ export class InfoPage implements OnInit {
   ngOnInit() {
     // Form
     this.infoForm = this.formBuilder.group({
-      address: [this.home.address, Validators.required]
+      address: ['', Validators.required]
     });
   }
 
-  ionViewDidEnter() {
-    // Home address
-    if (window.history.state.address) {
-      this.home.position.lat = window.history.state.lat;
-      this.home.position.lng = window.history.state.lng;
-      this.home.address = window.history.state.address;
-      // Reset address input value as only one way data binding
-      this.infoForm.get('address').setValue(this.home.address);
-    }
-  }
-
   // Map
-  goToMap(e) {
-    e.preventDefault();
-    this.router.navigate(['members', 'info', 'map'], {
-      state: {
+  async showMap() {
+    const modal = await this.mc.create({
+      component: GoogleMapInputComponent,
+      componentProps: {
         lat: this.home.position.lat,
         lng: this.home.position.lng
       }
     });
+    await modal.present();
+    // Value returned from map
+    const value = await modal.onDidDismiss();
+    // If data returned
+    if (value.data) {
+      this.home.position.lat = value.data.lat;
+      this.home.position.lng = value.data.lng;
+      this.home.address = value.data.address;
+      // Reset address input value as only one way data binding
+      this.infoForm.get('address').setValue(this.home.address);
+    }
   }
 
   async createUser() {
@@ -84,7 +87,7 @@ export class InfoPage implements OnInit {
       const userData = new UserData(this.driver, this.home, this.schedule, this.car);
       const userLink = new UserLink(this.user.displayName, this.user.email);
       // Important for adding as rider
-      await this.db.getPickups();
+      await this.db.loadPickups();
       await this.db.createNewUser(userData, userLink);
       // Next state
       this.authService.authState.next(true);

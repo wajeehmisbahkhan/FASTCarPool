@@ -6,24 +6,36 @@ import { ToggleSwitchComponent } from './toggle-switch/toggle-switch.component';
 import { ScheduleInputComponent } from './schedule-input/schedule-input.component';
 import { IonicModule } from '@ionic/angular';
 import { CarDetailsInputComponent } from './car-details-input/car-details-input.component';
+import { AgmCoreModule, AgmMap } from '@agm/core';
+import { environment } from 'src/environments/environment';
+import { GoogleMapInputComponent } from './google-map-input/google-map-input.component';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    FormsModule
+    FormsModule,
+    AgmCoreModule.forRoot({
+      apiKey: environment.googleMaps.apiKey
+    }),
+  ],
+  providers: [
+    AgmCoreModule,
+    AgmMap
   ],
   declarations: [
     GoogleMapComponent,
     ToggleSwitchComponent,
     ScheduleInputComponent,
-    CarDetailsInputComponent
+    CarDetailsInputComponent,
+    GoogleMapInputComponent
   ],
   exports: [
     GoogleMapComponent,
     ToggleSwitchComponent,
     ScheduleInputComponent,
-    CarDetailsInputComponent
+    CarDetailsInputComponent,
+    GoogleMapInputComponent
   ]
 })
 export class SharedModule { }
