@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { IonSearchbar } from '@ionic/angular';
+import { GoogleMapComponent } from 'src/app/components/google-map/google-map.component';
 
 @Component({
   selector: 'map',
@@ -11,26 +12,23 @@ import { IonSearchbar } from '@ionic/angular';
 export class MapComponent implements OnInit {
 
   // Map reference
-  @ViewChild('map') map;
+  @ViewChild('map') map: GoogleMapComponent;
   // Search
   @ViewChild('search') search: IonSearchbar;
 
-  @Input() lat: number;
-  @Input() lng: number;
+  lat: number;
+  lng: number;
 
   // Marker animation
   markerLifted = false;
   markerLiftHeight = 0.00025;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private location: Location
   ) {
-    this.route.paramMap.subscribe(params => {
-      this.lat = parseFloat(params.get('lat'));
-      this.lng = parseFloat(params.get('lng'));
-    });
+    this.lat = this.router.getCurrentNavigation().extras.state.lat;
+    this.lng = this.router.getCurrentNavigation().extras.state.lng;
   }
 
   async ngOnInit() {
@@ -130,7 +128,13 @@ export class MapComponent implements OnInit {
   // Confirm Location
   async confirmAddress() {
     const address: string = await this.map.getAddress(this.lat, this.lng);
-    this.router.navigate(['members', 'info', address, this.lat, this.lng]);
+    this.router.navigate(['members', 'info'], {
+      state: {
+        address,
+        lat: this.lat,
+        lng: this.lng
+      }
+    });
   }
 
   // Cancel

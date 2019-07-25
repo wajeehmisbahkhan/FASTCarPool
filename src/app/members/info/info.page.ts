@@ -3,9 +3,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserData, Day, Car, Address, UserLink } from 'src/app/services/helper-classes';
-import { log } from 'util';
 
 @Component({
   selector: 'info',
@@ -33,24 +32,12 @@ export class InfoPage implements OnInit {
     private db: DatabaseService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {
     // Default driver
     this.driver = false;
     // Default Home
     this.home = new Address('', 0, 0);
-    this.route.paramMap.subscribe(params => {
-      if (params.has('address')) {
-        this.home.address = params.get('address');
-        this.home.position.lat = parseFloat(params.get('lat'));
-        this.home.position.lng = parseFloat(params.get('lng'));
-      } else {
-        this.home.address = '';
-        this.home.position.lat = 0;
-        this.home.position.lng = 0;
-      }
-    });
     // Default schedule
     const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     this.schedule = [];
@@ -62,15 +49,32 @@ export class InfoPage implements OnInit {
   }
 
   ngOnInit() {
+    // Form
     this.infoForm = this.formBuilder.group({
       address: [this.home.address, Validators.required]
     });
   }
 
+  ionViewDidEnter() {
+    // Home address
+    if (window.history.state.address) {
+      this.home.position.lat = window.history.state.lat;
+      this.home.position.lng = window.history.state.lng;
+      this.home.address = window.history.state.address;
+      // Reset address input value as only one way data binding
+      this.infoForm.get('address').setValue(this.home.address);
+    }
+  }
+
   // Map
   goToMap(e) {
     e.preventDefault();
-    this.router.navigate(['members', 'info', 'map', 'temp', this.home.position.lat, this.home.position.lng]);
+    this.router.navigate(['members', 'info', 'map'], {
+      state: {
+        lat: this.home.position.lat,
+        lng: this.home.position.lng
+      }
+    });
   }
 
   async createUser() {

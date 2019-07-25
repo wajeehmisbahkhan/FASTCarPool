@@ -51,7 +51,6 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     // Enable location
-    console.log('Enabling location');
     this.map.getAccurateLocation().then(this.initMap.bind(this)).catch(err => {
       if (err === 'cordova_not_available') { // Special case for testing purposes
         this.initMap();
@@ -61,7 +60,6 @@ export class DashboardPage implements OnInit {
   }
 
   initMap() {
-    console.log('Location enabled');
     this.map.getCurrentLocation()
     .then(resp => {
       // Get location first time

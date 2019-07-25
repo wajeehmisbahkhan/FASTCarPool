@@ -214,7 +214,7 @@ export class GoogleMapComponent {
   }
 
   getAddress(lat: number, lng: number) {
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       // For lat lng to address
       const geocoder = new google.maps.Geocoder;
       // Reverse geocoding

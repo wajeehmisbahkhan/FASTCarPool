@@ -18,16 +18,10 @@ export class ToggleSwitchComponent {
   @Output()
   switchStatusChange = new EventEmitter<boolean>();
 
-  @HostListener('document:keyup') handler() {
-    // this.flip();
-    console.log(`Output:: ToggleSwitchComponent -> @HostListener -> this.switchStatus`, this.switchStatus);
-  }
-
   constructor() {}
 
   flip() {
     this.switchStatus = !this.switchStatus;
-    console.log(`Output:: ToggleSwitchComponent -> flip -> this.switchStatus`, this.switchStatus);
     this.switchStatusChange.emit(this.switchStatus);
   }
 

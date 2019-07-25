@@ -15,11 +15,7 @@ const routes: Routes = [
     component: InfoPage
   },
   {
-    path: ':address/:lat/:lng',
-    component: InfoPage
-  },
-  {
-    path: 'map/temp/:lat/:lng',
+    path: 'map',
     component: MapComponent
   }
 ];
