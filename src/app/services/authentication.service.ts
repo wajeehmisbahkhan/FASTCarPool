@@ -80,6 +80,8 @@ export class AuthenticationService {
       })
       .then(() => {
         this._user = auth.user;
+        // Send email verification
+        this.user.sendEmailVerification().catch(this.alertService.error.bind(this.alertService));
         resolve();
       });
     }).catch(reject);
@@ -89,6 +91,10 @@ export class AuthenticationService {
   logout() {
     this.authState.next(false);
     return this.afAuth.auth.signOut().catch(this.alertService.error);
+  }
+
+  deleteAccount() {
+    return this.user.delete();
   }
 
   isAuthenticated() {
@@ -156,6 +162,10 @@ export class AuthenticationService {
         return error;
       });
     }));
+  }
+
+  emailVerified(): boolean {
+    return this.user.emailVerified;
   }
 
   // Getters

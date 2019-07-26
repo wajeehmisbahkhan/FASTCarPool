@@ -4,12 +4,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-item>
-    <ion-text class="ion-padding ion-text-center">
-      In order for you to have the best experience, we will require you to input
-      some of your information below. You can change these settings after completing signing up:
-    </ion-text>
-  </ion-item>
+  <blockquote class="warning">
+    <p class="ion-padding">
+      <ion-icon slot="start" name="information-circle"></ion-icon>
+      In order for you to have the best experience, we will require some information. You can change these settings after completing signing up:
+    </p>
+  </blockquote>
   <form [formGroup]="infoForm" (ngSubmit)="createUser()">
   <!-- Driver or Rider -->
   <ion-item>
@@ -28,7 +28,24 @@
   <!-- Car if Driver -->
   <!-- Driver or Rider -->
   <car-details-input [(car)]="car" *ngIf="driver"></car-details-input>
-  <ion-button expand="block" type="submit" [disabled]="infoForm.invalid">Submit</ion-button>
+  <!-- Email Verified -->
+  <blockquote [ngClass]="user.emailVerified ? 'success' : 'danger'">
+    <div *ngIf="!user.emailVerified; else verifiedText">
+      <p class="ion-padding">
+      <ion-icon slot="start" name="close-circle"></ion-icon>
+      Please verify your email address to complete registration.
+        <a (click)="resendEmailConfirmation()" *ngIf="!emailVerificationResent">Resend Email Confirmation.</a>
+        <span *ngIf="emailVerificationResent">Email Confirmation Sent.</span>
+      </p>
+    </div>
+    <ng-template #verifiedText>
+      <p class="ion-padding">
+        <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+        Thank you for confirming your email.
+      </p>
+    </ng-template>
+  </blockquote>
+  <ion-button expand="block" type="submit" [disabled]="infoForm.invalid || !user.emailVerified">Submit</ion-button>
   </form>
   
 </ion-content>

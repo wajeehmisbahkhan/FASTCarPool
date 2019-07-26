@@ -70,15 +70,16 @@ export class AppComponent {
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
-      this.db.getDoc('app/info').subscribe(async doc => {
-        const localVersion = await this.appVersion.getVersionNumber().catch(this.alertService.error.bind(this.alertService));
+      try {
+        const doc = await this.db.getDoc('app/info');
+        const localVersion = await this.appVersion.getVersionNumber();
         this.alertService.app = localVersion;
         const serverVersion = doc.data().version;
         if (localVersion) // TODO: When coming from alpha to beta, only major version difference will cause app to stop working
           this.db.usable = this.versionDifference(localVersion, serverVersion) === 'minor' ? false : true;
         else // Testing purposes
           this.db.usable = this.versionDifference('3.3.1', '3.3.2') === 'minor' ? false : true;
-      });
+      } catch (err) { this.alertService.error(err); }
       // Check if user is stored in cache
       const user = await this.authService.getLocalUser();
       if (user) {
