@@ -49,7 +49,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(async () => {
-      main();
+      // main();
       // Track performance
       console.log(firebase.performance);
       // Enable local caching
