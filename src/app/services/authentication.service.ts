@@ -20,6 +20,7 @@ export class AuthenticationService {
     'email': [
       { type: 'required', message: 'Email is required.' },
       { type: 'email', message: 'Enter a valid email.' },
+      { type: 'pattern', message: 'Enter your university\'s email' },
       { type: 'emailExists', message: 'No such email exists.' },
       { type: 'emailAvailable', message: 'Email already exists.' }
     ],
@@ -28,7 +29,8 @@ export class AuthenticationService {
       { type: 'minlength', message: 'Password must be at least 6 characters long.' },
     ]
   };
-
+  emailEndingPattern = /.*/;
+  // emailEndingPattern = /@nu.edu.pk$/;
   authState = new BehaviorSubject(false);
 
   constructor(

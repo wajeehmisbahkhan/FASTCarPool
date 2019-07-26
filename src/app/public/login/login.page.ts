@@ -26,7 +26,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email], this.authService.emailExists.bind(this.authService)],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(this.authService.emailEndingPattern)],
+      this.authService.emailExists.bind(this.authService)],
       password: ['', [Validators.required]]
     });
     this.error = {

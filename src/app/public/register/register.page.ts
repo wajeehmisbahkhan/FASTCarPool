@@ -25,7 +25,8 @@ export class RegisterPage implements OnInit {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: [this.authService.passingEmail,
-      [Validators.required, Validators.email], this.authService.emailAvailable.bind(this.authService)],
+      [Validators.required, Validators.email, Validators.pattern(this.authService.emailEndingPattern)],
+      this.authService.emailAvailable.bind(this.authService)],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
     this.error = {
