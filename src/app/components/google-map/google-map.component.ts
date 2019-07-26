@@ -1,4 +1,4 @@
-import { Component, ViewChild, HostListener, EventEmitter, Output, Input } from '@angular/core';
+import { Component, ViewChild, HostListener, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { ThemeService } from 'src/app/services/theme.service';
@@ -6,13 +6,14 @@ import { Location, Coordinate } from '../../services/helper-classes';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { LatLngLiteral } from '@agm/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'google-map',
   templateUrl: './google-map.component.html',
   styleUrls: ['./google-map.component.scss'],
 })
-export class GoogleMapComponent {
+export class GoogleMapComponent implements OnDestroy {
 
   // Themes
   darkMap = [
@@ -113,6 +114,9 @@ export class GoogleMapComponent {
   infoWindowOpened = null;
   previousInfoWindow = null;
 
+  // Garbage collection
+  positionSubscription: Subscription;
+
   constructor(
     private geolocation: Geolocation,
     private locationAccuracy: LocationAccuracy,
@@ -150,10 +154,14 @@ export class GoogleMapComponent {
     this.positionCoordinates.lat = currentLocation.coords.latitude;
     this.positionCoordinates.lng = currentLocation.coords.longitude;
     // Keep updating position
-    this.getLiveLocation().subscribe(position => {
+    this.positionSubscription = this.getLiveLocation().subscribe(position => {
       this.positionCoordinates.lat = position.coords.latitude;
       this.positionCoordinates.lng = position.coords.longitude;
     });
+  }
+
+  ngOnDestroy() {
+    this.positionSubscription.unsubscribe();
   }
 
   getCurrentLocation() {
