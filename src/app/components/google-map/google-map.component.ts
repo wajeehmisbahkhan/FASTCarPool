@@ -300,6 +300,11 @@ export class GoogleMapComponent implements OnDestroy {
     });
   }
 
+  // Track by - for better performance of ngfor
+  pickupLocationTracker(index: number, pickup: Location) {
+    return index; // We can track by the index since pickup locations will not be rearranged
+  }
+
   // Info Window
   closeWindow() {
     if (this.previousInfoWindow)
