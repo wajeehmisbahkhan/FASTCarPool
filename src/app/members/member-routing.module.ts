@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'profile', loadChildren: './profile/profile.module#ProfilePageModule' },
   { path: 'view', loadChildren: './view/view.module#ViewPageModule' },
   { path: 'info', loadChildren: './info/info.module#InfoPageModule' },
+  { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
 ];
 
 @NgModule({

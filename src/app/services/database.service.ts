@@ -260,6 +260,8 @@ export class DatabaseService implements OnDestroy {
       riders = riders.filter(rider => rider.email !== email);
       await this.updateDoc('app/users', { riders });
     }
+    // TODO: Remove chats
+    await this.storage.remove('userData');
     // Finally remove user data
     return this.deleteDoc(`users/${email}`);
   }
