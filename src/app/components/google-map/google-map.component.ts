@@ -156,8 +156,21 @@ export class GoogleMapComponent {
     });
   }
 
-  getCurrentLocation() {
-    return this.geolocation.getCurrentPosition();
+  mapCenter() {
+    // const currentLocation = await this.getCurrentLocation();
+    // Set map position to center
+    this.mapCoordinates.lat = this.positionCoordinates.lat;
+    this.mapCoordinates.lng = this.positionCoordinates.lng;
+    this.centerCoordinates.lat = this.positionCoordinates.lat;
+    this.centerCoordinates.lng = this.positionCoordinates.lng;
+    console.log('location centered!');
+    console.log(this.mapCoordinates);
+    console.log(this.centerCoordinates);
+    console.log(this.positionCoordinates);
+  }
+
+  async getCurrentLocation() {
+    return await this.geolocation.getCurrentPosition();
   }
 
   getLiveLocation() {
