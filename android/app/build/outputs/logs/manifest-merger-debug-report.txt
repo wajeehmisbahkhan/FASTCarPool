@@ -1,0 +1,445 @@
+-- Merging decision tree log ---
+provider#android.support.v4.content.FileProvider
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:34:9-42:20
+	android:grantUriPermissions
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:38:13-47
+	android:authorities
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:36:13-64
+	android:exported
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:37:13-37
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:35:13-67
+manifest
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+MERGED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-36:12
+MERGED from [com.android.support:design:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\cc7e48a8a88a07148b777e4e4abed993\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c09e21bfe4781e0b4c3f9af79ebb922\AndroidManifest.xml:17:1-22:12
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-29:12
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-location-16.0.0.aar\b0724fc6a0ba0ca50c0cf89aefd61236\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:17:1-37:12
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:17:1-47:12
+MERGED from [com.google.firebase:firebase-iid-interop:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-interop-16.0.1.aar\31f3de33f2e47a5923ed664eacf53b7b\AndroidManifest.xml:2:1-10:12
+MERGED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-places-placereport-16.0.0.aar\dd1487553a82e3012946c6b265173f62\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:2:1-19:12
+MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\ffc215fb5c29ca9d0d1a89b347b0379a\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.firebase:firebase-measurement-connector:17.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-17.0.1.aar\0f8695a456476fc68371b5f0f5de6a86\AndroidManifest.xml:17:1-25:12
+MERGED from [com.google.android.gms:play-services-stats:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-stats-16.0.1.aar\ebb0fb2d43d6d0d2e24bf88331c74aa7\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\62b216750fd63de24702d89314310a55\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\0996700f38aebfe0b0443f88152476db\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\79bcc0355c644c5b06cfd391d3a4bab5\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customtabs:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customtabs-28.0.0.aar\c2abd5b57dd3bc74acfa0c6abe502f42\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\a3f3d5315e3b8bd3942de6113b188723\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\2fb1e15783603fd46d86a81d7396e8f2\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\8d8fa5e8de738e5f028ef6074a8c50bb\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4c1a4bd54fc029b5cc7f8f05da6079e6\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\cf28eb830275d1d6ae391f06b17f2b05\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\856fd0290877deab7f2f642e9337c984\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\16ad02e86ab2343b20c572f7a09f7bba\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\abf7af26a04deafd6b97c28ed1755a8b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\abbef20bbd13cee55dde9a1685642b5a\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\2de171f35fa4f92f6e16459aa65f4481\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\07b6d0328939ffda51c5620ccf33213e\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\5620dffacd13a7798d0bf81adff689bd\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\d79fb52412cdb3e7b30a73e30b047247\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\7aa0abd4824ad704acd85e397328680d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\04a26c1d3f22f16cf40fdce4f8808f08\AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ae8c3f93fdd96f999a293159d7d0c77b\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\045ff578cfd2a528e0d2cbe44c1db43b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\25384251415b4094677b1ac3e8da7de2\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\a10a5f48f7ed30cfbe58a8179d616a2f\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\9fbb6e8b8fcbdf7bf03f4f48c39d1e12\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\7797a4824dbf162227d6ecd88913bd7d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\292391653d25c523092d8aec70aac024\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\7bd2f6094eb042885dd9d1ee9dd5c39c\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\2200a6df6bc6e70a8ca094f945183c57\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\85fb12751ee48e16d7ae10939183edd3\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\c60562960150e32389aaabe72141114b\AndroidManifest.xml:17:1-22:12
+MERGED from [org.apache.cordova:framework:7.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\framework-7.0.0.aar\d2f11f0275de79acfc30658339337cd5\AndroidManifest.xml:20:1-27:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+	package
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:3:5-31
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:1-63:12
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:2:11-69
+application
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:5:5-43:19
+MERGED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:5-34:19
+MERGED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:5-34:19
+MERGED from [com.android.support:design:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\cc7e48a8a88a07148b777e4e4abed993\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\cc7e48a8a88a07148b777e4e4abed993\AndroidManifest.xml:22:5-20
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:5-27:19
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:5-27:19
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-location-16.0.0.aar\b0724fc6a0ba0ca50c0cf89aefd61236\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-location-16.0.0.aar\b0724fc6a0ba0ca50c0cf89aefd61236\AndroidManifest.xml:7:5-20
+MERGED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:22:5-35:19
+MERGED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:22:5-35:19
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:28:5-45:19
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:28:5-45:19
+MERGED from [com.google.firebase:firebase-iid-interop:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-interop-16.0.1.aar\31f3de33f2e47a5923ed664eacf53b7b\AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.firebase:firebase-iid-interop:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-interop-16.0.1.aar\31f3de33f2e47a5923ed664eacf53b7b\AndroidManifest.xml:7:5-8:19
+MERGED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-places-placereport-16.0.0.aar\dd1487553a82e3012946c6b265173f62\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-places-placereport-16.0.0.aar\dd1487553a82e3012946c6b265173f62\AndroidManifest.xml:22:5-20
+MERGED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:11:5-17:19
+MERGED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:11:5-17:19
+MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\ffc215fb5c29ca9d0d1a89b347b0379a\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\ffc215fb5c29ca9d0d1a89b347b0379a\AndroidManifest.xml:7:5-20
+MERGED from [com.google.firebase:firebase-measurement-connector:17.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-17.0.1.aar\0f8695a456476fc68371b5f0f5de6a86\AndroidManifest.xml:22:5-23:19
+MERGED from [com.google.firebase:firebase-measurement-connector:17.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-17.0.1.aar\0f8695a456476fc68371b5f0f5de6a86\AndroidManifest.xml:22:5-23:19
+MERGED from [com.google.android.gms:play-services-stats:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-stats-16.0.1.aar\ebb0fb2d43d6d0d2e24bf88331c74aa7\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-stats:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-stats-16.0.1.aar\ebb0fb2d43d6d0d2e24bf88331c74aa7\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:22:5-26:19
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\04a26c1d3f22f16cf40fdce4f8808f08\AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\04a26c1d3f22f16cf40fdce4f8808f08\AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:22:18-91
+	android:supportsRtl
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:10:9-35
+	android:label
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:8:9-41
+	android:roundIcon
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:9:9-54
+	android:icon
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:7:9-43
+	android:allowBackup
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:6:9-35
+	android:theme
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:11:9-40
+activity#io.ionic.starter.MainActivity
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:13:9-32:20
+	android:label
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:16:13-56
+	android:launchMode
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:18:13-44
+	android:configChanges
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:14:13-90
+	android:theme
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:17:13-62
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:15:13-57
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:20:13-23:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:21:17-69
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:21:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:22:17-77
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:22:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:@string/custom_url_scheme
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:25:13-30:29
+action#android.intent.action.VIEW
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:26:17-69
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:26:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:27:17-76
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:27:27-73
+category#android.intent.category.BROWSABLE
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:28:17-78
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:28:27-75
+data
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:29:17-68
+	android:scheme
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:29:23-65
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:47:5-67
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:23:5-67
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:23:5-67
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:47:22-64
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:49:5-79
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:49:22-77
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:50:5-81
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:50:22-78
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:52:5-81
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:5-81
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:5-81
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:52:22-78
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:53:5-79
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-79
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:53:22-76
+uses-feature#android.hardware.location.gps
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:54:5-66
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:5-66
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:5-66
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:54:19-63
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:56:5-79
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:22:5-79
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:56:22-76
+uses-permission#android.permission.CAMERA
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:59:5-65
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:59:22-62
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:61:5-71
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:61:22-68
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:62:5-79
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:62:22-77
+uses-sdk
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+MERGED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
+MERGED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:design:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\cc7e48a8a88a07148b777e4e4abed993\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\cc7e48a8a88a07148b777e4e4abed993\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c09e21bfe4781e0b4c3f9af79ebb922\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c09e21bfe4781e0b4c3f9af79ebb922\AndroidManifest.xml:20:5-44
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:8:5-10:41
+MERGED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:8:5-10:41
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-location-16.0.0.aar\b0724fc6a0ba0ca50c0cf89aefd61236\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-location:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-location-16.0.0.aar\b0724fc6a0ba0ca50c0cf89aefd61236\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-iid-interop:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-interop-16.0.1.aar\31f3de33f2e47a5923ed664eacf53b7b\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-iid-interop:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-interop-16.0.1.aar\31f3de33f2e47a5923ed664eacf53b7b\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-places-placereport-16.0.0.aar\dd1487553a82e3012946c6b265173f62\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-places-placereport-16.0.0.aar\dd1487553a82e3012946c6b265173f62\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:6:5-8:41
+MERGED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:6:5-8:41
+MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\ffc215fb5c29ca9d0d1a89b347b0379a\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\ffc215fb5c29ca9d0d1a89b347b0379a\AndroidManifest.xml:5:5-44
+MERGED from [com.google.firebase:firebase-measurement-connector:17.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-17.0.1.aar\0f8695a456476fc68371b5f0f5de6a86\AndroidManifest.xml:20:5-44
+MERGED from [com.google.firebase:firebase-measurement-connector:17.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-17.0.1.aar\0f8695a456476fc68371b5f0f5de6a86\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-stats:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-stats-16.0.1.aar\ebb0fb2d43d6d0d2e24bf88331c74aa7\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-stats:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-stats-16.0.1.aar\ebb0fb2d43d6d0d2e24bf88331c74aa7\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\62b216750fd63de24702d89314310a55\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\62b216750fd63de24702d89314310a55\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\0996700f38aebfe0b0443f88152476db\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\0996700f38aebfe0b0443f88152476db\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\79bcc0355c644c5b06cfd391d3a4bab5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\79bcc0355c644c5b06cfd391d3a4bab5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customtabs:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customtabs-28.0.0.aar\c2abd5b57dd3bc74acfa0c6abe502f42\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customtabs:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customtabs-28.0.0.aar\c2abd5b57dd3bc74acfa0c6abe502f42\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\a3f3d5315e3b8bd3942de6113b188723\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\a3f3d5315e3b8bd3942de6113b188723\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\2fb1e15783603fd46d86a81d7396e8f2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\2fb1e15783603fd46d86a81d7396e8f2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\8d8fa5e8de738e5f028ef6074a8c50bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\8d8fa5e8de738e5f028ef6074a8c50bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4c1a4bd54fc029b5cc7f8f05da6079e6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\4c1a4bd54fc029b5cc7f8f05da6079e6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\cf28eb830275d1d6ae391f06b17f2b05\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\cf28eb830275d1d6ae391f06b17f2b05\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\856fd0290877deab7f2f642e9337c984\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\856fd0290877deab7f2f642e9337c984\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\16ad02e86ab2343b20c572f7a09f7bba\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\16ad02e86ab2343b20c572f7a09f7bba\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\abf7af26a04deafd6b97c28ed1755a8b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\abf7af26a04deafd6b97c28ed1755a8b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\abbef20bbd13cee55dde9a1685642b5a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\abbef20bbd13cee55dde9a1685642b5a\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\2de171f35fa4f92f6e16459aa65f4481\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\2de171f35fa4f92f6e16459aa65f4481\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\07b6d0328939ffda51c5620ccf33213e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\07b6d0328939ffda51c5620ccf33213e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\5620dffacd13a7798d0bf81adff689bd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\5620dffacd13a7798d0bf81adff689bd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\d79fb52412cdb3e7b30a73e30b047247\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\d79fb52412cdb3e7b30a73e30b047247\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\7aa0abd4824ad704acd85e397328680d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\7aa0abd4824ad704acd85e397328680d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\e2a14271757ef99e2f367d0e0dc911bf\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\04a26c1d3f22f16cf40fdce4f8808f08\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\04a26c1d3f22f16cf40fdce4f8808f08\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ae8c3f93fdd96f999a293159d7d0c77b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\ae8c3f93fdd96f999a293159d7d0c77b\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\045ff578cfd2a528e0d2cbe44c1db43b\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\045ff578cfd2a528e0d2cbe44c1db43b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\25384251415b4094677b1ac3e8da7de2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\25384251415b4094677b1ac3e8da7de2\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\a10a5f48f7ed30cfbe58a8179d616a2f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\a10a5f48f7ed30cfbe58a8179d616a2f\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\9fbb6e8b8fcbdf7bf03f4f48c39d1e12\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\9fbb6e8b8fcbdf7bf03f4f48c39d1e12\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\7797a4824dbf162227d6ecd88913bd7d\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\7797a4824dbf162227d6ecd88913bd7d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\292391653d25c523092d8aec70aac024\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\292391653d25c523092d8aec70aac024\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\7bd2f6094eb042885dd9d1ee9dd5c39c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\7bd2f6094eb042885dd9d1ee9dd5c39c\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\2200a6df6bc6e70a8ca094f945183c57\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\2200a6df6bc6e70a8ca094f945183c57\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\85fb12751ee48e16d7ae10939183edd3\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\85fb12751ee48e16d7ae10939183edd3\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\c60562960150e32389aaabe72141114b\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\c60562960150e32389aaabe72141114b\AndroidManifest.xml:20:5-44
+MERGED from [org.apache.cordova:framework:7.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\framework-7.0.0.aar\d2f11f0275de79acfc30658339337cd5\AndroidManifest.xml:25:5-44
+MERGED from [org.apache.cordova:framework:7.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\framework-7.0.0.aar\d2f11f0275de79acfc30658339337cd5\AndroidManifest.xml:25:5-44
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:39:13-41:64
+	android:resource
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:41:17-51
+	android:name
+		ADDED from C:\Users\Moshu\Desktop\Carpool\Carpool\android\app\src\main\AndroidManifest.xml:40:17-67
+uses-feature#android.hardware.camera
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-13:36
+	android:required
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:9-33
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:9-47
+service#com.getcapacitor.plugin.background.BackgroundTaskService
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:9-18:40
+	android:exported
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:13-37
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:13-84
+receiver#com.getcapacitor.plugin.notification.TimedNotificationPublisher
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:20:9-100
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:20:19-97
+receiver#com.getcapacitor.plugin.notification.NotificationDismissReceiver
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:9-101
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:19-98
+meta-data#firebase_messaging_auto_init_enabled
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:23:9-25:37
+	android:value
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:25:13-34
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:13-64
+service#com.getcapacitor.CapacitorFirebaseMessagingService
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:27:9-33:19
+	android:stopWithTask
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:29:13-41
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:28:13-78
+intent-filter#action:name:com.google.firebase.MESSAGING_EVENT
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:30:13-32:29
+action#com.google.firebase.MESSAGING_EVENT
+ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:31:17-78
+	android:name
+		ADDED from [:capacitor-android] C:\Users\Moshu\Desktop\Carpool\Carpool\node_modules\@capacitor\android\capacitor\build\intermediates\library_manifest\debug\AndroidManifest.xml:31:25-75
+provider#de.appplant.cordova.emailcomposer.Provider
+ADDED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:9-26:20
+	android:grantUriPermissions
+		ADDED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:13-47
+	android:authorities
+		ADDED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:20:13-74
+	android:exported
+		ADDED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:13-37
+	android:name
+		ADDED from [:capacitor-cordova-android-plugins] C:\Users\Moshu\Desktop\Carpool\Carpool\android\capacitor-cordova-android-plugins\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:13-70
+service#com.google.firebase.messaging.FirebaseMessagingService
+ADDED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:28:9-34:19
+	android:exported
+		ADDED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:30:13-37
+	android:name
+		ADDED from [com.google.firebase:firebase-messaging:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-messaging-18.0.0.aar\ad1f6e1063564ecbef6e80f6c969ba6c\AndroidManifest.xml:29:13-82
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:24:5-68
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:24:22-65
+uses-permission#com.google.android.c2dm.permission.RECEIVE
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:26:5-82
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:26:22-79
+service#com.google.firebase.components.ComponentDiscoveryService
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:29:9-35:19
+	android:exported
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:31:13-37
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:30:13-84
+meta-data#com.google.firebase.components:com.google.firebase.iid.Registrar
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:32:13-34:85
+	android:value
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:34:17-82
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:33:17-96
+receiver#com.google.firebase.iid.FirebaseInstanceIdReceiver
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:37:9-44:20
+	android:exported
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:39:13-36
+	android:permission
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:40:13-73
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:38:13-78
+intent-filter#action:name:com.google.android.c2dm.intent.RECEIVE
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:41:13-43:29
+action#com.google.android.c2dm.intent.RECEIVE
+ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:42:17-81
+	android:name
+		ADDED from [com.google.firebase:firebase-iid:18.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-iid-18.0.0.aar\23e1588be72c8c8132e864488ef6c162\AndroidManifest.xml:42:25-78
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:23:9-26:75
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:26:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-base-16.0.1.aar\18c2e09d3a52920b45e557902f99f40c\AndroidManifest.xml:24:13-79
+provider#com.google.firebase.provider.FirebaseInitProvider
+ADDED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:12:9-16:39
+	android:authorities
+		ADDED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:14:13-72
+	android:exported
+		ADDED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:15:13-37
+	android:initOrder
+		ADDED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:16:13-36
+	android:name
+		ADDED from [com.google.firebase:firebase-common:17.0.0] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\firebase-common-17.0.0.aar\ad6621df9b42b7b0bc5bb3c0c1c63e8d\AndroidManifest.xml:13:13-77
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:23:9-25:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:25:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\Moshu\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\ed69e071bc8b269215ad62a8fc3a1d3e\AndroidManifest.xml:24:13-58
