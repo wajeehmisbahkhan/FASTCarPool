@@ -109,13 +109,14 @@ export class DatabaseService implements OnDestroy {
   }
 
   loadPickups() {
-    return new Promise((resolve, reject) => {
-      this.getDoc('app/pickups').subscribe(pickups => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const pickups = await this.getDoc('app/pickups');
         this.pickups = pickups.data()['locations'];
         // For quick reference
         this.fast = this.pickups[0];
         resolve();
-      }, reject);
+      } catch (err) { reject(err); }
     });
   }
 
@@ -173,9 +174,10 @@ export class DatabaseService implements OnDestroy {
   updateUserData(newUserData: UserData) {
     return this.alertService.load('Updating your profile...',
     // Resolving this promise will complete the updating phase
-    new Promise((resolve, reject) => {
+    new Promise(async (resolve, reject) => {
       // Update online
-      this.updateDoc(`users/${this.userLink.email}`, newUserData).then(() => {
+      try {
+        await this.updateDoc(`users/${this.userLink.email}`, newUserData);
         // If driver changed
         if (this.userData.isDriver !== newUserData.isDriver) {
           // Set theme according to new user data
@@ -185,31 +187,27 @@ export class DatabaseService implements OnDestroy {
             this.arrayUnion('app/users', 'drivers', this.userLink).catch(reject);
             this.arrayRemove('app/users', 'riders', this.userLink).catch(reject);
             // Remove 'as rider' from all pickups
-            const riderSub = this.getDoc('app/pickups').subscribe(doc => {
-              riderSub.unsubscribe();
-              const pickups: Array<Location> = doc.data().locations;
-              pickups.forEach(pickup => {
-                pickup.riders = pickup.riders.filter((rider) => rider.email !== this.userLink.email );
-              });
-              this.updateDoc('app/pickups', {locations: pickups});
-              // Add to FAST as driver by default
-              this.addDriver(this.fast);
+            const doc = await this.getDoc('app/pickups');
+            const pickups: Array<Location> = doc.data().locations;
+            pickups.forEach(pickup => {
+              pickup.riders = pickup.riders.filter((rider) => rider.email !== this.userLink.email );
             });
+            this.updateDoc('app/pickups', {locations: pickups});
+            // Add to FAST as driver by default
+            this.addDriver(this.fast);
           } else {
             // Remove from drivers and add to riders
             this.arrayRemove('app/users', 'drivers', this.userLink);
             this.arrayUnion('app/users', 'riders', this.userLink);
             // Remove 'as driver' from all pickups
-            const driverSub = this.getDoc('app/pickups').subscribe(doc => {
-              driverSub.unsubscribe();
-              const pickups: Array<Location> = doc.data().locations;
-              pickups.forEach(pickup => {
-                pickup.drivers = pickup.drivers.filter((driver) => driver.email !== this.userLink.email );
-              });
-              this.updateDoc('app/pickups', { locations: pickups});
-              // Add to FAST as rider by default
-              this.addRider(this.fast);
+            const doc = await this.getDoc('app/pickups');
+            const pickups: Array<Location> = doc.data().locations;
+            pickups.forEach(pickup => {
+              pickup.drivers = pickup.drivers.filter((driver) => driver.email !== this.userLink.email );
             });
+            this.updateDoc('app/pickups', { locations: pickups });
+            // Add to FAST as rider by default
+            this.addRider(this.fast);
           }
         }
         // Update user data - deep copy
@@ -217,7 +215,7 @@ export class DatabaseService implements OnDestroy {
         // Set locally
         this.storage.set('userData', JSON.stringify(this.userData));
         resolve();
-      }).catch(reject);
+      } catch (err) { reject(err); };
     })
     .then(this.alertService.notice.bind(this.alertService, 'Profile updated Successfully'))
     .catch(this.alertService.error.bind(this.alertService))
@@ -227,9 +225,9 @@ export class DatabaseService implements OnDestroy {
   // View
   getUserView(user: UserLink) {
     this.alertService.load(`Loading ${user.name}'s Profile`,
-    new Promise(resolve => {
-        const userSub = this.getDoc(`users/${user.email}`).subscribe(doc => {
-        userSub.unsubscribe();
+    new Promise(async (resolve, reject) => {
+      try {
+        const doc = await this.getDoc(`users/${user.email}`);
         // Copy to view user
         this.viewUser = new ViewUser(
           new UserData(doc.data().isDriver, null, // Address not needed
@@ -239,15 +237,60 @@ export class DatabaseService implements OnDestroy {
         this.viewUser.status = doc.data().status;
         // this.viewUser.rate.oneway = doc.data().rate.oneway;
         resolve();
-      });
+      } catch (err) { reject(err); }
     })
     );
   }
 
+  // User
+  async deleteAccount(email: string) {
+    // Get data first
+    const userDoc = await this.getDoc('app/users');
+    const userDataDoc = await this.getDoc(`users/${email}`);
+    const isDriver = userDataDoc.data().isDriver;
+    await this.removeUserFromPickups(email, isDriver);
+    if (isDriver) {
+      // Remove from app/users
+      let drivers: Array<UserLink> = userDoc.data().drivers;
+      drivers = drivers.filter(driver => driver.email === email);
+      await this.updateDoc('app/users', { drivers });
+    } else {
+      // Remove from app/users
+      let riders: Array<UserLink> = userDoc.data().riders;
+      riders = riders.filter(rider => rider.email !== email);
+      await this.updateDoc('app/users', { riders });
+    }
+    // TODO: Remove chats
+    await this.storage.remove('userData');
+    // Finally remove user data
+    return this.deleteDoc(`users/${email}`);
+  }
+
+  // Pickups
+  async removeUserFromPickups(email: string, isDriver: boolean) {
+    const pickupDoc = await this.getDoc('app/pickups');
+    const locations: Array<Location> = pickupDoc.data().locations;
+    if (isDriver) {
+      // Remove from app/pickups -> locations
+      locations.forEach(pickup => {
+        pickup.drivers = pickup.drivers.filter(driver => driver.email !== email);
+      });
+    } else {
+      // Remove from app/pickups -> locations
+      locations.forEach(pickup => {
+        pickup.riders = pickup.riders.filter(rider => rider.email !== email);
+      });
+    }
+    return this.updateDoc('app/pickups', { locations });
+  }
+
+
   // General Methods
-  getCollection(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.QuerySnapshot> {
+  getCollection(path: string, options?: firebase.firestore.GetOptions) {
     if (this.usable)
-      return this.db.collection(path).get(options);
+      return new Promise<firebase.firestore.QuerySnapshot>((resolve, reject) =>
+        this.db.collection(path).get(options).subscribe(doc => resolve(doc), reject)
+      );
     throw this.outdatedError;
   }
 
@@ -257,9 +300,11 @@ export class DatabaseService implements OnDestroy {
     throw this.outdatedError;
   }
 
-  getDoc(path: string, options?: firebase.firestore.GetOptions): Observable<firebase.firestore.DocumentSnapshot> {
+  getDoc(path: string, options?: firebase.firestore.GetOptions) {
     if (this.usable)
-      return this.db.doc(path).get(options);
+      return new Promise<firebase.firestore.DocumentSnapshot>((resolve, reject) =>
+        this.db.doc(path).get(options).subscribe(doc => resolve(doc), reject)
+      );
     throw this.outdatedError;
   }
 

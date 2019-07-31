@@ -11,11 +11,10 @@ import { Router } from '@angular/router';
 import { AlertService } from './services/alert.service';
 import { DatabaseService } from './services/database.service';
 
-import * as firebase from 'firebase/app';
 import { timer } from 'rxjs/observable/timer';
 import { UserLink } from './services/helper-classes';
 
-import { main } from './members/schedule';
+import { firestore } from 'firebase/app';
 
 @Component({
   selector: 'app-root',
@@ -42,21 +41,21 @@ export class AppComponent {
   navigateBack (e) {
     const url = window.location.pathname;
     // TODO: Handle all urls
-    if (url === '/login' || url === '/members/dashboard') {
+    // Exit
+    if (url === '/login' || url === '/members/info' || url === '/members/dashboard') {
       navigator['app'].exitApp();
+    } else if (url === '/members/messages/chat') { // If came from new
+      this.router.navigate(['members', 'messages']);
     }
   }
 
   initializeApp() {
     this.platform.ready().then(async () => {
-      // main();
-      // Track performance
-      console.log(firebase.performance);
       // Enable local caching
-      firebase.firestore().settings({
-        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+      firestore().settings({
+        cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED
       });
-      firebase.firestore().enablePersistence().catch(err => {
+      firestore().enablePersistence().catch(err => {
         if (err.code === 'failed-precondition') {
             // Multiple tabs open, persistence can only be enabled
             // in one tab at a a time.
@@ -70,15 +69,16 @@ export class AppComponent {
       // Save device settings in case email is needed
       this.alertService.device = this.device;
       // Check that user has the latest version for the app
-      this.db.getDoc('app/info').subscribe(async doc => {
-        const localVersion = await this.appVersion.getVersionNumber().catch(this.alertService.error.bind(this.alertService));
+      try {
+        const doc = await this.db.getDoc('app/info');
+        const localVersion = await this.appVersion.getVersionNumber();
         this.alertService.app = localVersion;
         const serverVersion = doc.data().version;
         if (localVersion) // TODO: When coming from alpha to beta, only major version difference will cause app to stop working
           this.db.usable = this.versionDifference(localVersion, serverVersion) === 'minor' ? false : true;
         else // Testing purposes
           this.db.usable = this.versionDifference('3.3.1', '3.3.2') === 'minor' ? false : true;
-      });
+      } catch (err) { this.alertService.error(err); }
       // Check if user is stored in cache
       const user = await this.authService.getLocalUser();
       if (user) {

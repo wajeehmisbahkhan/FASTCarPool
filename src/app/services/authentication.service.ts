@@ -5,6 +5,7 @@ import { AlertService } from './alert.service';
 
 import { AngularFireAuth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,8 @@ export class AuthenticationService {
       })
       .then(() => {
         this._user = auth.user;
+        // Send email verification
+        this.user.sendEmailVerification().catch(this.alertService.error.bind(this.alertService));
         resolve();
       });
     }).catch(reject);
@@ -89,6 +92,14 @@ export class AuthenticationService {
   logout() {
     this.authState.next(false);
     return this.afAuth.auth.signOut().catch(this.alertService.error);
+  }
+
+  reauthenticateAccount(password: string) {
+    return this.user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(this.user.email, password));
+  }
+
+  deleteAccount() {
+    return this.user.delete();
   }
 
   isAuthenticated() {
@@ -156,6 +167,10 @@ export class AuthenticationService {
         return error;
       });
     }));
+  }
+
+  emailVerified(): boolean {
+    return this.user.emailVerified;
   }
 
   // Getters

@@ -6,10 +6,24 @@ div.error-message {
         text-decoration-style: none;
     }
 }
-// ion-input, ion-button {
-//     position: relative;
-//     ion-spinner {
-//         position: absolute;
-//         right: 1em;
-//     }
-// }
+blockquote {
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    border-left: 1em solid rgba(0, 0, 0, .2);
+    color: white;
+    margin-left: 0;
+    margin-right: 1em;
+}
+blockquote.warning {
+    background: var(--ion-color-warning);
+}
+blockquote.success {
+    background: var(--ion-color-success);
+}
+blockquote.danger {
+    background: var(--ion-color-danger);
+}
+blockquote a {
+    color: white;
+    text-decoration: underline;
+}

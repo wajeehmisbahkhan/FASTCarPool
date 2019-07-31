@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UserData, Day, Car, Address, UserLink } from 'src/app/services/helper-classes';
 import { GoogleMapInputComponent } from '../../components/google-map-input/google-map-input.component';
 import { ModalController } from '@ionic/angular';
@@ -29,12 +28,21 @@ export class InfoPage implements OnInit {
   // Car
   car: Car;
 
+  // To avoid overusage of resend email verification
+  emailVerificationResent: boolean;
+  emailCheckInterval: NodeJS.Timeout;
+
+  @HostListener('window:focus')
+  reloadUser() {
+    if (!this.user.emailVerified)
+      this.user.reload();
+  }
+
   constructor(
     private authService: AuthenticationService,
     private db: DatabaseService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    private router: Router,
     private mc: ModalController
   ) {
     // Default driver
@@ -49,6 +57,8 @@ export class InfoPage implements OnInit {
     });
     // Default Car
     this.car = new Car;
+    // Default verification
+    this.emailVerificationResent = false;
   }
 
   ngOnInit() {
@@ -95,6 +105,18 @@ export class InfoPage implements OnInit {
       this.alertService.error(err);
       return;
     }
+  }
+
+  resendEmailConfirmation() {
+    // First confirm
+    this.alertService.confirmation('Are you sure you want to resend an email confirmation mail?', () =>
+    // Send
+    this.user.sendEmailVerification()
+    // Sent
+    .then(() => this.emailVerificationResent = true)
+    // Any error
+    .catch(this.alertService.error.bind(this.alertService))
+    );
   }
 
   get user() {

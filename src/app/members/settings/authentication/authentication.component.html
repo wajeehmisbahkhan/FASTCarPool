@@ -1,0 +1,17 @@
+<form #reauthForm="ngForm" class="ion-padding">
+  <ion-text class="ion-text-center">
+    <h2>Reauthentication Required</h2>
+  </ion-text>
+  <ion-item>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input name="password" [(ngModel)]="password" type="password"></ion-input>
+  </ion-item>
+  <div class="ion-margin-top">
+    <ion-button (click)="confirmPassword()" expand="block">
+      Confirm Password
+    </ion-button>
+    <ion-button (click)="cancel()" expand="block">
+      Cancel
+    </ion-button>
+  </div>
+</form>

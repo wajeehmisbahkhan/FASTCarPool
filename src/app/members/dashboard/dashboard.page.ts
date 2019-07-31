@@ -22,6 +22,11 @@ export class DashboardPage implements OnInit {
       title: 'Messages',
       url: '/messages',
       icon: 'mail'
+    },
+    {
+      title: 'Settings',
+      url: '/settings',
+      icon: 'settings'
     }
   ];
 

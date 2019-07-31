@@ -6,7 +6,7 @@
     <!-- Location Input Marker -->
     <agm-marker *ngIf="showCenter" [latitude]="centerCoordinates.lat" [longitude]="centerCoordinates.lng" iconUrl="../../assets/img/pinpoint.png"></agm-marker>
     <!-- Any extra markers - pickups etc -->
-    <agm-marker (markerClick)=selectMarker(infoWindow) *ngFor="let pickup of pickupLocations" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="pickupUrl(pickup)">
+    <agm-marker (markerClick)=selectMarker(infoWindow) *ngFor="let pickup of pickupLocations; trackBy: pickupLocationTracker" [latitude]="pickup.lat" [longitude]="pickup.lng" [iconUrl]="pickupUrl(pickup)">
         <agm-info-window #infoWindow>
             <h3>{{ pickup.name }}</h3>
             <!-- Show if user is rider -->
