@@ -1,6 +1,6 @@
 <agm-map (centerChange)="centerChange($event)" (mapClick)="closeWindow()" [zoomControl]="false" [streetViewControl]="false"
 [clickableIcons]="false" [latitude]="mapCoordinates.lat" [longitude]="mapCoordinates.lng" [zoom]="zoom"
-[styles]="isDriver ? darkMap : lightMap">
+[styles]="isDriver ? darkMap : lightMap" [usePanning]="true">
     <!-- Position Marker -->
     <agm-marker *ngIf="positionCoordinates" [latitude]="positionCoordinates.lat" [longitude]="positionCoordinates.lng" iconUrl="../../assets/img/live_location.png"></agm-marker>
     <!-- Location Input Marker -->
@@ -42,11 +42,14 @@
 
 </agm-map>
 
-<div class="center-controls">
-  <!-- <ion-button size="medium" expand="block" (click)="confirmAddress()">Confirm Address</ion-button> -->
-  <ion-button size="small" expand="block" (click)="mapCenter()" >
-      <ion-icon name="expand"></ion-icon>
-    <!-- <ion-img [src]='"./../../assets/img/map_center.png"'></ion-img> -->
-    <!-- Center -->
+<!-- <div class="center-controls">
+  <ion-button size="medium" expand="block" (click)="confirmAddress()">Confirm Address</ion-button> 
+  <ion-button size="small" expand="block" (click)="mapCenter()" > -->
+    <div class="center-controls" (click)="mapCenter()">
+         <ion-icon class="ico" size="large" name="expand"></ion-icon>
+    </div>
+     
+      <!-- <ion-img [src]='"./../../assets/img/map_center.png"'></ion-img>
+     Center
   </ion-button>
-</div>
+</div> -->

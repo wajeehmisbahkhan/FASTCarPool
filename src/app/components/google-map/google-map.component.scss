@@ -5,12 +5,14 @@ agm-map {
 
 .center-controls {
     position: absolute;
+    background-color: white;
+    color: gray;
     z-index: 9999;
-    bottom: 3vh;
-    width: 100%;
+    bottom: 4%;
+    right: 4%;
+    padding: 2%;
+    border-radius: 15%;
+
+    // width: 100%;
     text-align: center;
-    ion-button {
-        display: inline-block;
-        margin-inline-end: -75vw;
-    }
 }

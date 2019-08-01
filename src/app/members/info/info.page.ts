@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -12,7 +12,7 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './info.page.html',
   styleUrls: ['./info.page.scss'],
 })
-export class InfoPage implements OnInit {
+export class InfoPage implements OnInit, OnDestroy {
 
   infoForm: FormGroup;
 
@@ -66,6 +66,10 @@ export class InfoPage implements OnInit {
     this.infoForm = this.formBuilder.group({
       address: ['', Validators.required]
     });
+  }
+
+  ngOnDestroy() {
+    console.log('Info Page Destructor!');
   }
 
   // Map

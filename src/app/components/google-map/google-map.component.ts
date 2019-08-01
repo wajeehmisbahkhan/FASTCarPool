@@ -160,21 +160,27 @@ export class GoogleMapComponent implements OnDestroy {
     });
   }
 
-<<<<<<< HEAD
   ngOnDestroy() {
     this.positionSubscription.unsubscribe();
   }
 
-  getCurrentLocation() {
-    return this.geolocation.getCurrentPosition();
-=======
   mapCenter() {
     // const currentLocation = await this.getCurrentLocation();
     // Set map position to center
-    this.mapCoordinates.lat = this.positionCoordinates.lat;
-    this.mapCoordinates.lng = this.positionCoordinates.lng;
-    this.centerCoordinates.lat = this.positionCoordinates.lat;
-    this.centerCoordinates.lng = this.positionCoordinates.lng;
+
+    this.mapCoordinates.lat = 0;
+    this.mapCoordinates.lng = 0;
+    // this.centerCoordinates.lat = 0;
+    // this.centerCoordinates.lng = 0;
+
+    setTimeout(() => {
+      this.mapCoordinates.lat = this.positionCoordinates.lat;
+      this.mapCoordinates.lng = this.positionCoordinates.lng;
+      // this.centerCoordinates.lat = this.positionCoordinates.lat;
+      // this.centerCoordinates.lng = this.positionCoordinates.lng;
+      }, 1);
+
+
     console.log('location centered!');
     console.log(this.mapCoordinates);
     console.log(this.centerCoordinates);
@@ -183,7 +189,6 @@ export class GoogleMapComponent implements OnDestroy {
 
   async getCurrentLocation() {
     return await this.geolocation.getCurrentPosition();
->>>>>>> features
   }
 
   getLiveLocation() {
