@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ProfilePage } from './profile.page';
 import { SharedModule } from 'src/app/components/shared.module';
+import { GoogleMapInputComponent } from 'src/app/components/google-map-input/google-map-input.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
+  entryComponents: [GoogleMapInputComponent]
 })
 export class ProfilePageModule {}

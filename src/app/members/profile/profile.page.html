@@ -17,8 +17,15 @@
       <ion-label position="floating">Status</ion-label>
       <ion-input name="status" [placeholder]="'Cool Status'" formControlName="status" required></ion-input>
     </ion-item>
+    <!-- Address -->
+    <ion-item>
+      <ion-label position="floating">Your Home Address</ion-label>
+      <ion-input placeholder="This will not be displayed publicly..."
+      formControlName="address" name="address" (click)="showMap()"></ion-input>
+    </ion-item>
     <div class="ion-text-center">
-      <p>Your Schedule (First Class Start & Last Class End)</p>
+      <p>Your Schedule</p> <br>
+      <p>(First Class Start & Last Class End)</p>
     </div>
     <schedule-input [(schedule)]="localCopy.schedule"></schedule-input>
     <div *ngIf="localCopy.isDriver">
